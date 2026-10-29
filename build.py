@@ -6,9 +6,9 @@ sys.path.insert(0, str(Path(__file__).parent))
 from content.articles import ARTICLES
 
 ROOT = Path(__file__).parent; OUT = ROOT / "docs"
-SITE = "https://raetsellotse.de"; V = "20261029"; UPDATED = "Oktober 2026"
+SITE = "https://raetsellotse.de"; V = "20261029b"; UPDATED = "Oktober 2026"
 NAV = [("/", "Heute"), ("/codeknacker.html", "Codeknacker"), ("/sudoku.html", "Sudoku"), ("/zielzahl.html", "Zielzahl"),
-       ("/sudoku-zum-ausdrucken-mittel.html", "Zum Ausdrucken")]
+       ("/sudoku-zum-ausdrucken-mittel.html", "Zum Ausdrucken"), ("/archiv.html", "Meine Statistik")]
 env = Environment(loader=FileSystemLoader(ROOT / "templates"), autoescape=True, trim_blocks=True, lstrip_blocks=True)
 PAGES = []
 BY = {a["slug"]: a for a in ARTICLES}
@@ -184,6 +184,13 @@ def main():
               "publisher": {"@type": "Organization", "name": "AdStern"}}]
         write(a["slug"] + ".html", "page.html", title=f"{a['title']} | Rätsellotse", description=a["description"], h1=a["title"], lead=a["teaser"],
               body=a["body"], crumbs=crumbs, related=[x for x in ARTICLES if x["slug"] != a["slug"]][:3], jsonld=ld, priority=0.7)
+
+    write("archiv.html", "page.html", title="Meine Statistik & Rätsel-Archiv | Rätsellotse", description="Deine Serien, Erfolgsquoten und alle Rätsel der letzten 30 Tage zum Nachspielen.",
+          h1="Meine Statistik & Archiv", lead="Serien, Quoten und die Rätsel der letzten 30 Tage – verpasste Tage einfach nachspielen.", ads=False, robots="noindex,follow",
+          body="""<section data-game="archiv"><div class="stats" data-stats><p class="muted">Statistik wird geladen …</p></div>
+<h2>Die letzten 30 Tage</h2><p class="small muted">✓ gelöst · ◐ begonnen · ✗ nicht gelöst · – noch offen. Antippen zum (Nach-)Spielen. Sudoku: leicht, mittel, schwer.</p>
+<div class="scroll"><table class="tbl arch"><thead><tr><th scope="col">Tag</th><th scope="col">Code</th><th scope="col">Sudoku</th><th scope="col">Ziel</th></tr></thead><tbody data-days></tbody></table></div>
+<p class="small muted" style="margin-top:18px">Alle Werte stehen nur in deinem Browser (lokaler Speicher) und werden nicht übertragen. Auf einem anderen Gerät beginnst du von vorn. <button type="button" class="linkbtn" data-reset>Statistik zurücksetzen</button></p></section>""")
 
     write("about.html", "page.html", title="Über Rätsellotse", description="Wer hinter Rätsellotse steht und wie die Rätsel entstehen.",
           h1="Über Rätsellotse", lead="Täglich frische Rätsel – fair, eindeutig lösbar und ohne Anmeldung.", priority=0.3,

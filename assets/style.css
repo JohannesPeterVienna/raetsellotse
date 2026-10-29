@@ -104,3 +104,22 @@ p{margin:0 0 1em}.lead{font-size:1.15rem;color:var(--muted);max-width:58ch}.mute
 @media (max-width:420px){.crow{grid-template-columns:1.4em repeat(4,1fr) 40px}.game{padding:14px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 @media print{.top,.foot,.ad,.side,.crumbs,.no-print{display:none!important}.layout{display:block}body{background:#fff}.printgrid{grid-template-columns:repeat(2,1fr)}}
+.more{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0 0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:8px 0 10px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.stat h3{margin:0 0 10px}
+.stat dl{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:0}
+.stat dt{font-size:.72rem;color:var(--muted)}.stat dd{margin:0;font:700 1.35rem var(--head)}
+.hist{margin-top:12px;display:flex;flex-direction:column;gap:3px;font-size:.78rem}
+.hist div{display:grid;grid-template-columns:1.4em 1fr;gap:6px;align-items:center}
+.hist b{display:block;background:var(--buoy);color:#fff;border-radius:4px;padding:1px 6px;text-align:right;min-height:16px;font-weight:600}
+.arch td,.arch th{text-align:center;padding:6px 8px}.arch th[scope=row]{text-align:left;white-space:nowrap;font-weight:600}
+.arch td.su{white-space:nowrap}
+.acell{display:inline-grid;place-items:center;width:32px;height:32px;margin:1px;border-radius:8px;text-decoration:none;font-weight:700;border:1.5px solid var(--line);color:var(--muted)}
+.acell.ok{background:var(--sea);border-color:var(--sea);color:#fff}.acell.half{background:var(--sea-soft);color:var(--sea);border-color:var(--sea)}
+.acell.lost{background:var(--buoy-soft);color:var(--buoy);border-color:var(--buoy)}
+.acell:hover{border-color:var(--ink)}
+main{overflow-wrap:break-word}main a{overflow-wrap:anywhere}
+.layout>*{min-width:0}
+.hist b:empty{background:var(--line);padding:0;width:4px!important;min-height:12px}
+@media (max-width:640px){.nav{flex-wrap:nowrap;overflow-x:auto;width:100%;padding-bottom:6px;scrollbar-width:none}.nav::-webkit-scrollbar{display:none}.nav a{white-space:nowrap;flex:none}}

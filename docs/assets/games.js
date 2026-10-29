@@ -78,7 +78,7 @@
       if (cur.length !== 4 || st.done) return;
       st.guesses.push(cur); cur = [];
       const won = st.guesses.at(-1).join("") === code.join("");
-      if (won || st.guesses.length >= MAX) { st.done = true; if (day === todayVienna()) streak("code", day, won); }
+      if (won || st.guesses.length >= MAX) { st.done = true; st.won = won; if (day === todayVienna()) streak("code", day, won); }
       store.set(KEY, st); render();
     }
     pad.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; if (b.dataset.d) press(+b.dataset.d); if (b.hasAttribute("data-back")) back(); if (b.hasAttribute("data-ok")) submit(); });
@@ -262,7 +262,41 @@
     if (st.expr) check();
   }
 
-  const games = { codeknacker, sudoku, zielzahl };
+  /* ================= Statistik & Archiv (nur aus dem eigenen Browser) ================= */
+  function archiv(root) {
+    const t = todayVienna(), days = [];
+    for (let k = 0; k < 30; k++) { const d = new Date(t + "T12:00:00Z"); d.setUTCDate(d.getUTCDate() - k); const iso = d.toISOString().slice(0, 10); if (iso >= "2026-01-01") days.push(iso); }
+    const keys = []; try { for (let i = 0; i < localStorage.length; i++) keys.push(localStorage.key(i)); } catch {}
+    const code = keys.filter(k => /^rl-code-\d/.test(k)).map(k => store.get(k, {})).filter(s => s.done);
+    const codeWon = code.filter(s => s.won ?? s.guesses.length < 10);
+    const sud = keys.filter(k => /^rl-sudoku-\d/.test(k)).map(k => store.get(k, {}));
+    const zie = keys.filter(k => /^rl-ziel-\d/.test(k)).map(k => store.get(k, {}));
+    const sr = g => store.get(`rl-streak-${g}`, { n: 0, best: 0 });
+    const dist = Array(10).fill(0); codeWon.forEach(s => dist[Math.min(s.guesses.length, 10) - 1]++);
+    const mx = Math.max(1, ...dist);
+    const card = (name, items, extra = "") => `<div class="stat"><h3>${name}</h3><dl>${items.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join("")}</dl>${extra}</div>`;
+    const q = (a, b) => `${b ? Math.round(a / b * 100) : 0} %`;
+    const hist = codeWon.length ? `<div class="hist" aria-label="Versuche bis zum Knacken">${dist.map((n, i) => `<div><span>${i + 1}</span><b style="width:${Math.max(n / mx * 100, n ? 8 : 0)}%">${n || ""}</b></div>`).join("")}</div>` : "";
+    const icon = (st, href, label) => { const s = !st ? ["open", "–", "noch nicht gespielt"] : st.ok ? ["ok", "✓", "gelöst"] : st.done ? ["lost", "✗", "nicht gelöst"] : ["half", "◐", "begonnen"]; return `<a class="acell ${s[0]}" href="${href}" title="${label}: ${s[2]}" aria-label="${label}: ${s[2]}">${s[1]}</a>`; };
+    const rows = days.map(d => {
+      const c = store.get(`rl-code-${d}`, null), z = store.get(`rl-ziel-${d}`, null);
+      const cs = c && (c.guesses?.length) ? { done: c.done, ok: c.done && (c.won ?? c.guesses.length < 10) } : null;
+      const zs = z && (z.expr || z.done) ? { done: z.done || z.shown, ok: z.done && !z.shown } : null;
+      const su = ["leicht", "mittel", "schwer"].map(l => { const x = store.get(`rl-sudoku-${d}-${l}`, null); return icon(x && (x.done || x.t || (x.v && x.v.some((v, i) => v))) ? { done: x.done, ok: x.done } : null, `/sudoku.html?tag=${d}&stufe=${l}`, `Sudoku ${l} ${fmtDate(d)}`); }).join("");
+      return `<tr><th scope="row">${fmtDate(d)}${d === t ? " <span class='small muted'>heute</span>" : ""}</th><td>${icon(cs, `/codeknacker.html?tag=${d}`, `Codeknacker ${fmtDate(d)}`)}</td><td class="su">${su}</td><td>${icon(zs, `/zielzahl.html?tag=${d}`, `Zielzahl ${fmtDate(d)}`)}</td></tr>`;
+    }).join("");
+    const sd = sud.filter(x => x.done), sp = sud.filter(x => x.done || x.t), zp = zie.filter(x => x.expr || x.done), zw = zie.filter(x => x.done && !x.shown);
+    const cs = sr("code"), zs = sr("ziel");
+    $("[data-stats]", root).innerHTML =
+      card("Codeknacker", [["gespielt", code.length], ["geknackt", q(codeWon.length, code.length)], ["Serie", cs.n], ["Rekord", cs.best]], hist) +
+      card("Sudoku", [["begonnen", sp.length], ["gelöst", sd.length], ["ohne Tipp", sd.filter(x => !x.hints).length], ["Quote", q(sd.length, sp.length)]]) +
+      card("Zielzahl", [["gespielt", zp.length], ["getroffen", q(zw.length, zp.length)], ["Serie", zs.n], ["Rekord", zs.best]]);
+    $("[data-days]", root).innerHTML = rows;
+    const reset = $("[data-reset]", root);
+    if (reset) reset.addEventListener("click", () => { if (!reset.dataset.armed) { reset.dataset.armed = 1; reset.textContent = "Wirklich alles löschen? Nochmal tippen"; return; } keys.filter(k => k.startsWith("rl-")).forEach(k => { try { localStorage.removeItem(k); } catch {} }); location.reload(); });
+  }
+
+  const games = { codeknacker, sudoku, zielzahl, archiv };
   const init = () => $$("[data-game]").forEach(el => games[el.dataset.game]?.(el));
   document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", init) : init();
 })();
