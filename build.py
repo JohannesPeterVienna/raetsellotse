@@ -206,9 +206,15 @@ def main():
 
     write("about.html", "page.html", title="Über Rätsellotse", description="Wer hinter Rätsellotse steht und wie die Rätsel entstehen.",
           h1="Über Rätsellotse", lead="Täglich frische Rätsel – fair, eindeutig lösbar und ohne Anmeldung.", priority=0.3,
-          body="""<p>Rätsellotse wird von AdStern in Wien betrieben. Jeden Tag erscheinen neue Rätsel – Codeknacker, Sudoku in drei Stufen, Zielzahl und Nonogramm in drei Größen –, für alle Spielerinnen und Spieler dieselben.</p>
-<h2>Wie die Rätsel entstehen</h2><p>Die Rätsel werden von einem Programm erzeugt und automatisch geprüft: Jedes Sudoku hat genau eine Lösung, leichte und mittlere Sudokus lassen sich ohne fortgeschrittene Techniken lösen, und jede Zielzahl ist nachweislich erreichbar. Der Code und die Zahlen eines Tages hängen nur vom Datum ab.</p>
+          body="""<p>Rätsellotse wird von AdStern in Wien betrieben. Jeden Tag erscheinen neue Rätsel – Codeknacker, Sudoku in drei Stufen, Zielzahl und Nonogramm in drei Größen –, für alle Spielerinnen und Spieler dieselben. Die Idee: eine kurze, faire Knobelpause, die man mit anderen vergleichen kann, ohne Konto und ohne Zeitdruck.</p>
+<h2>Unsere Grundsätze</h2>
+<ul><li><strong>Fair:</strong> Jedes Rätsel ist eindeutig lösbar. Sudokus und Nonogramme lassen sich ohne Raten lösen, jede Zielzahl ist nachweislich erreichbar.</li>
+<li><strong>Erklärt:</strong> Die Tipp-Funktionen verraten nicht einfach die Lösung, sondern begründen den nächsten logischen Schritt.</li>
+<li><strong>Ohne Anmeldung:</strong> Fortschritt, Serien und Statistik bleiben in deinem Browser.</li>
+<li><strong>Für alle Geräte:</strong> Alle Rätsel funktionieren mit Maus, Tastatur und Touchscreen.</li></ul>
+<h2>Wie die Rätsel entstehen</h2><p>Die Rätsel werden von einem Programm erzeugt und automatisch geprüft, bevor sie erscheinen. Der Zufall hängt vom Datum ab – deshalb bekommen alle am selben Tag dasselbe Rätsel, und das Archiv kann jeden vergangenen Tag exakt wiederherstellen. Die Details erklärt der Beitrag <a href="/wie-unsere-raetsel-entstehen.html">Wie unsere Rätsel entstehen</a>.</p>
 <h2>Deine Daten</h2><p>Fortschritt und Serien speichern wir nur in deinem Browser. Es gibt kein Konto und keine Bestenliste mit persönlichen Daten. Werbung und Statistik laufen nur mit deiner Einwilligung; Details in der <a href="/privacy.html">Datenschutzerklärung</a>.</p>
+<h2>Fehler oder Ideen?</h2><p>Hast du ein Rätsel gefunden, das sich nicht eindeutig lösen lässt, oder wünschst du dir eine neue Rätselart? Schreib uns – wir lesen jede Nachricht.</p>
 <h2>Kontakt</h2><p><a href="mailto:office@adstern.com">office@adstern.com</a></p>""")
     write("imprint.html", "page.html", title="Impressum | Rätsellotse", description="Impressum von Rätsellotse.", h1="Impressum", ads=False, robots="noindex,follow",
           body=f"""<h2>Medieninhaber und Herausgeber</h2><p>{LEGAL_ADDR}</p>
