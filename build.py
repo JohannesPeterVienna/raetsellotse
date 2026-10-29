@@ -4,10 +4,11 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 sys.path.insert(0, str(Path(__file__).parent))
 from content.articles import ARTICLES
+from content import gamepages as GP
 
 ROOT = Path(__file__).parent; OUT = ROOT / "docs"
-SITE = "https://raetsellotse.de"; V = "20261029b"; UPDATED = "Oktober 2026"
-NAV = [("/", "Heute"), ("/codeknacker.html", "Codeknacker"), ("/sudoku.html", "Sudoku"), ("/zielzahl.html", "Zielzahl"),
+SITE = "https://raetsellotse.de"; V = "20261029c"; UPDATED = "Oktober 2026"
+NAV = [("/", "Heute"), ("/codeknacker.html", "Codeknacker"), ("/sudoku.html", "Sudoku"), ("/zielzahl.html", "Zielzahl"), ("/nonogramm.html", "Nonogramm"),
        ("/sudoku-zum-ausdrucken-mittel.html", "Zum Ausdrucken"), ("/archiv.html", "Meine Statistik")]
 env = Environment(loader=FileSystemLoader(ROOT / "templates"), autoescape=True, trim_blocks=True, lstrip_blocks=True)
 PAGES = []
@@ -118,6 +119,11 @@ UI_SUDOKU = """<div class="daynav" data-daynav></div>
 <div class="pad" data-pad>""" + "".join(f'<button type="button" data-d="{d}">{d}</button>' for d in range(1, 10)) + \
 """<button type="button" class="wide" data-notes aria-pressed="false">Notizen</button><button type="button" class="wide" data-erase>Löschen</button><button type="button" class="wide" data-hint>Tipp</button></div>
 <p class="msg" data-msg aria-live="polite"></p><noscript><p>Für das Spiel wird JavaScript benötigt. <a href="/sudoku-zum-ausdrucken-mittel.html">Sudokus zum Ausdrucken</a></p></noscript>"""
+UI_NONO = """<div class="daynav" data-daynav></div>
+<label class="small no-print">Größe <select data-size><option value="5">5 × 5 (Einstieg)</option><option value="10">10 × 10</option><option value="15">15 × 15</option></select></label>
+<div class="ngrid-wrap"><div class="ngrid" data-ngrid role="grid" aria-label="Nonogramm"></div></div>
+<div class="pad"><button type="button" class="wide" data-mode="1" aria-pressed="true">■ Füllen</button><button type="button" class="wide" data-mode="2" aria-pressed="false">✕ Kreuz</button><button type="button" class="wide" data-ncheck>Prüfen</button><button type="button" class="wide" data-nhint>Tipp</button><button type="button" class="wide" data-nreset>Neu beginnen</button></div>
+<p class="msg" data-msg aria-live="polite"></p><noscript><p>Für das Spiel wird JavaScript benötigt.</p></noscript>"""
 UI_ZIEL = """<div class="daynav" data-daynav></div>
 <div class="small muted">Zielzahl</div><div class="target" data-target>…</div>
 <div class="tiles" data-nums aria-label="Verfügbare Zahlen – antippen zum Einfügen"></div>
@@ -131,8 +137,8 @@ def main():
     (OUT / "assets").mkdir(parents=True)
     for f in (ROOT / "assets").iterdir(): shutil.copy(f, OUT / "assets" / f.name)
 
-    write("index.html", "home.html", title="Rätsellotse – tägliche Rätsel: Codeknacker, Sudoku & Zielzahl",
-          description="Jeden Tag drei neue Logikrätsel: Codeknacker, Sudoku in drei Stufen und Zielzahl. Kostenlos, ohne Anmeldung, mit Archiv und Serienzähler.",
+    write("index.html", "home.html", title="Rätsellotse – tägliche Rätsel: Sudoku, Nonogramm, Codeknacker & Zielzahl",
+          description="Jeden Tag neue Logikrätsel: Sudoku in drei Stufen, Nonogramm, Codeknacker und Zielzahl. Kostenlos, ohne Anmeldung, mit Archiv, Statistik und erklärten Tipps.",
           articles=ARTICLES, priority=1.0, active="/",
           jsonld=[{"@context": "https://schema.org", "@type": "WebSite", "name": "Rätsellotse", "url": SITE + "/", "inLanguage": "de"}])
 
@@ -153,6 +159,12 @@ def main():
          UI_ZIEL, ["zielzahl-tipps"],
          "<h2>So rechnest du</h2><p>Tippe die Zahlen an oder schreib die Rechnung direkt ins Feld, zum Beispiel (75 + 25) × 6 − 9. Klammern sind erlaubt, Malpunkt und Doppelpunkt ebenfalls. Kommst du nicht weiter, zeigt „Lösung zeigen“ einen möglichen Weg.</p><p>Strategien für schnelles Kopfrechnen findest du in den <a href='/zielzahl-tipps.html'>Zielzahl-Tipps</a>.</p>"),
     ]
+    games.append(("nonogramm", "Nonogramm", "Nonogramm online – tägliches Malrätsel (Picross) in drei Größen",
+         "Jeden Tag ein neues Nonogramm online lösen: 5×5, 10×10 oder 15×15, eindeutig und ohne Raten lösbar, mit erklärten Tipps – kostenlos.",
+         "Fülle die Felder so, dass die Zahlen am Rand stimmen – und ein Bild entsteht. Jeden Tag neu, garantiert ohne Raten lösbar.",
+         UI_NONO, ["nonogramm-anleitung", "wie-unsere-raetsel-entstehen"], ""))
+    BODY = {"codeknacker": GP.CODE, "sudoku": GP.SUDOKU, "zielzahl": GP.ZIEL, "nonogramm": GP.NONO}
+    games = [(g[0], g[1], g[2], g[3], g[4], g[5], g[6] + (["wie-unsere-raetsel-entstehen"] if g[0] != "nonogramm" else []), BODY[g[0]]) for g in games]
     for slug, name, title, desc, lead, ui, rel, body in games:
         crumbs = [("/", "Rätsellotse"), (f"/{slug}.html", name)]
         ld = [crumbs_ld(crumbs), {"@context": "https://schema.org", "@type": "WebApplication", "name": f"{name} – Rätsellotse", "url": f"{SITE}/{slug}.html",
@@ -188,13 +200,13 @@ def main():
     write("archiv.html", "page.html", title="Meine Statistik & Rätsel-Archiv | Rätsellotse", description="Deine Serien, Erfolgsquoten und alle Rätsel der letzten 30 Tage zum Nachspielen.",
           h1="Meine Statistik & Archiv", lead="Serien, Quoten und die Rätsel der letzten 30 Tage – verpasste Tage einfach nachspielen.", ads=False, robots="noindex,follow",
           body="""<section data-game="archiv"><div class="stats" data-stats><p class="muted">Statistik wird geladen …</p></div>
-<h2>Die letzten 30 Tage</h2><p class="small muted">✓ gelöst · ◐ begonnen · ✗ nicht gelöst · – noch offen. Antippen zum (Nach-)Spielen. Sudoku: leicht, mittel, schwer.</p>
-<div class="scroll"><table class="tbl arch"><thead><tr><th scope="col">Tag</th><th scope="col">Code</th><th scope="col">Sudoku</th><th scope="col">Ziel</th></tr></thead><tbody data-days></tbody></table></div>
+<h2>Die letzten 30 Tage</h2><p class="small muted">✓ gelöst · ◐ begonnen · ✗ nicht gelöst · – noch offen. Antippen zum (Nach-)Spielen. Sudoku: leicht, mittel, schwer · Nonogramm: 10 × 10.</p>
+<div class="scroll"><table class="tbl arch"><thead><tr><th scope="col">Tag</th><th scope="col">Code</th><th scope="col">Sudoku</th><th scope="col">Ziel</th><th scope="col">Nono</th></tr></thead><tbody data-days></tbody></table></div>
 <p class="small muted" style="margin-top:18px">Alle Werte stehen nur in deinem Browser (lokaler Speicher) und werden nicht übertragen. Auf einem anderen Gerät beginnst du von vorn. <button type="button" class="linkbtn" data-reset>Statistik zurücksetzen</button></p></section>""")
 
     write("about.html", "page.html", title="Über Rätsellotse", description="Wer hinter Rätsellotse steht und wie die Rätsel entstehen.",
           h1="Über Rätsellotse", lead="Täglich frische Rätsel – fair, eindeutig lösbar und ohne Anmeldung.", priority=0.3,
-          body="""<p>Rätsellotse wird von AdStern in Wien betrieben. Jeden Tag erscheinen drei neue Rätsel, für alle Spielerinnen und Spieler dieselben.</p>
+          body="""<p>Rätsellotse wird von AdStern in Wien betrieben. Jeden Tag erscheinen neue Rätsel – Codeknacker, Sudoku in drei Stufen, Zielzahl und Nonogramm in drei Größen –, für alle Spielerinnen und Spieler dieselben.</p>
 <h2>Wie die Rätsel entstehen</h2><p>Die Rätsel werden von einem Programm erzeugt und automatisch geprüft: Jedes Sudoku hat genau eine Lösung, leichte und mittlere Sudokus lassen sich ohne fortgeschrittene Techniken lösen, und jede Zielzahl ist nachweislich erreichbar. Der Code und die Zahlen eines Tages hängen nur vom Datum ab.</p>
 <h2>Deine Daten</h2><p>Fortschritt und Serien speichern wir nur in deinem Browser. Es gibt kein Konto und keine Bestenliste mit persönlichen Daten. Werbung und Statistik laufen nur mit deiner Einwilligung; Details in der <a href="/privacy.html">Datenschutzerklärung</a>.</p>
 <h2>Kontakt</h2><p><a href="mailto:office@adstern.com">office@adstern.com</a></p>""")

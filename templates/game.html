@@ -5,7 +5,7 @@
   <div>
     <h1>{{ h1 }}</h1><p class="lead">{{ lead }}</p>
     <section class="game" data-game="{{ game }}">{{ ui | safe }}</section>
-    <nav class="more no-print" aria-label="Weiterspielen"><span class="small muted">Weiterspielen:</span>{% for href, label in [("/codeknacker.html","Codeknacker"),("/sudoku.html","Sudoku"),("/zielzahl.html","Zielzahl")] if href != "/" ~ game ~ ".html" %}<a class="btn ghost small" href="{{ href }}">{{ label }}</a>{% endfor %}<a class="btn ghost small" href="/archiv.html">Meine Statistik</a></nav>
+    <nav class="more no-print" aria-label="Weiterspielen"><span class="small muted">Weiterspielen:</span>{% for href, label in [("/codeknacker.html","Codeknacker"),("/sudoku.html","Sudoku"),("/zielzahl.html","Zielzahl"),("/nonogramm.html","Nonogramm")] if href != "/" ~ game ~ ".html" %}<a class="btn ghost small" href="{{ href }}">{{ label }}</a>{% endfor %}<a class="btn ghost small" href="/archiv.html">Meine Statistik</a></nav>
     {{ m.ad("rect") }}
     <div class="prose">{{ body | safe }}</div>
     {% if related %}<h2>Passend dazu</h2><ul class="cards">{% for a in related %}<li><a href="/{{ a.slug }}.html"><strong>{{ a.title }}</strong><span>{{ a.teaser }}</span></a></li>{% endfor %}</ul>{% endif %}

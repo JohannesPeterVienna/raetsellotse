@@ -80,4 +80,49 @@ ARTICLES = [
 <p><a href="/zielzahl.html">Zur heutigen Zielzahl</a></p>
 """,
 },
+{
+"slug": "nonogramm-anleitung",
+"title": "Nonogramme lösen: Anleitung und Strategien",
+"teaser": "Überlappung, Ränder, Kreuze – so knackst du jedes Malrätsel ohne Raten.",
+"description": "Nonogramme lösen lernen: Regeln, die Überlappungs-Methode, Randtechnik, Lücken ausschließen und ein Schritt-für-Schritt-Beispiel.",
+"body": """
+<p>Bei einem Nonogramm verraten Zahlen am Rand, wie viele zusammenhängende Felder in jeder Zeile und Spalte gefüllt sind. Aus diesen Angaben entsteht Feld für Feld ein Bild. Ein gutes Nonogramm lässt sich vollständig mit Logik lösen – man muss nie raten.</p>
+<h2>1. Überlappung: der Einstieg</h2>
+<p>Schiebe einen Block gedanklich so weit wie möglich nach links und so weit wie möglich nach rechts. Felder, die in beiden Lagen gefüllt sind, sind sicher gefüllt. In einer Zeile mit 10 Feldern und der Angabe 7 überlappen die Lagen 1–7 und 4–10 in den Feldern 4 bis 7.</p>
+<p>Das funktioniert auch mit mehreren Blöcken: Bei „4 3“ in 10 Feldern liegen die Blöcke ganz links bei 1–4 und 6–8, ganz rechts bei 3–6 und 8–10. Der erste Block überlappt in den Feldern 3–4, der zweite in Feld 8.</p>
+<div class="example"><strong>Faustregel:</strong> Ist die Summe aller Blöcke plus der Lücken dazwischen größer als die halbe Zeilenlänge, bringt die Überlappung sichere Felder.</div>
+<h2>2. Kreuze setzen</h2>
+<p>Genauso wichtig wie gefüllte Felder sind Felder, die sicher leer bleiben. Ist eine Zeile vollständig, kommen in alle übrigen Felder Kreuze. Und wenn ein Block schon seine volle Länge erreicht hat, sind die Felder direkt davor und danach leer.</p>
+<h2>3. Vom Rand aus denken</h2>
+<p>Ist das erste Feld einer Zeile gefüllt, muss dort der erste Block beginnen. Bei der Angabe „3 …“ sind dann die Felder 1 bis 3 gefüllt und Feld 4 leer. Gefüllte Felder nahe am Rand begrenzen außerdem, wie weit ein Block reichen kann.</p>
+<h2>4. Zu kleine Lücken ausschließen</h2>
+<p>Liegen zwischen zwei Kreuzen nur zwei freie Felder, die Zeile enthält aber nur Blöcke ab drei, bleibt diese Lücke leer. Gerade in späteren Phasen räumt diese Technik viele Felder ab.</p>
+<h2>5. Zwischen Zeilen und Spalten wechseln</h2>
+<p>Jede neue Markierung in einer Zeile gibt einer Spalte neue Information – und umgekehrt. Wer konsequent hin und her wechselt, kommt meist ohne komplizierte Techniken bis zum Ende. Genau so arbeitet auch unser Prüfprogramm: Es löst jedes Rätsel nur mit Zeile-für-Zeile-Logik, bevor es veröffentlicht wird.</p>
+<h2>Woher Nonogramme kommen</h2>
+<p>Die Rätselform entstand Ende der 1980er-Jahre in Japan und wurde unter Namen wie „Picross“ oder „Griddler“ weltweit bekannt. Im Deutschen heißen sie oft „Japanische Rätsel“ oder „Malen nach Zahlen“ für Logiker.</p>
+<p><a href="/nonogramm.html">Zum heutigen Nonogramm</a></p>
+""",
+},
+{
+"slug": "wie-unsere-raetsel-entstehen",
+"title": "Wie unsere Rätsel entstehen – und warum sie fair sind",
+"teaser": "Ein Blick hinter die Kulissen: Zufall mit Datum, Eindeutigkeit und Prüfprogramme.",
+"description": "Wie Rätsellotse täglich neue Sudokus, Nonogramme, Codes und Zielzahlen erzeugt – und wie wir sicherstellen, dass jedes Rätsel eindeutig und ohne Raten lösbar ist.",
+"body": """
+<p>Jeden Tag erscheinen auf Rätsellotse neue Rätsel – für alle dieselben. Niemand tippt sie von Hand ab, und trotzdem ist keines davon zufällig unfair. Hier erklären wir, wie das funktioniert.</p>
+<h2>Zufall, der vom Datum abhängt</h2>
+<p>Unsere Rätsel werden von einem Programm erzeugt, das einen Zufallsgenerator verwendet. Der Startwert dieses Generators ist das Datum (nach Wiener Zeit). Dadurch bekommen alle, die am selben Tag spielen, exakt dasselbe Rätsel – ohne dass ein Server Rätsel verteilen oder Spielstände speichern muss. Das ist auch der Grund, warum das Archiv funktioniert: Das Rätsel vom 3. März lässt sich jederzeit genau so wieder erzeugen.</p>
+<h2>Sudoku: genau eine Lösung</h2>
+<p>Ein Sudoku entsteht in zwei Schritten. Zuerst füllt das Programm ein vollständiges, gültiges Gitter. Dann entfernt es nach und nach Ziffern. Nach jedem Schritt prüft ein Löser, ob das Rätsel noch <strong>genau eine</strong> Lösung hat. Hätte es zwei, wird die Ziffer zurückgelegt. Für die Stufen leicht und mittel prüfen wir zusätzlich, ob sich das Rätsel allein mit den zwei einfachsten Techniken lösen lässt.</p>
+<h2>Nonogramm: lösbar ohne Raten</h2>
+<p>Für Nonogramme erzeugt das Programm ein zufälliges Muster und glättet es, damit zusammenhängende Formen statt Rauschen entstehen. Dann versucht ein Löser, das Rätsel nur mit Zeile-für-Zeile-Logik zu knacken. Gelingt das nicht vollständig, wird das Muster verworfen und ein neues erzeugt. Erst wenn ein Rätsel diesen Test besteht, wird es zum Tagesrätsel.</p>
+<h2>Zielzahl: garantiert erreichbar</h2>
+<p>Bei der Zielzahl gehen wir den umgekehrten Weg: Das Programm verrechnet die sechs Zahlen des Tages selbst zufällig mit den vier Grundrechenarten. Das Ergebnis wird zur Zielzahl – sie ist also nachweislich erreichbar. Oft gibt es zusätzlich ganz andere, elegantere Wege.</p>
+<h2>Codeknacker: immer knackbar</h2>
+<p>Beim Codeknacker gibt es 360 mögliche Codes aus vier verschiedenen Ziffern zwischen 1 und 6. Mit einer guten Strategie lässt sich jeder davon in deutlich weniger als zehn Versuchen finden – der Spielraum reicht also auch für Umwege.</p>
+<h2>Was wir nicht tun</h2>
+<p>Es gibt kein Konto, keine Bestenliste und keine Spielstände auf unseren Servern. Fortschritt und Statistik bleiben in deinem Browser. Werbung und Reichweitenmessung laufen nur, wenn du einwilligst.</p>
+""",
+},
 ]

@@ -262,6 +262,132 @@
     if (st.expr) check();
   }
 
+  /* ================= Nonogramm ================= */
+  const runs = line => { const r = []; let n = 0; line.forEach(v => { if (v === 1) n++; else if (n) { r.push(n); n = 0; } }); if (n) r.push(n); return r.length ? r : [0]; };
+  // Linienlöser: alle Platzierungen der Blöcke, die zu den bekannten Feldern passen (-1 unbekannt, 0 leer, 1 voll)
+  function lineSolve(clue, line) {
+    const n = line.length, blocks = clue[0] === 0 ? [] : clue;
+    const can1 = Array(n).fill(false), can0 = Array(n).fill(false); let any = false;
+    const cur = Array(n).fill(0);
+    (function place(b, start) {
+      if (b === blocks.length) {
+        for (let i = start; i < n; i++) if (line[i] === 1) return;
+        for (let i = 0; i < n; i++) { if (cur[i] || false) can1[i] = true; else can0[i] = true; }
+        any = true; return;
+      }
+      const len = blocks[b], rest = blocks.slice(b + 1).reduce((a, x) => a + x + 1, 0);
+      for (let p = start; p + len + rest <= n; p++) {
+        let ok = true;
+        for (let i = start; i < p; i++) if (line[i] === 1) { ok = false; break; }
+        if (!ok) break;
+        for (let i = p; i < p + len; i++) if (line[i] === 0) { ok = false; break; }
+        if (!ok) continue;
+        if (p + len < n && line[p + len] === 1) continue;
+        for (let i = p; i < p + len; i++) cur[i] = 1;
+        place(b + 1, p + len + 1);
+        for (let i = p; i < p + len; i++) cur[i] = 0;
+      }
+    })(0, 0);
+    if (!any) return null;
+    return line.map((v, i) => v !== -1 ? v : can1[i] && !can0[i] ? 1 : can0[i] && !can1[i] ? 0 : -1);
+  }
+  function nonoSolve(rc, cc, n, g = Array(n * n).fill(-1)) {
+    g = g.slice(); let changed = true, steps = 0;
+    while (changed) {
+      changed = false; steps++;
+      for (let r = 0; r < n; r++) { const L = g.slice(r * n, r * n + n), o = lineSolve(rc[r], L); if (!o) return null; o.forEach((v, c) => { if (v !== L[c]) { g[r * n + c] = v; changed = true; } }); }
+      for (let c = 0; c < n; c++) { const L = Array.from({ length: n }, (_, r) => g[r * n + c]), o = lineSolve(cc[c], L); if (!o) return null; o.forEach((v, r) => { if (v !== L[r]) { g[r * n + c] = v; changed = true; } }); }
+    }
+    return { g, solved: !g.includes(-1), steps };
+  }
+  function makeNono(seed, n) {
+    const r = rng(seed);
+    for (let k = 0; k < 400; k++) {
+      let g = Array.from({ length: n * n }, () => r() < .56 ? 1 : 0);
+      // einmal glätten: Formen statt Rauschen
+      g = g.map((v, i) => { const y = Math.floor(i / n), x = i % n; let s = 0, c = 0; for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { const yy = y + dy, xx = x + dx; if (yy >= 0 && yy < n && xx >= 0 && xx < n) { s += g[yy * n + xx]; c++; } } return s * 2 > c ? 1 : (s * 2 === c ? v : 0); });
+      const filled = g.reduce((a, b) => a + b, 0);
+      if (filled < n * n * .38 || filled > n * n * .68) continue;
+      const rc = [...Array(n)].map((_, y) => runs(g.slice(y * n, y * n + n))), cc = [...Array(n)].map((_, x) => runs(Array.from({ length: n }, (_, y) => g[y * n + x])));
+      const s = nonoSolve(rc, cc, n);
+      if (s && s.solved && s.steps >= 3) return { sol: g, rc, cc, n };
+    }
+    return null;
+  }
+  function nonogramm(root) {
+    const day = dayFromUrl(); dayNav(root, day);
+    const sizeSel = $("[data-size]", root);
+    let n = +(new URLSearchParams(location.search).get("groesse") || store.get("rl-nono-size", 10)); if (![5, 10, 15].includes(n)) n = 10;
+    sizeSel.value = n;
+    const gridEl = $("[data-ngrid]", root), msg = $("[data-msg]", root);
+    let P, KEY, st, mode = 1, painting = null;
+    function load() {
+      msg.textContent = "Rätsel wird erstellt …";
+      setTimeout(() => {
+        P = makeNono(hash(`nono${day}${n}`), n); KEY = `rl-nono-${day}-${n}`;
+        st = store.get(KEY, { g: Array(n * n).fill(0), done: false, hints: 0 });
+        if (st.g.length !== n * n) st.g = Array(n * n).fill(0);
+        msg.textContent = ""; render();
+      }, 10);
+    }
+    const lineOk = (vals, clue) => runs(vals.map(v => v === 1 ? 1 : 0)).join() === clue.join();
+    function render() {
+      const { rc, cc } = P; let h = `<div class="nc corner"></div>`;
+      cc.forEach((c, x) => { const ok = lineOk(Array.from({ length: n }, (_, y) => st.g[y * n + x]), c); h += `<div class="nc col${ok ? " ok" : ""}${(x + 1) % 5 === 0 && x < n - 1 ? " b5" : ""}">${c.map(v => `<span>${v}</span>`).join("")}</div>`; });
+      for (let y = 0; y < n; y++) {
+        const ok = lineOk(st.g.slice(y * n, y * n + n), rc[y]);
+        h += `<div class="nc row${ok ? " ok" : ""}${(y + 1) % 5 === 0 && y < n - 1 ? " bb5" : ""}">${rc[y].map(v => `<span>${v}</span>`).join("")}</div>`;
+        for (let x = 0; x < n; x++) { const v = st.g[y * n + x]; h += `<button type="button" class="nx${v === 1 ? " on" : v === 2 ? " x" : ""}${(x + 1) % 5 === 0 && x < n - 1 ? " b5" : ""}${(y + 1) % 5 === 0 && y < n - 1 ? " bb5" : ""}" data-i="${y * n + x}" aria-label="Zeile ${y + 1}, Spalte ${x + 1}: ${v === 1 ? "gefüllt" : v === 2 ? "Kreuz" : "leer"}"></button>`; }
+      }
+      const wrapW = gridEl.parentElement.clientWidth || 320, clueW = Math.max(...rc.map(c => c.join(" ").length)) * 8 + 14;
+      gridEl.style.setProperty("--n", n); gridEl.style.setProperty("--c", Math.max(16, Math.min(34, Math.floor((wrapW - clueW) / n))) + "px"); gridEl.innerHTML = h;
+      $$("[data-mode]", root).forEach(b => b.setAttribute("aria-pressed", +b.dataset.mode === mode));
+      if (st.done) {
+        msg.innerHTML = `<strong>Gelöst!</strong> ${st.hints ? `Mit ${st.hints} Tipp${st.hints > 1 ? "s" : ""}.` : "Ohne Tipps."} <button class="btn small" type="button" data-share>Ergebnis teilen</button>`;
+        $("[data-share]", msg).onclick = e => share(`Rätsellotse Nonogramm ${fmtDate(day)} (${n}×${n}) gelöst${st.hints ? ` mit ${st.hints} Tipp(s)` : " ohne Tipps"} ✅\nraetsellotse.de/nonogramm.html`, e.target);
+      }
+    }
+    function checkDone() {
+      if (st.done) return;
+      if (P.sol.every((v, i) => (v === 1) === (st.g[i] === 1))) { st.done = true; st.g = st.g.map(v => v === 1 ? 1 : 2); if (day === todayVienna()) streak("nono", day, true); }
+    }
+    function set(i, v) { if (st.done || st.g[i] === v) return; st.g[i] = v; checkDone(); store.set(KEY, st); render(); }
+    gridEl.addEventListener("pointerdown", e => {
+      const b = e.target.closest(".nx"); if (!b || st.done) return; e.preventDefault();
+      const i = +b.dataset.i; painting = st.g[i] === mode ? 0 : mode; set(i, painting);
+    });
+    gridEl.addEventListener("pointermove", e => {
+      if (painting === null) return; const el = document.elementFromPoint(e.clientX, e.clientY); const b = el && el.closest && el.closest(".nx");
+      if (b && gridEl.contains(b)) set(+b.dataset.i, painting);
+    });
+    window.addEventListener("pointerup", () => { painting = null; });
+    gridEl.addEventListener("keydown", e => { const b = e.target.closest(".nx"); if (b && (e.key === " " || e.key === "Enter")) { e.preventDefault(); const i = +b.dataset.i; set(i, st.g[i] === mode ? 0 : mode); $(`[data-i="${i}"]`, gridEl)?.focus(); } });
+    $$("[data-mode]", root).forEach(b => b.addEventListener("click", () => { mode = +b.dataset.mode; render(); }));
+    $("[data-ncheck]", root).addEventListener("click", () => {
+      const wrong = st.g.map((v, i) => (v === 1 && P.sol[i] === 0) || (v === 2 && P.sol[i] === 1) ? i : -1).filter(i => i >= 0);
+      if (!wrong.length) { msg.textContent = "Bisher alles richtig."; return; }
+      wrong.forEach(i => $(`[data-i="${i}"]`, gridEl)?.classList.add("bad"));
+      msg.textContent = `${wrong.length} ${wrong.length === 1 ? "Feld ist" : "Felder sind"} falsch markiert (rot umrandet).`;
+    });
+    $("[data-nhint]", root).addEventListener("click", () => {
+      if (st.done) return;
+      const known = st.g.map((v, i) => v === 1 && P.sol[i] === 1 ? 1 : v === 2 && P.sol[i] === 0 ? 0 : -1);
+      const wrong = st.g.findIndex((v, i) => (v === 1 && P.sol[i] === 0) || (v === 2 && P.sol[i] === 1));
+      if (wrong >= 0) { $(`[data-i="${wrong}"]`, gridEl)?.classList.add("bad"); msg.textContent = `Zuerst korrigieren: Zeile ${Math.floor(wrong / n) + 1}, Spalte ${wrong % n + 1} ist falsch markiert.`; return; }
+      for (let pass = 0; pass < 2; pass++) for (let k = 0; k < n; k++) {
+        const idx = pass === 0 ? [...Array(n)].map((_, c) => k * n + c) : [...Array(n)].map((_, r) => r * n + k);
+        const L = idx.map(i => known[i]), o = lineSolve(pass === 0 ? P.rc[k] : P.cc[k], L); if (!o) continue;
+        const j = o.findIndex((v, q) => v !== -1 && L[q] === -1);
+        if (j >= 0) { const i = idx[j]; st.hints++; st.g[i] = o[j] === 1 ? 1 : 2; checkDone(); store.set(KEY, st); render(); $(`[data-i="${i}"]`, gridEl)?.classList.add("hint");
+          if (!st.done) msg.textContent = `${pass === 0 ? "Zeile" : "Spalte"} ${k + 1} (Hinweis ${(pass === 0 ? P.rc[k] : P.cc[k]).join(" ")}): Dieses Feld ist auf jeden Fall ${o[j] === 1 ? "gefüllt" : "leer"} – egal, wie man die Blöcke verschiebt.`; return; }
+      }
+      msg.textContent = "Kein weiterer Schritt gefunden – prüfe deine Markierungen.";
+    });
+    $("[data-nreset]", root).addEventListener("click", () => { if (st.done) return; st.g = Array(n * n).fill(0); store.set(KEY, st); msg.textContent = ""; render(); });
+    sizeSel.addEventListener("change", () => { n = +sizeSel.value; store.set("rl-nono-size", n); load(); });
+    load();
+  }
+
   /* ================= Statistik & Archiv (nur aus dem eigenen Browser) ================= */
   function archiv(root) {
     const t = todayVienna(), days = [];
@@ -283,20 +409,23 @@
       const cs = c && (c.guesses?.length) ? { done: c.done, ok: c.done && (c.won ?? c.guesses.length < 10) } : null;
       const zs = z && (z.expr || z.done) ? { done: z.done || z.shown, ok: z.done && !z.shown } : null;
       const su = ["leicht", "mittel", "schwer"].map(l => { const x = store.get(`rl-sudoku-${d}-${l}`, null); return icon(x && (x.done || x.t || (x.v && x.v.some((v, i) => v))) ? { done: x.done, ok: x.done } : null, `/sudoku.html?tag=${d}&stufe=${l}`, `Sudoku ${l} ${fmtDate(d)}`); }).join("");
-      return `<tr><th scope="row">${fmtDate(d)}${d === t ? " <span class='small muted'>heute</span>" : ""}</th><td>${icon(cs, `/codeknacker.html?tag=${d}`, `Codeknacker ${fmtDate(d)}`)}</td><td class="su">${su}</td><td>${icon(zs, `/zielzahl.html?tag=${d}`, `Zielzahl ${fmtDate(d)}`)}</td></tr>`;
+      const nn = store.get(`rl-nono-${d}-10`, null), ns = nn && (nn.done || nn.g?.some(v => v)) ? { done: nn.done, ok: nn.done } : null;
+      return `<tr><th scope="row">${fmtDate(d)}${d === t ? " <span class='small muted'>heute</span>" : ""}</th><td>${icon(cs, `/codeknacker.html?tag=${d}`, `Codeknacker ${fmtDate(d)}`)}</td><td class="su">${su}</td><td>${icon(zs, `/zielzahl.html?tag=${d}`, `Zielzahl ${fmtDate(d)}`)}</td><td>${icon(ns, `/nonogramm.html?tag=${d}&groesse=10`, `Nonogramm ${fmtDate(d)}`)}</td></tr>`;
     }).join("");
     const sd = sud.filter(x => x.done), sp = sud.filter(x => x.done || x.t), zp = zie.filter(x => x.expr || x.done), zw = zie.filter(x => x.done && !x.shown);
-    const cs = sr("code"), zs = sr("ziel");
+    const cs = sr("code"), zs = sr("ziel"), nsr = sr("nono");
+    const nono = keys.filter(k => /^rl-nono-\d/.test(k)).map(k => store.get(k, {})), np = nono.filter(x => x.done || x.g?.some(v => v)), nd = nono.filter(x => x.done);
     $("[data-stats]", root).innerHTML =
       card("Codeknacker", [["gespielt", code.length], ["geknackt", q(codeWon.length, code.length)], ["Serie", cs.n], ["Rekord", cs.best]], hist) +
       card("Sudoku", [["begonnen", sp.length], ["gelöst", sd.length], ["ohne Tipp", sd.filter(x => !x.hints).length], ["Quote", q(sd.length, sp.length)]]) +
-      card("Zielzahl", [["gespielt", zp.length], ["getroffen", q(zw.length, zp.length)], ["Serie", zs.n], ["Rekord", zs.best]]);
+      card("Zielzahl", [["gespielt", zp.length], ["getroffen", q(zw.length, zp.length)], ["Serie", zs.n], ["Rekord", zs.best]]) +
+      card("Nonogramm", [["begonnen", np.length], ["gelöst", nd.length], ["Serie", nsr.n], ["Rekord", nsr.best]]);
     $("[data-days]", root).innerHTML = rows;
     const reset = $("[data-reset]", root);
     if (reset) reset.addEventListener("click", () => { if (!reset.dataset.armed) { reset.dataset.armed = 1; reset.textContent = "Wirklich alles löschen? Nochmal tippen"; return; } keys.filter(k => k.startsWith("rl-")).forEach(k => { try { localStorage.removeItem(k); } catch {} }); location.reload(); });
   }
 
-  const games = { codeknacker, sudoku, zielzahl, archiv };
+  const games = { codeknacker, sudoku, zielzahl, nonogramm, archiv };
   const init = () => $$("[data-game]").forEach(el => games[el.dataset.game]?.(el));
   document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", init) : init();
 })();

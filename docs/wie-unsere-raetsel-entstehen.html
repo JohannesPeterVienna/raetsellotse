@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wie unsere Rätsel entstehen – und warum sie fair sind | Rätsellotse</title>
+<meta name="description" content="Wie Rätsellotse täglich neue Sudokus, Nonogramme, Codes und Zielzahlen erzeugt – und wie wir sicherstellen, dass jedes Rätsel eindeutig und ohne Raten lösbar ist.">
+<link rel="canonical" href="https://raetsellotse.de/wie-unsere-raetsel-entstehen.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Rätsellotse">
+<meta property="og:title" content="Wie unsere Rätsel entstehen – und warum sie fair sind | Rätsellotse">
+<meta property="og:description" content="Wie Rätsellotse täglich neue Sudokus, Nonogramme, Codes und Zielzahlen erzeugt – und wie wir sicherstellen, dass jedes Rätsel eindeutig und ohne Raten lösbar ist.">
+<meta property="og:url" content="https://raetsellotse.de/wie-unsere-raetsel-entstehen.html">
+<meta property="og:locale" content="de_AT">
+<meta name="theme-color" content="#21786C">
+<link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/style.css?v=20261029c">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "item": "https://raetsellotse.de/", "name": "R\u00e4tsellotse", "position": 1}, {"@type": "ListItem", "item": "https://raetsellotse.de/wie-unsere-raetsel-entstehen.html", "name": "Wie unsere R\u00e4tsel entstehen \u2013 und warum sie fair sind", "position": 2}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "author": {"@type": "Organization", "name": "Redaktion R\u00e4tsellotse", "url": "https://raetsellotse.de/about.html"}, "dateModified": "2026-10-29", "datePublished": "2026-10-29", "description": "Wie R\u00e4tsellotse t\u00e4glich neue Sudokus, Nonogramme, Codes und Zielzahlen erzeugt \u2013 und wie wir sicherstellen, dass jedes R\u00e4tsel eindeutig und ohne Raten l\u00f6sbar ist.", "headline": "Wie unsere R\u00e4tsel entstehen \u2013 und warum sie fair sind", "inLanguage": "de", "publisher": {"@type": "Organization", "name": "AdStern"}}</script>
+<script src="/assets/consent.js?v=20261029c" defer></script><script src="/assets/games.js?v=20261029c" defer></script>
+</head>
+<body>
+<a class="skip" href="#inhalt">Zum Inhalt</a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.5" fill="#21786C"/><path d="M16 6v14" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M9 17a7 7 0 0 0 14 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="8.5" r="3.2" fill="#E8622A" stroke="#fff" stroke-width="1.6"/></svg>Rätsellotse</a>
+  <nav class="nav" aria-label="Hauptmenü">
+<a href="/">Heute</a><a href="/codeknacker.html">Codeknacker</a><a href="/sudoku.html">Sudoku</a><a href="/zielzahl.html">Zielzahl</a><a href="/nonogramm.html">Nonogramm</a><a href="/sudoku-zum-ausdrucken-mittel.html">Zum Ausdrucken</a><a href="/archiv.html">Meine Statistik</a>  </nav>
+</div></header>
+<main id="inhalt">
+<nav class="crumbs wrap" aria-label="Brotkrumen"><a href="/">Rätsellotse</a> › <span>Wie unsere Rätsel entstehen – und warum sie fair sind</span></nav><div class="wrap layout" style="padding-top:28px">
+  <article>
+    <h1>Wie unsere Rätsel entstehen – und warum sie fair sind</h1><p class="lead">Ein Blick hinter die Kulissen: Zufall mit Datum, Eindeutigkeit und Prüfprogramme.</p><div class="ad ad--billboard" data-ad="billboard" aria-hidden="true"></div>    <div class="prose">
+<p>Jeden Tag erscheinen auf Rätsellotse neue Rätsel – für alle dieselben. Niemand tippt sie von Hand ab, und trotzdem ist keines davon zufällig unfair. Hier erklären wir, wie das funktioniert.</p>
+<h2>Zufall, der vom Datum abhängt</h2>
+<p>Unsere Rätsel werden von einem Programm erzeugt, das einen Zufallsgenerator verwendet. Der Startwert dieses Generators ist das Datum (nach Wiener Zeit). Dadurch bekommen alle, die am selben Tag spielen, exakt dasselbe Rätsel – ohne dass ein Server Rätsel verteilen oder Spielstände speichern muss. Das ist auch der Grund, warum das Archiv funktioniert: Das Rätsel vom 3. März lässt sich jederzeit genau so wieder erzeugen.</p>
+<h2>Sudoku: genau eine Lösung</h2>
+<p>Ein Sudoku entsteht in zwei Schritten. Zuerst füllt das Programm ein vollständiges, gültiges Gitter. Dann entfernt es nach und nach Ziffern. Nach jedem Schritt prüft ein Löser, ob das Rätsel noch <strong>genau eine</strong> Lösung hat. Hätte es zwei, wird die Ziffer zurückgelegt. Für die Stufen leicht und mittel prüfen wir zusätzlich, ob sich das Rätsel allein mit den zwei einfachsten Techniken lösen lässt.</p>
+<h2>Nonogramm: lösbar ohne Raten</h2>
+<p>Für Nonogramme erzeugt das Programm ein zufälliges Muster und glättet es, damit zusammenhängende Formen statt Rauschen entstehen. Dann versucht ein Löser, das Rätsel nur mit Zeile-für-Zeile-Logik zu knacken. Gelingt das nicht vollständig, wird das Muster verworfen und ein neues erzeugt. Erst wenn ein Rätsel diesen Test besteht, wird es zum Tagesrätsel.</p>
+<h2>Zielzahl: garantiert erreichbar</h2>
+<p>Bei der Zielzahl gehen wir den umgekehrten Weg: Das Programm verrechnet die sechs Zahlen des Tages selbst zufällig mit den vier Grundrechenarten. Das Ergebnis wird zur Zielzahl – sie ist also nachweislich erreichbar. Oft gibt es zusätzlich ganz andere, elegantere Wege.</p>
+<h2>Codeknacker: immer knackbar</h2>
+<p>Beim Codeknacker gibt es 360 mögliche Codes aus vier verschiedenen Ziffern zwischen 1 und 6. Mit einer guten Strategie lässt sich jeder davon in deutlich weniger als zehn Versuchen finden – der Spielraum reicht also auch für Umwege.</p>
+<h2>Was wir nicht tun</h2>
+<p>Es gibt kein Konto, keine Bestenliste und keine Spielstände auf unseren Servern. Fortschritt und Statistik bleiben in deinem Browser. Werbung und Reichweitenmessung laufen nur, wenn du einwilligst.</p>
+</div>
+<h2>Weiterlesen</h2><ul class="cards"><li><a href="/codeknacker-anleitung.html"><strong>Codeknacker: Regeln und Strategie</strong><span>Wie die Hinweise funktionieren und wie du den Code systematisch eingrenzt.</span></a></li><li><a href="/sudoku-strategien.html"><strong>Sudoku-Strategien: von einfach bis schwer</strong><span>Fünf Techniken, mit denen du fast jedes Sudoku ohne Raten löst.</span></a></li><li><a href="/sudoku-regeln-und-geschichte.html"><strong>Sudoku: Regeln, Herkunft und erstaunliche Zahlen</strong><span>Woher das Zahlenrätsel kommt und warum 17 eine magische Zahl ist.</span></a></li></ul>  </article>
+<aside class="side"><div class="box"><h3>Tagesrätsel</h3><ul><li><a href="/codeknacker.html">Codeknacker</a></li><li><a href="/sudoku.html">Sudoku</a></li><li><a href="/zielzahl.html">Zielzahl</a></li><li><a href="/nonogramm.html">Nonogramm</a></li><li><a href="/archiv.html">Meine Statistik</a></li></ul></div>
+<div class="box"><h3>Zum Ausdrucken</h3><ul><li><a href="/sudoku-zum-ausdrucken-leicht.html">Sudoku leicht</a></li><li><a href="/sudoku-zum-ausdrucken-mittel.html">Sudoku mittel</a></li><li><a href="/sudoku-zum-ausdrucken-schwer.html">Sudoku schwer</a></li></ul></div><div class="ad ad--half" data-ad="half" aria-hidden="true"></div></aside></div>
+</main>
+<footer class="foot"><div class="wrap">
+  <div>Rätsellotse – jeden Tag neue Logikrätsel: Sudoku, Nonogramm, Codeknacker und Zielzahl. Kostenlos und ohne Anmeldung.</div>
+  <nav aria-label="Rechtliches"><a href="/about.html">Über uns</a><a href="/imprint.html">Impressum</a><a href="/privacy.html">Datenschutz</a><button class="linkbtn" type="button" data-privacy-settings>Datenschutz-Einstellungen</button></nav>
+</div></footer>
+</body>
+</html>

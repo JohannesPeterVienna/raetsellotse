@@ -16,17 +16,17 @@
 <meta name="theme-color" content="#21786C">
 <link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/style.css?v=20261029b">
+<link rel="stylesheet" href="/assets/style.css?v=20261029c">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "item": "https://raetsellotse.de/", "name": "R\u00e4tsellotse", "position": 1}, {"@type": "ListItem", "item": "https://raetsellotse.de/codeknacker.html", "name": "Codeknacker", "position": 2}]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "applicationCategory": "GameApplication", "inLanguage": "de", "name": "Codeknacker \u2013 R\u00e4tsellotse", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "operatingSystem": "Web", "url": "https://raetsellotse.de/codeknacker.html"}</script>
-<script src="/assets/consent.js?v=20261029b" defer></script><script src="/assets/games.js?v=20261029b" defer></script>
+<script src="/assets/consent.js?v=20261029c" defer></script><script src="/assets/games.js?v=20261029c" defer></script>
 </head>
 <body>
 <a class="skip" href="#inhalt">Zum Inhalt</a>
 <header class="top"><div class="wrap">
   <a class="brand" href="/"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.5" fill="#21786C"/><path d="M16 6v14" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M9 17a7 7 0 0 0 14 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="8.5" r="3.2" fill="#E8622A" stroke="#fff" stroke-width="1.6"/></svg>Rätsellotse</a>
   <nav class="nav" aria-label="Hauptmenü">
-<a href="/">Heute</a><a href="/codeknacker.html" aria-current="page">Codeknacker</a><a href="/sudoku.html">Sudoku</a><a href="/zielzahl.html">Zielzahl</a><a href="/sudoku-zum-ausdrucken-mittel.html">Zum Ausdrucken</a><a href="/archiv.html">Meine Statistik</a>  </nav>
+<a href="/">Heute</a><a href="/codeknacker.html" aria-current="page">Codeknacker</a><a href="/sudoku.html">Sudoku</a><a href="/zielzahl.html">Zielzahl</a><a href="/nonogramm.html">Nonogramm</a><a href="/sudoku-zum-ausdrucken-mittel.html">Zum Ausdrucken</a><a href="/archiv.html">Meine Statistik</a>  </nav>
 </div></header>
 <main id="inhalt">
 <nav class="crumbs wrap" aria-label="Brotkrumen"><a href="/">Rätsellotse</a> › <span>Codeknacker</span></nav>
@@ -36,16 +36,32 @@
     <section class="game" data-game="codeknacker"><div class="daynav" data-daynav></div><div class="board" data-board></div>
 <div class="pad" data-pad><button type="button" data-d="1" aria-label="Ziffer 1">1</button><button type="button" data-d="2" aria-label="Ziffer 2">2</button><button type="button" data-d="3" aria-label="Ziffer 3">3</button><button type="button" data-d="4" aria-label="Ziffer 4">4</button><button type="button" data-d="5" aria-label="Ziffer 5">5</button><button type="button" data-d="6" aria-label="Ziffer 6">6</button><button type="button" class="wide" data-back>Löschen</button><button type="button" class="btn" data-ok>Prüfen</button></div>
 <p class="msg" data-msg aria-live="polite"></p><noscript><p>Für das Spiel wird JavaScript benötigt.</p></noscript></section>
-    <nav class="more no-print" aria-label="Weiterspielen"><span class="small muted">Weiterspielen:</span><a class="btn ghost small" href="/sudoku.html">Sudoku</a><a class="btn ghost small" href="/zielzahl.html">Zielzahl</a><a class="btn ghost small" href="/archiv.html">Meine Statistik</a></nav>
+    <nav class="more no-print" aria-label="Weiterspielen"><span class="small muted">Weiterspielen:</span><a class="btn ghost small" href="/sudoku.html">Sudoku</a><a class="btn ghost small" href="/zielzahl.html">Zielzahl</a><a class="btn ghost small" href="/nonogramm.html">Nonogramm</a><a class="btn ghost small" href="/archiv.html">Meine Statistik</a></nav>
     <div class="ad ad--rect" data-ad="rect" aria-hidden="true"></div>
-    <div class="prose"><h2>Kurz erklärt</h2><p>Tippe vier verschiedene Ziffern und drücke Prüfen – oder nutze die Tastatur (1–6, Enter, Rücktaste). Nach jedem Versuch zeigen die Punkte, wie nah du dran bist. Die ausführlichen Regeln und eine Strategie findest du in der <a href='/codeknacker-anleitung.html'>Anleitung</a>.</p><p>Jeden Tag gibt es einen neuen Code, für alle derselbe. Ältere Rätsel öffnest du über das Archiv oben im Spielfeld.</p></div>
-<h2>Passend dazu</h2><ul class="cards"><li><a href="/codeknacker-anleitung.html"><strong>Codeknacker: Regeln und Strategie</strong><span>Wie die Hinweise funktionieren und wie du den Code systematisch eingrenzt.</span></a></li></ul>  </div>
-  <aside class="side"><div class="box"><h3>Tagesrätsel</h3><ul><li><a href="/codeknacker.html">Codeknacker</a></li><li><a href="/sudoku.html">Sudoku</a></li><li><a href="/zielzahl.html">Zielzahl</a></li></ul></div>
+    <div class="prose">
+<h2>So spielst du Codeknacker</h2>
+<p>Gesucht ist ein Code aus vier <strong>verschiedenen</strong> Ziffern von 1 bis 6. Tippe vier Ziffern an und drücke „Prüfen“ – oder nutze die Tastatur: Ziffern 1 bis 6, Enter zum Prüfen, Rücktaste zum Löschen. Nach jedem Versuch zeigen dir Punkte, wie nah du dran bist:</p>
+<ul><li><strong>Oranger Punkt:</strong> eine Ziffer stimmt und steht an der richtigen Stelle.</li>
+<li><strong>Weißer Punkt mit orangem Rand:</strong> eine Ziffer kommt vor, steht aber woanders.</li>
+<li><strong>Grauer Punkt:</strong> eine Ziffer kommt im Code nicht vor.</li></ul>
+<p>Welche Ziffer welchen Punkt bekommt, verraten die Hinweise nicht – genau das macht den Reiz aus. Du hast zehn Versuche.</p>
+<h2>Drei Tipps für den Einstieg</h2>
+<ol><li><strong>Starte breit:</strong> 1 2 3 4 als erster Versuch zeigt, wie viele dieser vier Ziffern dabei sind. Da genau zwei der sechs Ziffern fehlen, sind es mindestens zwei.</li>
+<li><strong>Ändere wenig auf einmal:</strong> Tauschst du nur eine Ziffer aus, erkennst du an der Veränderung der Punkte genau, was sie bewirkt hat.</li>
+<li><strong>Spiele nur mögliche Codes:</strong> Jeder neue Versuch sollte zu allen bisherigen Hinweisen passen. Dann kann er selbst schon die Lösung sein.</li></ol>
+<p>Die vollständige Strategie mit Rechenbeispiel steht in der <a href="/codeknacker-anleitung.html">Codeknacker-Anleitung</a>.</p>
+<h2>Häufige Fragen</h2>
+<p><strong>Ist der Code für alle gleich?</strong> Ja. Jeden Tag um Mitternacht (Wiener Zeit) gibt es einen neuen Code, der für alle Spielerinnen und Spieler gilt. So kannst du dein Ergebnis teilen, ohne die Lösung zu verraten – der Teilen-Knopf verschickt nur die Punkte.</p>
+<p><strong>Kann ich frühere Tage nachspielen?</strong> Ja, über das Datumsfeld oben im Spiel oder in deiner <a href="/archiv.html">Statistik</a>. Nachgespielte Tage zählen allerdings nicht für die Serie.</p>
+<p><strong>Wie viele Versuche braucht man im Schnitt?</strong> Mit systematischem Vorgehen schaffen es geübte Spieler meist in fünf bis sieben Versuchen. Es gibt 360 mögliche Codes – zehn Versuche reichen mit Logik immer aus.</p>
+</div>
+<h2>Passend dazu</h2><ul class="cards"><li><a href="/codeknacker-anleitung.html"><strong>Codeknacker: Regeln und Strategie</strong><span>Wie die Hinweise funktionieren und wie du den Code systematisch eingrenzt.</span></a></li><li><a href="/wie-unsere-raetsel-entstehen.html"><strong>Wie unsere Rätsel entstehen – und warum sie fair sind</strong><span>Ein Blick hinter die Kulissen: Zufall mit Datum, Eindeutigkeit und Prüfprogramme.</span></a></li></ul>  </div>
+  <aside class="side"><div class="box"><h3>Tagesrätsel</h3><ul><li><a href="/codeknacker.html">Codeknacker</a></li><li><a href="/sudoku.html">Sudoku</a></li><li><a href="/zielzahl.html">Zielzahl</a></li><li><a href="/nonogramm.html">Nonogramm</a></li><li><a href="/archiv.html">Meine Statistik</a></li></ul></div>
 <div class="box"><h3>Zum Ausdrucken</h3><ul><li><a href="/sudoku-zum-ausdrucken-leicht.html">Sudoku leicht</a></li><li><a href="/sudoku-zum-ausdrucken-mittel.html">Sudoku mittel</a></li><li><a href="/sudoku-zum-ausdrucken-schwer.html">Sudoku schwer</a></li></ul></div><div class="ad ad--half" data-ad="half" aria-hidden="true"></div></aside>
 </div>
 </main>
 <footer class="foot"><div class="wrap">
-  <div>Rätsellotse – jeden Tag neue Logikrätsel: Codeknacker, Sudoku und Zielzahl. Kostenlos und ohne Anmeldung.</div>
+  <div>Rätsellotse – jeden Tag neue Logikrätsel: Sudoku, Nonogramm, Codeknacker und Zielzahl. Kostenlos und ohne Anmeldung.</div>
   <nav aria-label="Rechtliches"><a href="/about.html">Über uns</a><a href="/imprint.html">Impressum</a><a href="/privacy.html">Datenschutz</a><button class="linkbtn" type="button" data-privacy-settings>Datenschutz-Einstellungen</button></nav>
 </div></footer>
 </body>
