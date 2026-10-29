@@ -1,0 +1,6 @@
+{% macro ad(kind) -%}<div class="ad ad--{{ kind }}" data-ad="{{ kind }}" aria-hidden="true"></div>{%- endmacro %}
+{% macro crumbs(items) -%}<nav class="crumbs wrap" aria-label="Brotkrumen">{% for href,label in items %}{% if not loop.last %}<a href="{{ href }}">{{ label }}</a> › {% else %}<span>{{ label }}</span>{% endif %}{% endfor %}</nav>{%- endmacro %}
+{% macro sidebar() -%}
+<aside class="side"><div class="box"><h3>Tagesrätsel</h3><ul><li><a href="/codeknacker.html">Codeknacker</a></li><li><a href="/sudoku.html">Sudoku</a></li><li><a href="/zielzahl.html">Zielzahl</a></li></ul></div>
+<div class="box"><h3>Zum Ausdrucken</h3><ul><li><a href="/sudoku-zum-ausdrucken-leicht.html">Sudoku leicht</a></li><li><a href="/sudoku-zum-ausdrucken-mittel.html">Sudoku mittel</a></li><li><a href="/sudoku-zum-ausdrucken-schwer.html">Sudoku schwer</a></li></ul></div>{{ ad("half") }}</aside>
+{%- endmacro %}

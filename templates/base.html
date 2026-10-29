@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ title }}</title>
+<meta name="description" content="{{ description }}">
+<link rel="canonical" href="{{ site }}{{ path }}">
+<meta name="robots" content="{{ robots or 'index,follow' }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Rätsellotse">
+<meta property="og:title" content="{{ og_title or title }}">
+<meta property="og:description" content="{{ description }}">
+<meta property="og:url" content="{{ site }}{{ path }}">
+<meta property="og:locale" content="de_AT">
+<meta name="theme-color" content="#21786C">
+<link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/style.css?v={{ v }}">
+{% for ld in jsonld %}<script type="application/ld+json">{{ ld | tojson }}</script>
+{% endfor %}
+{% if ads %}<script src="/assets/consent.js?v={{ v }}" defer></script>{% endif %}
+<script src="/assets/games.js?v={{ v }}" defer></script>
+</head>
+<body>
+<a class="skip" href="#inhalt">Zum Inhalt</a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.5" fill="#21786C"/><path d="M16 6v14" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M9 17a7 7 0 0 0 14 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="8.5" r="3.2" fill="#E8622A" stroke="#fff" stroke-width="1.6"/></svg>Rätsellotse</a>
+  <nav class="nav" aria-label="Hauptmenü">
+    {% for href, label in nav %}<a href="{{ href }}"{% if href == active %} aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}
+  </nav>
+</div></header>
+<main id="inhalt">
+{% block main %}{% endblock %}
+</main>
+<footer class="foot"><div class="wrap">
+  <div>Rätsellotse – jeden Tag neue Logikrätsel: Codeknacker, Sudoku und Zielzahl. Kostenlos und ohne Anmeldung.</div>
+  <nav aria-label="Rechtliches"><a href="/about.html">Über uns</a><a href="/imprint.html">Impressum</a><a href="/privacy.html">Datenschutz</a>{% if ads %}<button class="linkbtn" type="button" data-privacy-settings>Datenschutz-Einstellungen</button>{% endif %}</nav>
+</div></footer>
+</body>
+</html>

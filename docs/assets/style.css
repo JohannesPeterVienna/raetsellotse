@@ -1,0 +1,106 @@
+/* Rätsellotse — Seeglas, Tiefsee-Tinte, Bojen-Orange */
+@font-face{font-family:"Bricolage Grotesque";src:url("bricolage-grotesque-latin-wght-normal.woff2") format("woff2");font-weight:200 800;font-display:swap}
+@font-face{font-family:"Inter";src:url("inter-latin-wght-normal.woff2") format("woff2");font-weight:100 900;font-display:swap}
+:root{
+  --bg:#EAF2EF;--card:#FFFFFF;--ink:#102B2A;--muted:#4F6664;--line:#CFDDD9;--soft:#DCEAE5;
+  --buoy:#E8622A;--buoy-soft:#FCE6DB;--sea:#21786C;--sea-soft:#D3EDE7;--focus:#1D5FD0;
+  --head:"Bricolage Grotesque",system-ui,sans-serif;--text:"Inter",system-ui,-apple-system,sans-serif;--r:14px;--wrap:1160px;
+}
+@media (prefers-color-scheme:dark){:root{--bg:#0D1A1A;--card:#132424;--ink:#E3EFEC;--muted:#97B0AC;--line:#24403E;--soft:#1A3130;--buoy:#FF8A57;--buoy-soft:#3A2116;--sea:#4FC7B5;--sea-soft:#163A35;--focus:#8FB4FF}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--text);font-feature-settings:"tnum" 1}
+a{color:var(--sea);text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:4px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 20px}
+.skip{position:absolute;left:-9999px}.skip:focus{left:12px;top:12px;background:var(--card);padding:8px 12px;z-index:9}
+h1,h2,h3{font-family:var(--head);line-height:1.08;margin:0 0 .5em;font-weight:700;letter-spacing:-.01em}
+h1{font-size:clamp(2.3rem,6vw,4.2rem);font-weight:800}h2{font-size:clamp(1.45rem,3vw,2.05rem);margin-top:1.7em}h3{font-size:1.15rem;margin-top:1.3em}
+p{margin:0 0 1em}.lead{font-size:1.15rem;color:var(--muted);max-width:58ch}.muted{color:var(--muted)}.small{font-size:.875rem}
+.prose{max-width:68ch}.prose li{margin-bottom:.4em}
+.top{background:var(--card);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:20px;min-height:62px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;font:800 1.2rem var(--head)}
+.brand svg{width:30px;height:30px}
+.nav{display:flex;gap:2px;flex-wrap:wrap;margin-left:auto}
+.nav a{color:var(--muted);text-decoration:none;padding:8px 12px;border-radius:999px;font-size:.95rem}
+.nav a:hover,.nav a[aria-current=page]{color:var(--ink);background:var(--soft)}
+
+/* Startseite: drei Tagesrätsel als Bojen */
+.hero{padding:44px 0 20px}
+.today{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+.today a{display:flex;flex-direction:column;gap:8px;padding:22px;border-radius:var(--r);background:var(--card);border:1px solid var(--line);text-decoration:none;color:var(--ink);position:relative;overflow:hidden}
+.today a:hover{border-color:var(--buoy)}
+.today .glyph{font:800 2.6rem/1 var(--head);color:var(--buoy)}
+.today strong{font:700 1.35rem var(--head)}
+.today .meta{color:var(--muted);font-size:.92rem}
+.today .go{margin-top:auto;font-weight:600;color:var(--sea)}
+
+/* Spielflächen */
+.game{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.daynav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;font-size:.95rem}
+.daynav input{font:inherit;border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--card);color:var(--ink)}
+.msg{min-height:1.6em;margin:14px 0 0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font:600 .95rem var(--text);border:0;background:var(--buoy);color:#fff;border-radius:999px;padding:10px 18px;cursor:pointer;min-height:44px;text-decoration:none}
+.btn.small{min-height:34px;padding:6px 14px;font-size:.85rem}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn:disabled{opacity:.4;cursor:default}
+.pad{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.pad button{min-width:48px;min-height:48px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font:700 1.2rem var(--head);cursor:pointer}
+.pad button[aria-pressed=true]{background:var(--sea);color:#fff;border-color:var(--sea)}
+.pad button:disabled{opacity:.35}
+.pad .wide{padding:0 16px;font:600 .95rem var(--text)}
+
+/* Codeknacker */
+.board{display:flex;flex-direction:column;gap:6px}
+.crow{display:grid;grid-template-columns:1.6em repeat(4,44px) 1fr;gap:6px;align-items:center}
+.crow .cn{color:var(--muted);font-size:.8rem;text-align:right}
+.crow .cell{height:44px;border-radius:10px;background:var(--soft);display:grid;place-items:center;font:700 1.3rem var(--head)}
+.crow.live .cell{background:var(--card);box-shadow:inset 0 0 0 2px var(--sea)}
+.pegs{display:grid;grid-template-columns:repeat(2,14px);gap:4px;margin-left:8px}
+.pegs i{width:14px;height:14px;border-radius:50%;background:var(--line)}
+.pegs i.b{background:var(--buoy)}.pegs i.w{background:var(--card);box-shadow:inset 0 0 0 2.5px var(--buoy)}
+
+/* Sudoku */
+.sgrid{display:grid;grid-template-columns:repeat(9,1fr);grid-template-rows:repeat(9,1fr);aspect-ratio:1;max-width:520px;border:2.5px solid var(--ink);border-radius:8px;overflow:hidden;background:var(--line);gap:1px}
+.sc{border:0;background:var(--card);color:var(--sea);font:600 clamp(1rem,4.6vw,1.6rem) var(--head);display:grid;place-items:center;cursor:pointer;padding:0;position:relative;min-width:0;min-height:0}
+.sc.given{color:var(--ink);font-weight:800}
+.sc.rel{background:var(--soft)}.sc.same{background:var(--sea-soft)}.sc.sel{background:var(--buoy-soft);box-shadow:inset 0 0 0 2px var(--buoy)}
+.sc.bad{color:var(--buoy);text-decoration:underline wavy}
+.sc.br{border-right:2px solid var(--ink)}.sc.bb{border-bottom:2px solid var(--ink)}
+.notes{display:grid;grid-template-columns:repeat(3,1fr);width:100%;height:100%;padding:2px}
+.notes i{font:500 clamp(.45rem,1.6vw,.7rem) var(--text);color:var(--muted);font-style:normal;display:grid;place-items:center}
+
+/* Zielzahl */
+.target{font:800 clamp(3.5rem,12vw,6rem)/1 var(--head);color:var(--buoy);letter-spacing:-.02em}
+.tiles{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.tile{min-width:56px;height:56px;padding:0 10px;border-radius:12px;background:var(--sea);color:#fff;display:grid;place-items:center;font:700 1.4rem var(--head);cursor:pointer;user-select:none}
+.expr{width:100%;font:600 1.3rem var(--head);padding:12px 14px;border:2px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);min-height:52px}
+.expr:focus{border-color:var(--sea);outline:none}
+
+/* Druck-Sudokus */
+.printgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px}
+.ps{border-collapse:collapse;width:100%;aspect-ratio:1;border:2px solid var(--ink);font:600 1.05rem var(--head);table-layout:fixed}
+.ps td{border:1px solid var(--line);text-align:center;height:24px}
+.ps td:nth-child(3n){border-right:2px solid var(--ink)}.ps tr:nth-child(3n) td{border-bottom:2px solid var(--ink)}
+.ps.sol{font-size:.75rem;color:var(--muted)}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:40px;align-items:start;padding-bottom:40px}
+.side{position:sticky;top:16px;display:flex;flex-direction:column;gap:18px}
+.side .box{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.side h3{margin-top:0;font-size:1rem}.side ul{margin:0;padding-left:1.1em}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;list-style:none;padding:0;margin:0}
+.cards a{display:block;height:100%;padding:16px;border:1px solid var(--line);border-radius:var(--r);background:var(--card);text-decoration:none;color:var(--ink)}
+.cards strong{display:block;font:700 1.08rem/1.25 var(--head);margin-bottom:4px}.cards span{color:var(--muted);font-size:.92rem}
+.crumbs{font-size:.85rem;color:var(--muted);padding-top:18px}.crumbs a{color:var(--muted)}
+.ad{display:none;margin:28px auto;text-align:center}.ad.on{display:block}
+.ad::before{content:"Werbung";display:block;font-size:.7rem;color:var(--muted);margin-bottom:4px}
+.ad--billboard{min-height:100px;max-width:970px}.ad--rect{min-height:250px;max-width:336px}.ad--half{min-height:600px;width:300px}
+.foot{border-top:1px solid var(--line);background:var(--card);margin-top:40px;padding:28px 0;font-size:.9rem;color:var(--muted)}
+.foot .wrap{display:flex;gap:24px;flex-wrap:wrap;justify-content:space-between}.foot nav{display:flex;gap:16px;flex-wrap:wrap}.foot a{color:var(--muted)}
+.linkbtn{background:none;border:0;padding:0;font:inherit;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.tbl{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.tbl th,.tbl td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line)}.tbl th{background:var(--soft);font-size:.85rem}
+@media (max-width:900px){.today{grid-template-columns:1fr}.layout{grid-template-columns:1fr}.side{position:static}.ad--half{display:none!important}.nav{margin-left:0}}
+@media (max-width:420px){.crow{grid-template-columns:1.4em repeat(4,1fr) 40px}.game{padding:14px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{.top,.foot,.ad,.side,.crumbs,.no-print{display:none!important}.layout{display:block}body{background:#fff}.printgrid{grid-template-columns:repeat(2,1fr)}}

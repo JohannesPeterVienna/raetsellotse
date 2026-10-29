@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% import "macros.html" as m %}
+{% block main %}
+{{ m.crumbs(crumbs) }}
+<div class="wrap layout" style="padding-top:18px">
+  <div>
+    <h1>{{ h1 }}</h1><p class="lead">{{ lead }}</p>
+    <section class="game" data-game="{{ game }}">{{ ui | safe }}</section>
+    {{ m.ad("rect") }}
+    <div class="prose">{{ body | safe }}</div>
+    {% if related %}<h2>Passend dazu</h2><ul class="cards">{% for a in related %}<li><a href="/{{ a.slug }}.html"><strong>{{ a.title }}</strong><span>{{ a.teaser }}</span></a></li>{% endfor %}</ul>{% endif %}
+  </div>
+  {{ m.sidebar() }}
+</div>
+{% endblock %}

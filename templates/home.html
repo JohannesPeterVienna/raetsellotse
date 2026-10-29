@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% import "macros.html" as m %}
+{% block main %}
+<section class="hero"><div class="wrap">
+  <h1>Drei Rätsel. Jeden Tag neu.</h1>
+  <p class="lead">Für alle dieselbe Aufgabe – knack den Code, lös das Sudoku, triff die Zielzahl. Ohne Anmeldung, ohne Zeitdruck, auf jedem Gerät.</p>
+  <div class="today">
+    <a href="/codeknacker.html"><span class="glyph" aria-hidden="true">● ○</span><strong>Codeknacker</strong><span class="meta">Vier Ziffern, zehn Versuche, reine Logik.</span><span class="go">Heutigen Code knacken</span></a>
+    <a href="/sudoku.html"><span class="glyph" aria-hidden="true">9×9</span><strong>Sudoku</strong><span class="meta">Leicht, mittel oder schwer – mit erklärten Tipps.</span><span class="go">Heutiges Sudoku lösen</span></a>
+    <a href="/zielzahl.html"><span class="glyph" aria-hidden="true">= ?</span><strong>Zielzahl</strong><span class="meta">Sechs Zahlen, vier Rechenarten, ein Ziel.</span><span class="go">Heutige Zielzahl treffen</span></a>
+  </div>
+</div></section>
+<div class="wrap">{{ m.ad("billboard") }}</div>
+<div class="wrap layout">
+  <div class="prose" style="max-width:none">
+    <h2>So funktioniert Rätsellotse</h2>
+    <div class="prose"><p>Jeden Tag um Mitternacht (Wiener Zeit) erscheinen drei neue Rätsel. Alle Spielerinnen und Spieler bekommen dieselben Aufgaben – so kannst du dein Ergebnis mit Freunden vergleichen, ohne die Lösung zu verraten.</p>
+    <p>Dein Fortschritt und deine Serie bleiben in deinem Browser gespeichert. Verpasste Tage findest du im Archiv jedes Rätsels.</p></div>
+    {{ m.ad("rect") }}
+    <h2>Strategien und Anleitungen</h2>
+    <ul class="cards">{% for a in articles %}<li><a href="/{{ a.slug }}.html"><strong>{{ a.title }}</strong><span>{{ a.teaser }}</span></a></li>{% endfor %}</ul>
+  </div>
+  {{ m.sidebar() }}
+</div>
+{% endblock %}
