@@ -146,3 +146,8 @@ main{overflow-wrap:break-word}main a{overflow-wrap:anywhere}
 .nx:focus-visible{outline:3px solid var(--focus);outline-offset:-3px;z-index:1}
 .pad button[data-mode][aria-pressed=true]{background:var(--sea);color:#fff;border-color:var(--sea)}
 .nc.col{border-bottom:2px solid var(--ink)}
+
+/* Werbeplätze: Superbanner 728×90 (ab Tablet), Wide Skyscraper 160×600 (nur mit Seitenleiste) */
+.ad--superbanner{max-width:728px;min-height:90px}.ad--sky{width:160px;min-height:600px}
+@media (max-width:767px){.ad--superbanner{display:none!important}}
+@media (max-width:960px){.ad--sky{display:none!important}}
