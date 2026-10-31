@@ -642,7 +642,9 @@ ARTICLES = [
 <li>Ein vergrößertes Gitter für die gemeinsame Erklärung vorbereiten, auf Flipchart oder als A3-Kopie.</li>
 <li>Vorher selbst ein Rätsel lösen: Wer weiß, wo man hängen bleibt, kann gezielter helfen.</li></ul>
 <h2>Mehr als sechs Rätsel gesucht?</h2>
-<p>Die Druckseiten enthalten derzeit je sechs feste Rätsel. Für Abwechslung sorgen die täglichen Online-Rätsel: <a href="/sudoku.html">Sudoku</a> in drei Stufen, <a href="/nonogramm.html">Nonogramm</a>, <a href="/zielzahl.html">Zielzahl</a> und <a href="/codeknacker.html">Codeknacker</a>. Wenn du Rätsel von Rätsellotse in einer Publikation abdrucken möchtest, etwa in einer Vereins- oder Schulzeitung, schreib uns bitte vorher an <a href="mailto:office@adstern.com">office@adstern.com</a>.</p>
+<p>Die Druckseiten enthalten derzeit je sechs feste Rätsel. Für Abwechslung sorgen die täglichen Online-Rätsel: <a href="/sudoku.html">Sudoku</a> in drei Stufen, <a href="/nonogramm.html">Nonogramm</a>, <a href="/zielzahl.html">Zielzahl</a> und <a href="/codeknacker.html">Codeknacker</a>. </p>
+<h2>Nachdruck in Vereins-, Schul- und Pfarrblättern</h2>
+<p>Du darfst unsere Druckrätsel ohne Anfrage kostenlos in nichtkommerziellen Blättern abdrucken – etwa in der Vereinszeitung, der Schülerzeitung, im Pfarr- oder Gemeindeblatt oder im Rundbrief einer Seniorenrunde. Einzige Bedingung: Gib unter dem Rätsel die Quelle an, zum Beispiel „Rätsel: raetsellotse.de“. Für kommerzielle Zeitschriften, Bücher oder Werbematerial gilt diese Erlaubnis nicht; dafür erreichst du uns unter <a href="mailto:office@adstern.com">office@adstern.com</a>.</p>
 <h2>Quellen</h2>
 """ + _src([
     'Europäische Blindenunion (EBU): Richtlinien für gut lesbaren Druck (deutsche Fassung, Stand 2016), bereitgestellt vom Blinden- und Sehbehindertenverband Österreich. <a href="https://www.blindenverband.at/media/file/82_EBU-clear-print-guidelines_DEUTSCH.pdf" rel="noopener">blindenverband.at (PDF)</a>',
