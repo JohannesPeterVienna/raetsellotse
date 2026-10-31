@@ -1,17 +1,20 @@
 /* Werbung und Statistik — beides läuft über Googles zertifizierte Einwilligungsverwaltung (TCF 2.2).
    Ablauf Statistik:
-   1) Sofort, vor allen Google-Skripten: gtag-Warteschlange + consent default (alles denied, 500 ms).
-   2) Bei jeder Meldung der Google-CMP (TCF-Ereignis, CONSENT_MODE_DATA_READY) wird neu entschieden.
-      Messen nur, wenn TCF Zweck 1 + Anbieter 755 UND Consent Mode analytics_storage GRANTED melden.
-      Unbekannt/fehlend = nicht messen. Außerhalb der DSGVO (gdprApplies false) ohne Ablehnung = messen.
+   1) Sofort, vor allen Google-Skripten: gtag-Warteschlange + consent default (alles denied, 500 ms), ga-disable an.
+   2) Bei jeder Meldung der Google-CMP (TCF-Ereignis, CONSENT_MODE_DATA_READY, US-Status) wird neu entschieden.
+      DSGVO-Zweig: messen nur bei TCF Zweck 1 + Anbieter 755 UND Consent Mode analytics GRANTED (1).
+      Außerhalb der DSGVO (gdprApplies false): nur bei GRANTED (1) oder NOT_APPLICABLE (3) und wenn die CMP
+      ausdrücklich keinen US-Opt-out meldet (Status 1/2). Fehlend/UNKNOWN (0)/DENIED (2)/NOT_CONFIGURED (4)/Schnittstellenfehler = nicht messen.
+      Ein TCF-Nein entscheidet sofort, ohne die Consent-Mode-Schnittstelle zu fragen.
    3) Ablehnung oder Widerruf: consent update denied + ga-disable → keine weiteren Treffer.
-   Signals und Werbepersonalisierung sind in Analytics deaktiviert. */
+   Statuswerte: developers.google.com/funding-choices/fc-api-docs. Signals/Werbepersonalisierung aus. */
 (() => {
   const PUB = "ca-pub-7811071715414905";
   const GA = "G-T00HRG2YVF";
   const GOOGLE_VENDOR = 755;
   const SPERRE = "ga-disable-" + GA;
-  const STATUS = { UNKNOWN: 0, GRANTED: 1, DENIED: 2 };
+  const STATUS = { UNKNOWN: 0, GRANTED: 1, DENIED: 2, NOT_APPLICABLE: 3, NOT_CONFIGURED: 4 };
+  const US_KEIN_OPTOUT = [1, 2];   // usstatesoptout: DOES_NOT_APPLY, NOT_OPTED_OUT; 0 UNKNOWN / 3 OPTED_OUT sperren
 
   window.dataLayer = window.dataLayer || [];
   const gtag = window.gtag = typeof window.gtag === "function" ? window.gtag : function(){ window.dataLayer.push(arguments); };
@@ -66,14 +69,25 @@
     } catch (_) { return STATUS.UNKNOWN; }
   }
 
+  function usOptOutGemeldet(){
+    try {
+      const u = window.googlefc && window.googlefc.usstatesoptout;
+      return !(u && typeof u.getInitialUsStatesOptOutStatus === "function" && US_KEIN_OPTOUT.includes(u.getInitialUsStatesOptOutStatus()));
+    } catch (_) { return true; }
+  }
+
   // "ja" | "nein" | "offen"
   function urteil(){
-    const cm = statistikLautCmp(), tc = lage.tc;
-    if (gpc || cm === STATUS.DENIED) return "nein";
+    const tc = lage.tc;
+    if (gpc) return "nein";
     if (!tc) return "offen";
-    if (tc.gdprApplies === false) return "ja";
+    if (tc.gdprApplies === false){
+      const cm = statistikLautCmp();
+      return (cm === STATUS.GRANTED || cm === STATUS.NOT_APPLICABLE) && !usOptOutGemeldet() ? "ja" : "nein";
+    }
     if (!["tcloaded", "useractioncomplete"].includes(tc.eventStatus)) return "offen";
-    return zugestimmt(tc.purpose, 1) && zugestimmt(tc.vendor, GOOGLE_VENDOR) && cm === STATUS.GRANTED ? "ja" : "nein";
+    if (!zugestimmt(tc.purpose, 1) || !zugestimmt(tc.vendor, GOOGLE_VENDOR)) return "nein";   // ohne weitere CMP-Abfrage
+    return statistikLautCmp() === STATUS.GRANTED ? "ja" : "nein";
   }
 
   function einschalten(){
@@ -117,7 +131,7 @@
       setTimeout(neuBewerten, 300);   // Consent-Mode-Werte der CMP können nachziehen
     });
   }
-  window.googlefc.callbackQueue.push({ CONSENT_MODE_DATA_READY: neuBewerten });
+  window.googlefc.callbackQueue.push({ CONSENT_MODE_DATA_READY: neuBewerten, INITIAL_US_STATES_OPT_OUT_DATA_READY: neuBewerten });
 
   // Link „Datenschutz-Einstellungen" im Seitenfuß öffnet den Google-Dialog erneut
   document.addEventListener("click", e => {
