@@ -165,3 +165,6 @@ main{overflow-wrap:break-word}main a{overflow-wrap:anywhere}
 .dg .f1{fill:var(--ink)}.dg .f2{fill:var(--sea)}.dg .x1{stroke:var(--muted);stroke-width:1.6}.dg .x2{stroke:var(--buoy);stroke-width:2.2}
 .dg .cl{font-size:12px;fill:var(--muted)}.dg .lb{font-size:13px;font-weight:600}
 @media print{.prose{max-width:none}.printgrid>div{break-inside:avoid}}
+
+/* Abstand Superbanner – Fußzeilen-Knopf (≥ 150 px) */
+.ad--superbanner{margin-bottom:120px}
