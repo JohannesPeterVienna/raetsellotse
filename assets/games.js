@@ -136,7 +136,7 @@
         P = makeSudoku(hash(`sudoku${day}${level}`), level);
         KEY = `rl-sudoku-${day}-${level}`;
         st = store.get(KEY, { v: P.puzzle.slice(), n: Array(81).fill(0).map(() => []), done: false, t: 0, hints: 0 });
-        sel = P.puzzle.indexOf(0); render();
+        sel = P.puzzle.indexOf(0); msg.textContent = ""; render();
       }, 10);
     }
     function conflicts(i) { const v = st.v[i]; return v && peers[i].some(p => st.v[p] === v); }

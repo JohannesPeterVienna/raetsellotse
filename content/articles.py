@@ -283,7 +283,7 @@ ARTICLES = [
 <li><strong>Nur auf Zeilen schauen:</strong> Viele Hidden Singles verstecken sich in Blöcken und Spalten.</li></ul>
 <h2>Wie oft braucht man welche Technik?</h2>
 <p>Wir haben je 100 leichte und mittlere sowie 200 schwere Sudokus aus unserem Generator mit einem Löseprogramm geprüft, das die Techniken in der Reihenfolge dieser Seite anwendet. Alle leichten und mittleren gingen allein mit den Techniken 1 und 2 auf. Bei den schweren reichten diese beiden in gut der Hälfte der Fälle; bei den übrigen kamen Block-Zeile und Paare dazu, und ein Teil brauchte noch weitergehende Techniken. Die genauen Zahlen und was ein Sudoku wirklich schwer macht, erklärt der Beitrag <a href="/schweres-sudoku-erkennen.html">Woran man ein schweres Sudoku erkennt</a>.</p>
-<div class="example"><strong>Tipp:</strong> Die Tipp-Funktion im <a href="/sudoku.html">Tagessudoku</a> zeigt zuerst falsche Einträge und erklärt sonst den nächsten logischen Schritt. Lieber auf Papier üben? Die <a href="/sudoku-zum-ausdrucken-leicht.html">leichten Sudokus zum Ausdrucken</a> eignen sich gut, um Hidden Singles zu trainieren.</div>
+<div class="example"><strong>Tipp:</strong> Die Tipp-Funktion im <a href="/sudoku.html">Tagessudoku</a> zeigt zuerst falsche Einträge und erklärt sonst den nächsten Schritt mit den Techniken 1 und 2. Greifen die nicht mehr – das kann nur bei schweren Rätseln passieren –, deckt sie ein Feld ohne Begründung auf. Lieber auf Papier üben? Die <a href="/sudoku-zum-ausdrucken-leicht.html">leichten Sudokus zum Ausdrucken</a> eignen sich gut, um Hidden Singles zu trainieren.</div>
 """,
 },
 {
@@ -321,7 +321,7 @@ ARTICLES = [
 <li><strong>Samurai-Sudoku:</strong> Fünf Sudokus überlappen sich in den Eckblöcken.</li>
 <li><strong>Puzzle-Sudoku (Jigsaw):</strong> Die Blöcke sind keine Quadrate, sondern unregelmäßige Formen aus je neun Feldern.</li></ul>
 <h2>Selbst ausprobieren</h2>
-<p>Auf Rätsellotse gibt es jeden Tag drei neue Sudokus: leicht, mittel und schwer. Jedes hat genau eine Lösung, und die Tipp-Funktion erklärt den nächsten logischen Schritt. Wer lieber mit Bleistift arbeitet, findet sechs Rätsel je Stufe mit Lösungen zum Ausdrucken: <a href="/sudoku-zum-ausdrucken-leicht.html">leicht</a>, <a href="/sudoku-zum-ausdrucken-mittel.html">mittel</a> und <a href="/sudoku-zum-ausdrucken-schwer.html">schwer</a>.</p>
+<p>Auf Rätsellotse gibt es jeden Tag drei neue Sudokus: leicht, mittel und schwer. Jedes hat genau eine Lösung, und die Tipp-Funktion erklärt den nächsten Schritt mit den Grundtechniken; bei schweren Rätseln deckt sie notfalls ein Feld ohne Erklärung auf. Wer lieber mit Bleistift arbeitet, findet sechs Rätsel je Stufe mit Lösungen zum Ausdrucken: <a href="/sudoku-zum-ausdrucken-leicht.html">leicht</a>, <a href="/sudoku-zum-ausdrucken-mittel.html">mittel</a> und <a href="/sudoku-zum-ausdrucken-schwer.html">schwer</a>.</p>
 <p><a href="/sudoku.html">Zum heutigen Sudoku</a></p>
 """,
 },
@@ -445,7 +445,7 @@ ARTICLES = [
 <h2>Was ein Programm nicht kann</h2>
 <p>Ein Generator prüft Regeln, aber er hat keinen Geschmack. Ein von Hand gestaltetes Nonogramm zeigt ein Motiv; unsere Bilder sind abstrakte Formen. Ein Sudoku-Autor kann einen „Aha-Moment“ bewusst einbauen; unser Programm findet so etwas höchstens zufällig. Dafür gibt es jeden Tag neue Rätsel, die für alle gleich sind und sich lückenlos nachspielen lassen. Wenn du ein Rätsel findest, das dir unfair vorkommt, schreib uns an <a href="mailto:office@adstern.com">office@adstern.com</a> – mit Datum und Rätselart können wir es exakt nachbauen.</p>
 <h2>Was wir nicht tun</h2>
-<p>Es gibt kein Konto, keine Bestenliste und keine Spielstände auf unseren Servern. Fortschritt und Statistik bleiben in deinem Browser. Werbung und Reichweitenmessung laufen nur, wenn du einwilligst. Mehr dazu auf der Seite <a href="/about.html">Über Rätsellotse</a>.</p>
+<p>Es gibt kein Konto, keine Bestenliste und keine Spielstände auf unseren Servern. Fortschritt und Statistik bleiben in deinem Browser. Reichweitenmessung und personalisierte Werbung laufen nur, wenn du einwilligst; ohne Einwilligung kann Google eingeschränkte, nicht personalisierte Anzeigen zeigen. Mehr dazu auf der Seite <a href="/about.html">Über Rätsellotse</a>.</p>
 """,
 },
 {
@@ -529,7 +529,7 @@ ARTICLES = [
 <li><strong>Eine Ziffer fehlt fast ganz.</strong> Kommt eine Ziffer unter den Vorgaben gar nicht oder nur einmal vor, fehlen für sie die Ansatzpunkte. Das ist kein Beweis für Schwierigkeit, aber ein häufiges Zeichen.</li>
 <li><strong>Leere Blöcke oder Zeilen.</strong> Ein Block mit nur einer oder zwei Vorgaben lässt sich oft erst ganz am Ende füllen.</li>
 <li><strong>Viele Felder mit drei oder mehr Kandidaten.</strong> Sobald du Notizen machst: Haben kaum Felder nur zwei Kandidaten, gibt es wenig Ansatzpunkte für Paare und Muster.</li>
-<li><strong>Die Tipp-Funktion erklärt etwas Neues.</strong> Wenn der nächste Schritt eine Technik ist, die du noch nicht kennst, ist das Rätsel für dich gerade schwer – und eine gute Gelegenheit, sie zu lernen.</li></ol>
+<li><strong>Die Tipp-Funktion deckt nur noch auf.</strong> Im <a href="/sudoku.html">Tagessudoku</a> erklärt der Tipp nur Schritte mit den beiden Grundtechniken. Findet er keinen mehr, deckt er ein Feld ohne Begründung auf – ein sicheres Zeichen, dass das Rätsel ab hier fortgeschrittene Techniken verlangt.</li></ol>
 <h2>Was tun, wenn es nicht weitergeht?</h2>
 <ul><li><strong>Kandidaten vollständig notieren.</strong> Viele „unlösbare“ Stellen sind in Wahrheit übersehene Kandidaten oder vergessene Streichungen.</li>
 <li><strong>Systematisch nach Paaren suchen.</strong> Gehe jede Einheit durch und schau nur auf Felder mit genau zwei Kandidaten.</li>

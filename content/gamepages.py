@@ -24,10 +24,10 @@ SUDOKU = """
 <h2>Bedienung</h2>
 <ul><li>Feld antippen, dann Ziffer wählen – oder Pfeiltasten und Zifferntasten verwenden.</li>
 <li><strong>Notizen</strong> (Taste N) schaltet auf kleine Kandidaten-Ziffern um. So hältst du fest, welche Ziffern in einem Feld noch möglich sind.</li>
-<li><strong>Tipp</strong> zeigt zuerst falsche Einträge. Ist alles richtig, erklärt er den nächsten logischen Schritt – etwa „In dieser Zeile kann die 7 nur noch hier stehen“.</li>
+<li><strong>Tipp</strong> markiert zuerst ein falsch ausgefülltes Feld. Ist alles richtig, sucht er einen Schritt mit den beiden Grundtechniken, trägt die Ziffer ein und erklärt, warum – etwa „In dieser Zeile kann die 7 nur noch hier stehen“. Bei <strong>leicht</strong> und <strong>mittel</strong> reicht das immer bis zum Ende. Bei <strong>schwer</strong> kann es vorkommen, dass keine Grundtechnik mehr greift; dann deckt der Tipp ein Feld auf, ohne es zu begründen. Fortgeschrittene Techniken wie Paare erklärt die Tipp-Funktion nicht.</li>
 <li>Gleiche Ziffern werden hervorgehoben, Konflikte rot markiert.</li></ul>
 <h2>Die drei Schwierigkeitsstufen</h2>
-<p>Jedes Sudoku auf Rätsellotse hat <strong>genau eine Lösung</strong>. Das prüft unser Programm, bevor ein Rätsel erscheint. <strong>Leicht</strong> und <strong>mittel</strong> lassen sich allein mit den beiden Grundtechniken lösen: „einzige Möglichkeit im Feld“ und „einziger Platz für eine Ziffer“. Mittel hat dabei weniger Vorgaben. <strong>Schwer</strong> hat rund 25 Vorgaben und verlangt Techniken wie Paare oder die Wechselwirkung von Block und Zeile.</p>
+<p>Jedes Sudoku auf Rätsellotse hat <strong>genau eine Lösung</strong>. Das prüft unser Programm, bevor ein Rätsel erscheint. <strong>Leicht</strong> und <strong>mittel</strong> lassen sich allein mit den beiden Grundtechniken lösen: „einzige Möglichkeit im Feld“ und „einziger Platz für eine Ziffer“. Mittel hat dabei weniger Vorgaben. <strong>Schwer</strong> hat rund 25 Vorgaben; hier prüft das Programm nur, dass es genau eine Lösung gibt, und schreibt keine Techniken vor. Manche schweren Rätsel gehen trotzdem mit den Grundtechniken auf, andere verlangen Paare, die Wechselwirkung von Block und Zeile oder noch weitergehende Schritte.</p>
 <h2>So kommst du weiter, wenn du feststeckst</h2>
 <ol><li>Gehe die Ziffern der Reihe nach durch: Wo kann die 1 in jedem Block noch stehen? Dann die 2, und so weiter.</li>
 <li>Schau auf fast volle Zeilen, Spalten und Blöcke – dort fehlen nur wenige Ziffern.</li>
@@ -35,7 +35,7 @@ SUDOKU = """
 <p>Alle Techniken mit Beispielen erklären die <a href="/sudoku-strategien.html">Sudoku-Strategien</a>. Lieber auf Papier? Dann probier die <a href="/sudoku-zum-ausdrucken-mittel.html">Sudokus zum Ausdrucken</a> mit Lösungen.</p>
 <h2>Häufige Fragen</h2>
 <p><strong>Wird mein Fortschritt gespeichert?</strong> Ja, automatisch in deinem Browser. Du kannst das Sudoku schließen und später weitermachen – auf demselben Gerät.</p>
-<p><strong>Muss man raten?</strong> Nein. Jedes Sudoku hat genau eine Lösung, die sich durch Schließen finden lässt. Leicht und mittel kommen mit einfachen Techniken aus; schwere Rätsel können fortgeschrittene Techniken wie X-Wing oder Ketten verlangen – mehr dazu in <a href="/schweres-sudoku-erkennen.html">Woran man ein schweres Sudoku erkennt</a>.</p>
+<p><strong>Muss man raten?</strong> Nein. Jedes Sudoku hat genau eine Lösung, die sich durch Schließen finden lässt. Leicht und mittel kommen mit einfachen Techniken aus; schwere Rätsel können fortgeschrittene Techniken bis hin zu Ketten verlangen. An solchen Stellen kann die Tipp-Funktion nur noch ein Feld aufdecken, aber nicht erklären – mehr dazu in <a href="/schweres-sudoku-erkennen.html">Woran man ein schweres Sudoku erkennt</a>.</p>
 """
 
 ZIEL = """
@@ -71,3 +71,37 @@ NONO = """
 <h2>Der wichtigste Trick: Überlappung</h2>
 <p>Steht in einer Zeile mit zehn Feldern die Zahl 8, ist sie fast voll. Schiebe den Block gedanklich ganz nach links (Felder 1 bis 8) und ganz nach rechts (Felder 3 bis 10): Die Felder 3 bis 8 sind in beiden Fällen gefüllt – also sicher. Mit diesem Trick beginnt fast jedes Nonogramm. Mehr Techniken erklärt die <a href="/nonogramm-anleitung.html">Nonogramm-Anleitung</a>.</p>
 """
+
+# Texte der Druckseiten (Sudoku zum Ausdrucken). Aussagen zu Vorgaben/Techniken wurden für die festen Druck-Seeds nachgeprüft.
+PRINT_TEXT = {
+"leicht": ("""<h2>Was dich bei „leicht“ erwartet</h2>
+<p>Jedes der sechs Sudokus auf dieser Seite hat 38 vorgegebene Ziffern – fast die Hälfte des Gitters ist also schon ausgefüllt. Unser Programm hat beim Erstellen geprüft, dass jedes Rätsel genau eine Lösung hat und sich allein mit den beiden Grundtechniken lösen lässt. Bei diesen sechs Rätseln reicht sogar die einfachere der beiden: Jede Ziffer findest du, indem du in einem leeren Feld nachsiehst, welche Zahl dort als einzige noch passt.</p>
+<h2>So löst du ein leichtes Sudoku</h2>
+<ol><li><strong>Fast volle Einheiten zuerst:</strong> Suche eine Zeile, Spalte oder einen Block, in dem nur noch ein oder zwei Felder frei sind. Welche Ziffer fehlt, siehst du dort sofort.</li>
+<li><strong>Ein Feld, drei Blicke:</strong> Für ein leeres Feld streichst du im Kopf alle Ziffern, die schon in seiner Zeile, seiner Spalte oder seinem 3×3-Block stehen. Bleibt genau eine übrig, trägst du sie ein. Diese Technik heißt „einzige Möglichkeit im Feld“ oder Naked Single.</li>
+<li><strong>Jede neue Ziffer hilft weiter:</strong> Nach jedem Eintrag lohnt der Blick auf die Felder in derselben Zeile, Spalte und demselben Block – oft passt dort jetzt auch nur noch eine Ziffer.</li></ol>
+<p>Notizen brauchst du bei dieser Stufe nicht. Raten musst du nie: Wenn du bei einem Feld zwischen zwei Ziffern schwankst, nimm dir einfach ein anderes Feld vor und komm später zurück. Wer die zweite Grundtechnik üben möchte, findet sie in den <a href='/sudoku-strategien.html'>Sudoku-Strategien</a> erklärt.</p>""",
+"""<h2>Tipps zum Ausdrucken</h2>
+<p>Der Knopf oben druckt nur die Rätsel und die Lösungen – Navigation, Werbung und diese Erklärungen werden beim Drucken ausgeblendet. Die Lösungen beginnen auf einer neuen Seite. Wer die Blätter in einer Gruppe austeilt, behält die Lösungsseite einfach zurück. Für Kinder oder Menschen, die größere Ziffern brauchen, lohnt es sich, das Blatt am Kopierer von A4 auf A3 zu vergrößern. Weitere Ideen für Rätselrunden stehen im Beitrag <a href='/raetsel-ausdrucken-seniorenrunde-schule.html'>Rätsel ausdrucken für Seniorenrunde, Schule und Wartezimmer</a>.</p>"""),
+"mittel": ("""<h2>Was „mittel“ von „leicht“ unterscheidet</h2>
+<p>Die sechs Rätsel hier haben je 30 Vorgaben, acht weniger als in der leichten Stufe. Auch sie sind so erstellt, dass es genau eine Lösung gibt und die beiden Grundtechniken bis zum Ende reichen. Der Unterschied liegt darin, welche der beiden du brauchst: Bei fünf der sechs Rätsel kommst du irgendwann mit der Frage „Welche Ziffer passt in dieses Feld?“ allein nicht weiter. Dann hilft die umgekehrte Frage: „Wo kann diese Ziffer in dieser Zeile, Spalte oder diesem Block noch hin?“</p>
+<h2>Die Technik: einziger Platz für eine Ziffer</h2>
+<p>Nimm dir eine Ziffer vor, etwa die 4, und einen Block, in dem sie noch fehlt. Zieh gedanklich – oder mit dem Bleistift ganz leicht – Linien durch alle Zeilen und Spalten, in denen bereits eine 4 steht. Bleibt im Block nur ein freies Feld übrig, gehört die 4 dorthin. Diese Technik heißt „einziger Platz für eine Ziffer“ oder Hidden Single. Sie funktioniert genauso für Zeilen und Spalten.</p>
+<h2>Eine Reihenfolge, die sich bewährt</h2>
+<ol><li>Gehe die Ziffern von 1 bis 9 der Reihe nach durch und prüfe für jede alle neun Blöcke.</li>
+<li>Trage jede gefundene Ziffer sofort ein – sie kann den nächsten Platz freilegen.</li>
+<li>Steckst du fest, wechsle zur Feld-Methode der leichten Stufe und suche Felder, in die nur noch eine Ziffer passt.</li></ol>
+<p>Notizen sind nicht zwingend nötig, helfen aber, den Überblick zu behalten. Raten musst du auch hier nie.</p>""",
+"""<h2>Tipps zum Ausdrucken</h2>
+<p>„Drucken oder als PDF speichern“ öffnet den Druckdialog deines Browsers. In den meisten Browsern kannst du dort statt eines Druckers „Als PDF speichern“ wählen – praktisch, wenn du die Rätsel aufs Tablet laden oder später mehrmals drucken möchtest. Ausgedruckt werden nur Rätsel und Lösungen; die Lösungen beginnen auf einer eigenen Seite. Für die Hilfslinien der Kreuzschraffur eignet sich ein weicher Bleistift, dessen Striche du danach wieder wegradierst.</p>"""),
+"schwer": ("""<h2>Was „schwer“ hier bedeutet</h2>
+<p>Die Rätsel dieser Seite haben 25 Vorgaben, Rätsel 2 hat 27. Unser Programm garantiert bei der schweren Stufe nur eines: Jedes Sudoku hat genau eine Lösung. Welche Techniken man braucht, schreibt es nicht vor – deshalb schwankt die Schwierigkeit stärker als bei leicht und mittel. Wir haben die sechs Rätsel mit einem Löseprogramm nachgeprüft: Die Sudokus 3, 5 und 6 lassen sich mit den beiden Grundtechniken lösen und verlangen vor allem Ausdauer. Bei den Sudokus 1, 2 und 4 reichen weder die Grundtechniken noch Block-Zeile und Paare bis zum Ende; hier sind weitergehende Techniken gefragt. Am besten beginnst du mit 3, 5 oder 6.</p>
+<h2>Mit Notizen arbeiten</h2>
+<p>Bei wenigen Vorgaben findest du nach dem ersten Durchgang oft keine Ziffer mehr direkt. Dann trägst du in jedes leere Feld klein die Ziffern ein, die dort noch möglich sind – die Kandidaten – und streichst gezielt:</p>
+<ul><li><strong>Block-Zeile (Pointing):</strong> Liegen alle Kandidaten einer Ziffer in einem Block in derselben Zeile, kann die Ziffer im Rest dieser Zeile gestrichen werden. Das gilt genauso für Spalten.</li>
+<li><strong>Nacktes Paar:</strong> Haben zwei Felder einer Einheit genau dieselben zwei Kandidaten, gehören diese zwei Ziffern in diese zwei Felder. In den übrigen Feldern der Einheit fallen sie weg.</li>
+<li><strong>Verstecktes Paar:</strong> Kommen zwei Ziffern in einer Einheit nur in denselben zwei Feldern vor, dürfen dort alle anderen Kandidaten gestrichen werden.</li></ul>
+<p>Nach jeder Streichung lohnt der Blick zurück auf die Grundtechniken. Diagramme zu allen Techniken zeigen die <a href='/sudoku-strategien.html'>Sudoku-Strategien</a>.</p>""",
+"""<h2>Tipps zum Ausdrucken</h2>
+<p>Mit zwei Rätseln nebeneinander auf A4 werden die Felder ungefähr einen Zentimeter breit – für Kandidaten-Notizen ist das knapp. Wer viel notiert, druckt besser vergrößert, etwa mit einer höheren Skalierung im Druckdialog oder am Kopierer von A4 auf A3. Nimm einen spitzen, weichen Bleistift und schreib jeden Kandidaten immer an dieselbe Stelle im Feld: die 1 links oben, die 9 rechts unten. So erkennst du Paare auf einen Blick. Die Lösungen beginnen auf einer eigenen Seite; nach einem Fehler kannst du dort gezielt eine einzelne Ziffer nachschlagen.</p>"""),
+}

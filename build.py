@@ -7,12 +7,13 @@ from content.articles import ARTICLES
 from content import gamepages as GP
 
 ROOT = Path(__file__).parent; OUT = ROOT / "docs"
-SITE = "https://raetsellotse.de"; V = "20261031c"; UPDATED = "Oktober 2026"
+SITE = "https://raetsellotse.de"; V = "20261102a"; UPDATED = "Oktober 2026"
 NAV = [("/", "Heute"), ("/codeknacker.html", "Codeknacker"), ("/sudoku.html", "Sudoku"), ("/zielzahl.html", "Zielzahl"), ("/nonogramm.html", "Nonogramm"),
        ("/sudoku-zum-ausdrucken-mittel.html", "Zum Ausdrucken"), ("/archiv.html", "Meine Statistik")]
 env = Environment(loader=FileSystemLoader(ROOT / "templates"), autoescape=True, trim_blocks=True, lstrip_blocks=True)
 PAGES = []
 BY = {a["slug"]: a for a in ARTICLES}
+REVIEWED = "2026-11-02"; REVIEWED_TEXT = "2. November 2026"   # letzte redaktionelle Prüfung aller Beiträge
 LEGAL_ADDR = "AdStern :: Agentur für digitales Marketing<br>Seilerstätte 8, 1010 Wien, Österreich<br>E-Mail: <a href='mailto:office@adstern.com'>office@adstern.com</a><br>Web: <a href='https://www.adstern.com'>www.adstern.com</a>"
 
 
@@ -150,9 +151,9 @@ def main():
          "<h2>Kurz erklärt</h2><p>Tippe vier verschiedene Ziffern und drücke Prüfen – oder nutze die Tastatur (1–6, Enter, Rücktaste). Nach jedem Versuch zeigen die Punkte, wie nah du dran bist. Die ausführlichen Regeln und eine Strategie findest du in der <a href='/codeknacker-anleitung.html'>Anleitung</a>.</p><p>Jeden Tag gibt es einen neuen Code, für alle derselbe. Ältere Rätsel öffnest du über das Archiv oben im Spielfeld.</p>"),
         ("sudoku", "Sudoku", "Sudoku online – täglich neu, leicht bis schwer, mit Tipps",
          "Tägliches Sudoku online spielen: drei Schwierigkeitsstufen, Notizen, erklärte Tipps, Archiv – kostenlos und ohne Anmeldung.",
-         "Jeden Tag drei neue Sudokus – leicht, mittel und schwer. Jedes hat genau eine Lösung, und die Tipps erklären den nächsten logischen Schritt.",
+         "Jeden Tag drei neue Sudokus – leicht, mittel und schwer. Jedes hat genau eine Lösung, und die Tipps erklären den nächsten Schritt mit den Grundtechniken.",
          UI_SUDOKU, ["sudoku-strategien", "sudoku-regeln-und-geschichte"],
-         "<h2>Bedienung</h2><ul><li>Feld antippen, dann Ziffer wählen – oder Pfeiltasten und Zifferntasten.</li><li><strong>Notizen</strong> (Taste N) schaltet auf kleine Kandidaten-Ziffern um.</li><li><strong>Tipp</strong> zeigt zuerst falsche Einträge, sonst den nächsten logischen Schritt mit Erklärung.</li></ul><p>Leichte und mittlere Sudokus lassen sich nur mit den beiden einfachsten Techniken lösen; schwere haben weniger Vorgaben und verlangen mehr Überblick. Mehr dazu in den <a href='/sudoku-strategien.html'>Sudoku-Strategien</a>.</p>"),
+         "<h2>Bedienung</h2><ul><li>Feld antippen, dann Ziffer wählen – oder Pfeiltasten und Zifferntasten.</li><li><strong>Notizen</strong> (Taste N) schaltet auf kleine Kandidaten-Ziffern um.</li><li><strong>Tipp</strong> zeigt zuerst falsche Einträge, sonst einen Schritt mit den Grundtechniken samt Erklärung; bei schweren Sudokus deckt er notfalls ein Feld ohne Begründung auf.</li></ul><p>Leichte und mittlere Sudokus lassen sich mit den beiden einfachsten Techniken lösen; schwere haben weniger Vorgaben und können mehr verlangen. Mehr dazu in den <a href='/sudoku-strategien.html'>Sudoku-Strategien</a>.</p>"),
         ("zielzahl", "Zielzahl", "Zielzahl – das tägliche Rechenrätsel mit sechs Zahlen",
          "Triff jeden Tag eine neue Zielzahl mit sechs Zahlen und den vier Grundrechenarten. Kopfrechnen trainieren – kostenlos, mit Lösungsweg.",
          "Erreiche die Zielzahl mit + − × ÷. Jede Zahl höchstens einmal, Teilen nur ohne Rest. Jede Aufgabe ist garantiert lösbar.",
@@ -174,15 +175,18 @@ def main():
 
     for level, intro in (("leicht", "Für Einsteiger: viele Vorgaben, lösbar allein mit den beiden einfachsten Techniken."),
                          ("mittel", "Weniger Vorgaben, aber weiterhin ohne Raten mit einfachen Techniken lösbar."),
-                         ("schwer", "Nur rund 25 Vorgaben – hier braucht es Überblick und fortgeschrittene Techniken.")):
+                         ("schwer", "Nur rund 25 Vorgaben – hier braucht es Überblick und teils fortgeschrittene Techniken.")):
         puzzles = [make(f"druck-{level}-2026-{k}", level) for k in range(6)]
         grid = "".join(f"<div><h3 style='margin:0 0 6px'>Sudoku {k+1}</h3>{table(p)}</div>" for k, (p, s) in enumerate(puzzles))
         sols = "".join(f"<div><h3 style='margin:0 0 6px;font-size:.9rem'>Lösung {k+1}</h3>{table(s, 'ps sol')}</div>" for k, (p, s) in enumerate(puzzles))
         others = " · ".join(f"<a href='/sudoku-zum-ausdrucken-{l}.html'>{l}</a>" for l in ("leicht", "mittel", "schwer") if l != level)
-        body = (f"<p class='no-print'><button class='btn' type='button' onclick='print()'>Drucken oder als PDF speichern</button></p>"
+        before, after = GP.PRINT_TEXT[level]
+        body = (f"<div class='no-print'>{before}</div>"
+                f"<p class='no-print'><button class='btn' type='button' onclick='print()'>Drucken oder als PDF speichern</button></p>"
                 f"<div class='printgrid'>{grid}</div><h2 style='break-before:page'>Lösungen</h2><div class='printgrid'>{sols}</div>"
                 f"<h2 class='no-print'>Andere Schwierigkeiten</h2><p class='no-print'>{others} · <a href='/sudoku.html'>Tagessudoku online spielen</a></p>"
-                "<p class='small muted no-print'>Jedes Sudoku hat genau eine Lösung. Beim Drucken werden Navigation und Werbung ausgeblendet; Lösungen beginnen auf einer neuen Seite.</p>")
+                f"<div class='no-print'>{after}</div>"
+                "<p class='small muted no-print'>Jedes Sudoku hat genau eine Lösung. Beim Drucken werden Navigation, Werbung und Erklärungen ausgeblendet; Lösungen beginnen auf einer neuen Seite.</p>")
         crumbs = [("/", "Rätsellotse"), (f"/sudoku-zum-ausdrucken-{level}.html", f"Sudoku zum Ausdrucken ({level})")]
         write(f"sudoku-zum-ausdrucken-{level}.html", "page.html", title=f"Sudoku zum Ausdrucken – {level} (6 Rätsel mit Lösungen, PDF) | Rätsellotse",
               description=f"Sechs Sudokus zum Ausdrucken, Schwierigkeit {level}, mit Lösungen auf separater Seite. Kostenlos drucken oder als PDF speichern.",
@@ -192,11 +196,12 @@ def main():
     for a in ARTICLES:
         crumbs = [("/", "Rätsellotse"), ("/" + a["slug"] + ".html", a["title"])]
         ld = [crumbs_ld(crumbs), {"@context": "https://schema.org", "@type": "Article", "headline": a["title"], "description": a["description"], "inLanguage": "de",
-              "datePublished": a.get("published", "2026-10-29"), "dateModified": a.get("modified", a.get("published", "2026-10-29")), "author": {"@type": "Organization", "name": "Redaktion Rätsellotse", "url": SITE + "/about.html"},
+              "datePublished": a.get("published", "2026-10-29"), "dateModified": REVIEWED, "author": {"@type": "Organization", "name": "Redaktion Rätsellotse", "url": SITE + "/about.html"},
               "publisher": {"@type": "Organization", "name": "AdStern"}}]
         write(a["slug"] + ".html", "page.html", title=f"{a['title']} | Rätsellotse", description=a["description"], h1=a["title"], lead=a["teaser"],
+              reviewed=REVIEWED_TEXT,
               body=a["body"], crumbs=crumbs, related=[BY[s] for s in a.get("related", [])] or [x for x in ARTICLES if x["slug"] != a["slug"]][:3],
-              jsonld=ld, priority=0.7, lastmod=a.get("modified", a.get("published", "2026-10-29")))
+              jsonld=ld, priority=0.7, lastmod=REVIEWED)
 
     write("archiv.html", "page.html", title="Meine Statistik & Rätsel-Archiv | Rätsellotse", description="Deine Serien, Erfolgsquoten und alle Rätsel der letzten 30 Tage zum Nachspielen.",
           h1="Meine Statistik & Archiv", lead="Serien, Quoten und die Rätsel der letzten 30 Tage – verpasste Tage einfach nachspielen.", ads=False, robots="noindex,follow",
@@ -210,11 +215,11 @@ def main():
           body="""<p>Rätsellotse ist ein Projekt der Wiener Agentur AdStern. Jeden Tag erscheinen neue Rätsel – Codeknacker, Sudoku in drei Stufen, Zielzahl und Nonogramm in drei Größen –, für alle Spielerinnen und Spieler dieselben. Die Idee: eine kurze, faire Knobelpause, die man mit anderen vergleichen kann, ohne Konto und ohne Zeitdruck.</p>
 <h2>Unsere Grundsätze</h2>
 <ul><li><strong>Fair:</strong> Jedes Rätsel ist eindeutig lösbar. Nonogramme lassen sich ohne Raten lösen, Sudokus der Stufen leicht und mittel mit einfachen Techniken, schwere teils nur mit fortgeschrittenen Techniken; jede Zielzahl ist nachweislich erreichbar.</li>
-<li><strong>Erklärt:</strong> Die Tipp-Funktionen verraten nicht einfach die Lösung, sondern begründen den nächsten logischen Schritt.</li>
+<li><strong>Erklärt:</strong> Die Tipp-Funktionen verraten nicht einfach die Lösung, sondern begründen den nächsten logischen Schritt. Einzige Ausnahme: Kommt man bei einem schweren Sudoku mit den Grundtechniken nicht weiter, deckt der Tipp ein Feld auf, ohne es zu erklären.</li>
 <li><strong>Ohne Anmeldung:</strong> Fortschritt, Serien und Statistik bleiben in deinem Browser.</li>
 <li><strong>Für alle Geräte:</strong> Alle Rätsel funktionieren mit Maus, Tastatur und Touchscreen.</li></ul>
 <h2>Wie die Rätsel entstehen</h2><p>Die Rätsel werden von einem Programm erzeugt und automatisch geprüft, bevor sie erscheinen. Der Zufall hängt vom Datum ab – deshalb bekommen alle am selben Tag dasselbe Rätsel, und das Archiv kann jeden vergangenen Tag exakt wiederherstellen. Die Details erklärt der Beitrag <a href="/wie-unsere-raetsel-entstehen.html">Wie unsere Rätsel entstehen</a>.</p>
-<h2>Deine Daten</h2><p>Fortschritt und Serien speichern wir nur in deinem Browser. Es gibt kein Konto und keine Bestenliste mit persönlichen Daten. Anzeigen und Besucherstatistik werden erst geladen, wenn du im Einwilligungsfenster zustimmst – was genau dabei passiert, erklärt die <a href="/privacy.html">Datenschutzerklärung</a>.</p>
+<h2>Deine Daten</h2><p>Fortschritt und Serien speichern wir nur in deinem Browser. Es gibt kein Konto und keine Bestenliste mit persönlichen Daten. Die Besucherstatistik (Google Analytics) läuft nur, wenn du im Einwilligungsfenster zustimmst. Auch personalisierte Anzeigen erscheinen nur mit deiner Einwilligung. Stimmst du nicht zu, kann Google eingeschränkte, nicht personalisierte Anzeigen ausliefern, die ohne Werbe-Cookies auskommen; ist in deinem Browser „Global Privacy Control“ aktiv, laden wir keine Werbung. Was genau dabei passiert, erklärt die <a href="/privacy.html">Datenschutzerklärung</a>.</p>
 <h2>Fehler oder Ideen?</h2><p>Hast du ein Rätsel gefunden, das sich nicht eindeutig lösen lässt, oder wünschst du dir eine neue Rätselart? Schreib uns – wir lesen jede Nachricht.</p>
 <h2>Kontakt</h2><p><a href="mailto:office@adstern.com">office@adstern.com</a></p>""")
     write("imprint.html", "page.html", title="Impressum | Rätsellotse", description="Impressum von Rätsellotse.", h1="Impressum", ads=False, robots="noindex,follow",
@@ -228,10 +233,9 @@ def main():
 "Alle Rätsel laufen ausschließlich in deinem Browser. Damit du ein Rätsel später fortsetzen kannst und deine Serie sichtbar bleibt, speichern wir Spielstand, Serie und gewählte Schwierigkeit im lokalen Speicher deines Browsers (localStorage). Diese Speicherung ist für die von dir gewünschte Funktion erforderlich (§ 165 Abs. 3 TKG 2021); die Daten werden nicht an uns übertragen und lassen sich jederzeit über die Browser-Einstellungen löschen.</p>", body, flags=re.S)
     assert "Alle Rätsel laufen" in body
     write("privacy.html", "page.html", title="Datenschutz | Rätsellotse", description="Datenschutzerklärung von Rätsellotse.", h1="Datenschutzerklärung",
-          lead="Stand: 29. Oktober 2026", ads=False, robots="noindex,follow", body=body)
+          lead="Stand: 2. November 2026", ads=False, robots="noindex,follow", body=body)
     write("404.html", "page.html", title="Seite nicht gefunden | Rätsellotse", description="Diese Seite gibt es nicht.", h1="Diese Seite gibt es nicht",
           lead="Die heutigen Rätsel warten trotzdem.", ads=False, robots="noindex", body="<p><a href='/'>Zu den Tagesrätseln</a></p>")
-    (OUT / "advertise.html").write_text(f'<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Weiterleitung</title><meta name="robots" content="noindex"><link rel="canonical" href="{SITE}/about.html"><meta http-equiv="refresh" content="0; url=/about.html"></head><body><a href="/about.html">Weiter</a></body></html>', encoding="utf-8")
 
     (OUT / "assets" / "icon.svg").write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14.5" fill="#21786C"/><path d="M16 6v14" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M9 17a7 7 0 0 0 14 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="8.5" r="3.2" fill="#E8622A" stroke="#fff" stroke-width="1.6"/></svg>')
     (OUT / "CNAME").write_text("raetsellotse.de\n"); (OUT / ".nojekyll").write_text("")
