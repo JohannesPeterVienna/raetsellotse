@@ -12,6 +12,22 @@ CODE = """
 <li><strong>Ändere wenig auf einmal:</strong> Tauschst du nur eine Ziffer aus, erkennst du an der Veränderung der Punkte genau, was sie bewirkt hat.</li>
 <li><strong>Spiele nur mögliche Codes:</strong> Jeder neue Versuch sollte zu allen bisherigen Hinweisen passen. Dann kann er selbst schon die Lösung sein.</li></ol>
 <p>Die vollständige Strategie mit Rechenbeispiel steht in der <a href="/codeknacker-anleitung.html">Codeknacker-Anleitung</a>.</p>
+<h2>Ein Spiel Schritt für Schritt</h2>
+<p>So kann ein vollständiges Spiel aussehen. Der gesuchte Code lautet 5 3 1 6 – das weiß man natürlich erst am Ende. Orange zählt die Ziffern an der richtigen Stelle, Weiß die richtigen Ziffern an der falschen Stelle.</p>
+<ol><li><strong>Versuch 1: 1 2 3 4 – kein oranger, zwei weiße Punkte.</strong> Zwei der Ziffern 1 bis 4 kommen vor, aber keine an ihrer Stelle. Weil der Code vier verschiedene Ziffern aus sechs enthält und nur zwei davon aus 1 bis 4 stammen, müssen <strong>die 5 und die 6 beide</strong> im Code stecken. Außerdem steht die 1 nicht vorn, die 2 nicht an zweiter, die 3 nicht an dritter und die 4 nicht an vierter Stelle. Von den 360 möglichen Codes passen jetzt noch 84.</li>
+<li><strong>Versuch 2: 3 5 6 1 – kein oranger, vier weiße Punkte.</strong> Dieser Versuch passt zu allem, was wir wissen: 5 und 6 sind dabei, 3 und 1 stehen an neuen Stellen. Das Ergebnis verrät alle vier Ziffern – 1, 3, 5 und 6 –, nur steht jede an der falschen Stelle.</li>
+<li><strong>Nachdenken statt raten.</strong> Die 1 darf weder an Stelle 1 (Versuch 1) noch an Stelle 4 (Versuch 2) stehen, bleibt also an 2 oder 3. Die 3 darf nicht an 3 und nicht an 1 stehen, bleibt also an 2 oder 4. Die 5 darf nicht an 2, die 6 nicht an 3. Spielt man die Fälle durch, bleiben genau vier Codes übrig: 5 3 1 6, 5 6 1 3, 6 1 5 3 und 6 3 1 5.</li>
+<li><strong>Versuch 3: 5 6 1 3 – zwei orange, zwei weiße Punkte.</strong> Gespielt wird einer der vier Kandidaten, denn er könnte schon die Lösung sein. Er ist es nicht, aber die Antwort reicht: Nur 5 3 1 6 ergibt gegen 5 6 1 3 genau zwei orange und zwei weiße Punkte. 6 1 5 3 und 6 3 1 5 hätten einen orangen und drei weiße geliefert.</li>
+<li><strong>Versuch 4: 5 3 1 6 – vier orange Punkte.</strong> Geknackt.</li></ol>
+<p>Das Muster lässt sich auf jeden Tag übertragen: ein breiter Start, ein Versuch, der die fehlenden Ziffern ins Spiel bringt, dann eine kurze Fallunterscheidung – am besten auf einem Zettel. Warum mit bestem Spiel jeder Code in höchstens fünf Versuchen fällt, steht in <a href="/codeknacker-mathematik.html">Wie viele Versuche braucht man beim Codeknacker?</a></p>
+<h2>Gibt es Schwierigkeitsstufen?</h2>
+<p>Nein. Die Regeln sind jeden Tag gleich: vier verschiedene Ziffern aus 1 bis 6, zehn Versuche. Unterschiedlich ist nur, wie viel der erste Versuch verrät. Zeigt 1 2 3 4 vier Punkte, kennst du sofort alle Ziffern und suchst nur noch die Reihenfolge. Zeigt er zwei Punkte, weißt du immerhin sicher, dass 5 und 6 dabei sind – wie im Beispiel oben. Wer sich fordern möchte, setzt sich ein eigenes Limit, etwa höchstens sechs Versuche, oder spielt einen Tag aus dem Archiv ohne Zettel nur im Kopf.</p>
+<h2>Typische Fehler</h2>
+<ul><li><strong>Punkte einzelnen Stellen zuordnen:</strong> Die Punkte stehen nach Farbe sortiert, zuerst Orange, dann Weiß. Der erste orange Punkt gehört also nicht zur ersten Ziffer.</li>
+<li><strong>Nur auf den letzten Versuch schauen:</strong> Ein neuer Versuch muss zu allen bisherigen Zeilen passen. Wer vor dem Prüfen kurz jede frühere Zeile gegenrechnet, verschenkt keine Versuche.</li>
+<li><strong>Zu viel auf einmal ändern:</strong> Tauschst du drei Ziffern gleichzeitig, weißt du hinterher nicht, welche Änderung die Punkte verschoben hat.</li>
+<li><strong>Zu schnell abschicken:</strong> Ein geprüfter Versuch lässt sich nicht zurücknehmen. Vor dem Prüfen entfernt „Löschen“ die zuletzt getippte Ziffer.</li></ul>
+<p>Codeknacker trainiert vor allem das Arbeitsgedächtnis und sauberes Schließen. Was solche Rätsel nachweislich bewirken – und was nicht –, fasst <a href="/denksport-und-gehirn.html">Denksport und Gehirn</a> zusammen. Wie man Kinder an das Spiel heranführt, steht in <a href="/logikraetsel-mit-kindern.html">Logikrätsel mit Kindern lösen</a>.</p>
 <h2>Häufige Fragen</h2>
 <p><strong>Ist der Code für alle gleich?</strong> Ja. Jeden Tag um Mitternacht (Wiener Zeit) gibt es einen neuen Code, der für alle Spielerinnen und Spieler gilt. So kannst du dein Ergebnis teilen, ohne die Lösung zu verraten – der Teilen-Knopf verschickt nur die Punkte.</p>
 <p><strong>Kann ich frühere Tage nachspielen?</strong> Ja, über das Datumsfeld oben im Spiel oder in deiner <a href="/archiv.html">Statistik</a>. Nachgespielte Tage zählen allerdings nicht für die Serie.</p>
@@ -33,6 +49,23 @@ SUDOKU = """
 <li>Schau auf fast volle Zeilen, Spalten und Blöcke – dort fehlen nur wenige Ziffern.</li>
 <li>Trage Notizen ein und suche Paare: Zwei Felder mit denselben zwei Kandidaten blockieren diese Ziffern für den Rest der Einheit.</li></ol>
 <p>Alle Techniken mit Beispielen erklären die <a href="/sudoku-strategien.html">Sudoku-Strategien</a>. Lieber auf Papier? Dann probier die <a href="/sudoku-zum-ausdrucken-mittel.html">Sudokus zum Ausdrucken</a> mit Lösungen.</p>
+<h2>Ein Beispiel Schritt für Schritt (4 × 4)</h2>
+<p>Die beiden Grundtechniken lassen sich am kleinen Mini-Sudoku am besten zeigen. Hier stehen die Ziffern 1 bis 4 in einem 4×4-Gitter mit vier 2×2-Blöcken; jede Ziffer kommt in jeder Zeile, Spalte und jedem Block genau einmal vor. Vorgegeben sind nur vier Ziffern: Zeile 1 beginnt mit 1 und endet mit 4, in Zeile 4 stehen an zweiter und dritter Stelle die 3 und die 2. Das Rätsel hat genau eine Lösung; das haben wir mit einem Programm geprüft.</p>
+<table class="tbl" aria-label="Mini-Sudoku 4 × 4, Ausgangslage"><tbody><tr><td>1</td><td></td><td></td><td>4</td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td>3</td><td>2</td><td></td></tr></tbody></table>
+<ol><li><strong>Zeile 1:</strong> Es fehlen 2 und 3. In Spalte 3 steht unten schon die 2, also kommt in Zeile 1, Spalte 3 die 3 – und daneben in Spalte 2 die 2. Das ist die Technik „einzige Möglichkeit im Feld“.</li>
+<li><strong>Zeile 4:</strong> Es fehlen 1 und 4. Spalte 1 enthält oben schon die 1, also steht in Zeile 4, Spalte 1 die 4 und in Spalte 4 die 1.</li>
+<li><strong>Wohin gehört die 3 in Spalte 1?</strong> Frei sind nur noch Zeile 2 und Zeile 3. Zeile 3 liegt im Block unten links, und dort steht bereits die 3. Also bleibt für die 3 nur Zeile 2. Das ist die zweite Technik, „einziger Platz für eine Ziffer“.</li>
+<li><strong>Spalte 1 vervollständigen:</strong> 1, 3 und 4 sind eingetragen; in Zeile 3 fehlt die 2.</li>
+<li><strong>Blöcke links:</strong> Im Block oben links fehlt nur noch die 4 (Zeile 2, Spalte 2), im Block unten links nur die 1 (Zeile 3, Spalte 2).</li>
+<li><strong>Zeile 2:</strong> Es fehlen 1 und 2. Spalte 3 enthält schon die 2, also steht dort die 1, in Spalte 4 die 2.</li>
+<li><strong>Zeile 3:</strong> Es fehlen 3 und 4. Spalte 4 enthält oben die 4, also kommt dort die 3 hin, in Spalte 3 die 4.</li></ol>
+<p>Die Lösung lautet zeilenweise 1 2 3 4 · 3 4 1 2 · 2 1 4 3 · 4 3 2 1. Beim 9×9-Sudoku sind die Schritte genau dieselben, es gibt nur mehr davon. Bei leicht und mittel kommst du mit diesen beiden Fragen bis zum Ende: „Welche Ziffer passt in dieses Feld?“ und „Wo kann diese Ziffer in dieser Zeile, Spalte oder diesem Block noch stehen?“</p>
+<h2>Typische Fehler</h2>
+<ul><li><strong>Rot heißt nicht „falsch“, kein Rot heißt nicht „richtig“:</strong> Die rote Markierung zeigt nur, dass dieselbe Ziffer schon in Zeile, Spalte oder Block steht. Eine Ziffer kann falsch sein, ohne sofort einen Konflikt zu erzeugen. Der Tipp-Knopf meldet solche Felder zuerst.</li>
+<li><strong>Aus dem Bauch eintragen:</strong> Eine geratene Ziffer fällt oft erst zehn Schritte später auf, und dann ist schwer zu sagen, wo der Fehler begann. Trage nur ein, was du begründen kannst; bei Zweifeln hilft eine Notiz.</li>
+<li><strong>Nur nach Feldern suchen:</strong> Wer immer nur fragt, was in ein Feld passt, übersieht den „einzigen Platz“ – gerade bei mittel ist das oft der einzige Weg weiter.</li>
+<li><strong>Notizen auf Papier nicht nachführen:</strong> Online verschwindet eine eingetragene Ziffer automatisch aus den Notizen in derselben Zeile, Spalte und demselben Block. Auf einem Ausdruck musst du sie selbst streichen.</li></ul>
+<p>Wie man einem Sudoku seine Schwierigkeit ansieht, erklärt <a href="/schweres-sudoku-erkennen.html">Woran man ein schweres Sudoku erkennt</a>; Herkunft und Zahlen rund um das Rätsel stehen in <a href="/sudoku-regeln-und-geschichte.html">Sudoku: Regeln, Herkunft und erstaunliche Zahlen</a>.</p>
 <h2>Häufige Fragen</h2>
 <p><strong>Wird mein Fortschritt gespeichert?</strong> Ja, automatisch in deinem Browser. Du kannst das Sudoku schließen und später weitermachen – auf demselben Gerät.</p>
 <p><strong>Muss man raten?</strong> Nein. Jedes Sudoku hat genau eine Lösung, die sich durch Schließen finden lässt. Leicht und mittel kommen mit einfachen Techniken aus; schwere Rätsel können fortgeschrittene Techniken bis hin zu Ketten verlangen. An solchen Stellen kann die Tipp-Funktion nur noch ein Feld aufdecken, aber nicht erklären – mehr dazu in <a href="/schweres-sudoku-erkennen.html">Woran man ein schweres Sudoku erkennt</a>.</p>
@@ -55,6 +88,27 @@ ZIEL = """
 <p>Weitere Kniffe stehen in den <a href="/zielzahl-tipps.html">Zielzahl-Tipps</a>.</p>
 <h2>Warum Kopfrechnen Spaß machen kann</h2>
 <p>Zielzahl verbindet Rechnen mit Knobeln: Es gibt fast immer mehrere Wege, und der eleganteste ist selten der erste, der einem einfällt. Wer regelmäßig spielt, erkennt Muster schneller – etwa, dass 25 × 4 = 100 ist oder dass sich Zahlen nahe einem Vielfachen von 25 gut anpeilen lassen.</p>
+<h2>Ein Beispiel Schritt für Schritt</h2>
+<p>Angenommen, die Zahlen des Tages sind <strong>100, 50, 9, 7, 4 und 2</strong>, und die Zielzahl lautet <strong>863</strong>.</p>
+<ol><li><strong>Größenordnung finden:</strong> 863 liegt knapp unter 900, und 9 × 100 = 900 ist schnell gerechnet. Von dort fehlen 37 nach unten.</li>
+<li><strong>Den Rest bauen:</strong> Die 37 muss aus 50, 7, 4 und 2 entstehen. 7 + 4 + 2 = 13, und 50 − 13 = 37. Zusammen: 9 × 100 − (50 − (7 + 4 + 2)) = 900 − 37 = 863. Jede Zahl ist genau einmal verwendet, alle Zwischenergebnisse (13, 37, 900) sind positiv – die Rechnung gilt.</li>
+<li><strong>Einen kürzeren Weg suchen:</strong> 863 lässt sich auch zerlegen: 863 = 800 + 63. Die 800 ist 8 × 100, und die 8 entsteht aus 4 × 2. Die 63 ist 7 × 9. Ins Feld getippt: <code>4 × 2 × 100 + 7 × 9</code>. Die 50 bleibt übrig, und das ist erlaubt.</li></ol>
+<p>Der Trick „Zielzahl durch eine kleine Zahl teilen“ aus der Strategie oben hilft hier übrigens nicht: 863 ist eine Primzahl und lässt sich durch keine der kleinen Zahlen teilen. Dann führen Anpeilen und Zerlegen in eine runde Zahl plus Rest zum Ziel.</p>
+<h2>Wie schwer ist eine Aufgabe?</h2>
+<p>Feste Stufen gibt es bei der Zielzahl nicht. Jeden Tag kommen zwei große Zahlen aus 25, 50, 75 und 100 und vier kleine aus 1 bis 10 dazu; eine kleine Zahl kann auch doppelt vorkommen, etwa zweimal die 5. Die Zielzahl liegt zwischen 101 und 999. Leicht wird eine Aufgabe, wenn die Zielzahl nahe an einem Vielfachen der großen Zahlen liegt oder sich glatt teilen lässt. Schwerer sind Zielzahlen weit weg von runden Werten, Primzahlen wie 863 und Tage mit vielen kleinen, gleichen Zahlen.</p>
+<h2>Typische Fehler</h2>
+<ul><li><strong>Punkt vor Strich vergessen:</strong> 100 + 6 × 4 ergibt 124, nicht 424. Wer zuerst addieren will, setzt Klammern: (100 + 6) × 4.</li>
+<li><strong>Negative Zwischenschritte:</strong> 2 − 7 + 100 wird abgelehnt, weil zwischendurch −5 entsteht. Stelle die Rechnung um: 100 + 2 − 7.</li>
+<li><strong>Teilen mit Rest:</strong> 50 ÷ 4 geht nicht auf und ist deshalb nicht erlaubt. Prüfe vor dem Teilen, ob das Ergebnis eine ganze Zahl ist.</li>
+<li><strong>Eine Zahl zu oft verwenden:</strong> Steht die 7 nur einmal da, darf sie auch nur einmal vorkommen. Das Spiel meldet dann, welche Zahl nicht oft genug zur Verfügung steht.</li>
+<li><strong>Zu früh aufgeben:</strong> Auch ein Ergebnis knapp daneben ist ein guter Ausgangspunkt. Das beste bisherige Ergebnis wird angezeigt; oft fehlt nur ein Tausch von zwei kleinen Zahlen.</li></ul>
+<p>Warum sich regelmäßiges Kopfrechnen lohnt und welche Wirkungen von Denksport belegt sind, steht in <a href="/denksport-und-gehirn.html">Denksport und Gehirn</a>.</p>
+<h2>Häufige Fragen</h2>
+<p><strong>Gibt es nur eine richtige Rechnung?</strong> Nein. Meist führen mehrere Wege zur Zielzahl, wie das Beispiel oben zeigt. Jede Rechnung zählt, die die Regeln einhält und genau die Zielzahl ergibt.</p>
+<p><strong>Warum ist die gezeigte Lösung manchmal umständlich?</strong> „Lösung zeigen“ durchsucht die Möglichkeiten der Reihe nach und zeigt den ersten Weg, den das Programm findet – nicht unbedingt den kürzesten. Es lohnt sich, danach selbst eine elegantere Rechnung zu suchen.</p>
+<p><strong>Zählt der Tag für meine Serie, wenn ich die Lösung angesehen habe?</strong> Nein. Die Serie wächst nur, wenn du die Zielzahl am selben Tag selbst triffst, ohne vorher die Lösung anzeigen zu lassen.</p>
+<p><strong>Sind Brüche oder Kommazahlen erlaubt?</strong> Nein. Es wird nur mit ganzen Zahlen gerechnet: Das Eingabefeld nimmt Ziffern, die vier Rechenzeichen und Klammern an, und jede Division muss ohne Rest aufgehen. Auch Hochzahlen oder Wurzeln gibt es nicht.</p>
+<p><strong>Kann ich frühere Aufgaben nachrechnen?</strong> Ja, über das Datumsfeld oben im Spiel oder deine <a href="/archiv.html">Statistik</a>. Nachgespielte Tage zählen nicht für die Serie.</p>
 """
 
 NONO = """
@@ -70,6 +124,27 @@ NONO = """
 <p>Jeden Tag gibt es drei Nonogramme: 5×5 zum Kennenlernen, 10×10 als Tagesrätsel und 15×15 für längere Knobelpausen. Alle sind <strong>eindeutig und ohne Raten lösbar</strong>: Unser Programm löst jedes Rätsel vor der Veröffentlichung allein mit Zeile-für-Zeile-Logik. Lässt es sich so nicht vollständig lösen, wird es verworfen.</p>
 <h2>Der wichtigste Trick: Überlappung</h2>
 <p>Steht in einer Zeile mit zehn Feldern die Zahl 8, ist sie fast voll. Schiebe den Block gedanklich ganz nach links (Felder 1 bis 8) und ganz nach rechts (Felder 3 bis 10): Die Felder 3 bis 8 sind in beiden Fällen gefüllt – also sicher. Mit diesem Trick beginnt fast jedes Nonogramm. Mehr Techniken erklärt die <a href="/nonogramm-anleitung.html">Nonogramm-Anleitung</a>.</p>
+<h2>Ein Beispiel Schritt für Schritt (5 × 5)</h2>
+<p>Ein kleines Nonogramm mit fünf Zeilen und fünf Spalten. Die Zeilenhinweise lauten von oben nach unten <strong>1 1 · 5 · 5 · 3 · 1</strong>, die Spaltenhinweise von links nach rechts <strong>2 · 4 · 4 · 4 · 2</strong>. Unser Löseprogramm schafft es allein mit Zeile-für-Zeile-Logik; es hat also genau eine Lösung.</p>
+<ol><li><strong>Volle Zeilen:</strong> Zeile 2 und Zeile 3 haben den Hinweis 5 – bei fünf Feldern sind sie komplett gefüllt.</li>
+<li><strong>Überlappung in den Spalten 2 bis 4:</strong> Ein Viererblock in fünf Feldern liegt entweder in den Feldern 1 bis 4 oder 2 bis 5. In beiden Lagen sind die Felder 2, 3 und 4 gefüllt. Also sind in diesen drei Spalten die Zeilen 2 bis 4 sicher gefüllt.</li>
+<li><strong>Zeile 4 (Hinweis 3):</strong> Die Felder in den Spalten 2, 3 und 4 sind schon gefüllt – das ist der ganze Dreierblock. Die Felder ganz links und ganz rechts bekommen ein Kreuz.</li>
+<li><strong>Spalten 1 und 5 (Hinweis 2):</strong> Die Zeilen 2 und 3 sind gefüllt, der Zweierblock ist komplett. Zeile 1, 4 und 5 bleiben in diesen Spalten leer.</li>
+<li><strong>Zeile 1 (Hinweis 1 1):</strong> Die Ecken sind leer, es bleiben die Felder in den Spalten 2, 3 und 4. Zwei Einzelfelder mit einer Lücke passen dort nur in die Spalten 2 und 4; Spalte 3 bleibt leer.</li>
+<li><strong>Spalten 2 und 4 (Hinweis 4):</strong> Jetzt sind die Zeilen 1 bis 4 gefüllt – der Block ist vollständig, Zeile 5 bleibt leer.</li>
+<li><strong>Zeile 5 (Hinweis 1):</strong> Übrig ist nur noch die Mitte. Damit hat auch Spalte 3 ihre vier gefüllten Felder in den Zeilen 2 bis 5. Fertig – das Bild ist ein Herz.</li></ol>
+<p>Größere Rätsel funktionieren genauso, nur greifen die Schritte öfter ineinander: Ein Kreuz in einer Spalte macht eine Zeile lösbar, die wiederum zwei Spalten weiterhilft.</p>
+<h2>Typische Fehler</h2>
+<ul><li><strong>Die Reihenfolge der Blöcke ignorieren:</strong> „1 3“ ist nicht dasselbe wie „3 1“. Der Einzelblock kommt zuerst, von links beziehungsweise von oben gelesen.</li>
+<li><strong>Keine Kreuze setzen:</strong> Wer nur füllt, verliert den Überblick, welche Felder schon geklärt sind. Kreuze sind halbe Arbeit, die man nicht zweimal machen will.</li>
+<li><strong>Ausgegraute Zahlen für einen Beweis halten:</strong> Die Zahlen werden grau, sobald die gefüllten Felder einer Zeile zum Hinweis passen. Das heißt noch nicht, dass sie an der richtigen Stelle liegen – die Spalten müssen ebenfalls aufgehen.</li>
+<li><strong>Falsch zählen:</strong> Bei 10 × 10 und 15 × 15 sind alle fünf Felder dickere Linien gezogen. Zähle in Fünfergruppen statt Feld für Feld.</li>
+<li><strong>Raten, wenn es hakt:</strong> Jedes Tagesrätsel ist ohne Raten lösbar. Steckst du fest, such die Zeile oder Spalte mit dem geringsten Spielraum, oder lass dir mit „Tipp“ ein ableitbares Feld samt Begründung zeigen.</li></ul>
+<p>Für den Einstieg mit Kindern eignet sich 5 × 5 besonders gut; Ideen dazu stehen in <a href="/logikraetsel-mit-kindern.html">Logikrätsel mit Kindern lösen</a>. Wer lieber auf Papier knobelt, findet Tipps für Rätselrunden im Beitrag <a href="/raetsel-ausdrucken-seniorenrunde-schule.html">Rätsel ausdrucken für Seniorenrunde, Schule und Wartezimmer</a>.</p>
+<h2>Häufige Fragen</h2>
+<p><strong>Was zeigt das fertige Bild?</strong> Unsere Nonogramme werden von einem Programm erzeugt. Die Bilder sind deshalb abstrakte, zusammenhängende Formen und keine gezeichneten Motive wie das Herz im Beispiel.</p>
+<p><strong>Welche Größe zählt für die Serie?</strong> Jedes am selben Tag gelöste Nonogramm zählt, egal ob 5 × 5, 10 × 10 oder 15 × 15. In der Tabelle der letzten 30 Tage in deiner <a href="/archiv.html">Statistik</a> steht jeweils das 10×10-Rätsel.</p>
+<p><strong>Was passiert bei „Neu beginnen“?</strong> Alle Markierungen des aktuellen Rätsels werden gelöscht, und du startest mit einem leeren Gitter. Die Zahl der bereits genutzten Tipps bleibt dabei gespeichert. Ein gelöstes Rätsel lässt sich nicht mehr zurücksetzen.</p>
 """
 
 # Texte der Druckseiten (Sudoku zum Ausdrucken). Aussagen zu Vorgaben/Techniken wurden für die festen Druck-Seeds nachgeprüft.

@@ -7,13 +7,15 @@ from content.articles import ARTICLES
 from content import gamepages as GP
 
 ROOT = Path(__file__).parent; OUT = ROOT / "docs"
-SITE = "https://raetsellotse.de"; V = "20261102a"; UPDATED = "Oktober 2026"
+SITE = "https://raetsellotse.de"; V = "20261104a"; UPDATED = "Oktober 2026"
 NAV = [("/", "Heute"), ("/codeknacker.html", "Codeknacker"), ("/sudoku.html", "Sudoku"), ("/zielzahl.html", "Zielzahl"), ("/nonogramm.html", "Nonogramm"),
        ("/sudoku-zum-ausdrucken-mittel.html", "Zum Ausdrucken"), ("/archiv.html", "Meine Statistik")]
 env = Environment(loader=FileSystemLoader(ROOT / "templates"), autoescape=True, trim_blocks=True, lstrip_blocks=True)
 PAGES = []
 BY = {a["slug"]: a for a in ARTICLES}
 REVIEWED = "2026-11-02"; REVIEWED_TEXT = "2. November 2026"   # letzte redaktionelle Prüfung aller Beiträge
+CONTENT_UPDATED = "2026-11-04"   # letzte inhaltliche Änderung von Startseite, Spielseiten und „Über“ (sitemap lastmod)
+LOADER = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7811071715414905" crossorigin="anonymous"></script>'
 LEGAL_ADDR = "AdStern :: Agentur für digitales Marketing<br>Seilerstätte 8, 1010 Wien, Österreich<br>E-Mail: <a href='mailto:office@adstern.com'>office@adstern.com</a><br>Web: <a href='https://www.adstern.com'>www.adstern.com</a>"
 
 
@@ -134,13 +136,15 @@ UI_ZIEL = """<div class="daynav" data-daynav></div>
 
 
 def main():
+    import subprocess
+    subprocess.run(["node", "--test", str(ROOT / "test_consent.js")], check=True, capture_output=True)   # Einwilligung/Loader-Test
     if OUT.exists(): shutil.rmtree(OUT)
     (OUT / "assets").mkdir(parents=True)
     for f in (ROOT / "assets").iterdir(): shutil.copy(f, OUT / "assets" / f.name)
 
     write("index.html", "home.html", title="Rätsellotse – tägliche Rätsel: Sudoku, Nonogramm, Codeknacker & Zielzahl",
           description="Jeden Tag neue Logikrätsel: Sudoku in drei Stufen, Nonogramm, Codeknacker und Zielzahl. Kostenlos, ohne Anmeldung, mit Archiv, Statistik und erklärten Tipps.",
-          articles=ARTICLES, priority=1.0, active="/",
+          articles=ARTICLES, priority=1.0, active="/", lastmod=CONTENT_UPDATED,
           jsonld=[{"@context": "https://schema.org", "@type": "WebSite", "name": "Rätsellotse", "url": SITE + "/", "inLanguage": "de"}])
 
     games = [
@@ -171,7 +175,7 @@ def main():
         ld = [crumbs_ld(crumbs), {"@context": "https://schema.org", "@type": "WebApplication", "name": f"{name} – Rätsellotse", "url": f"{SITE}/{slug}.html",
               "applicationCategory": "GameApplication", "operatingSystem": "Web", "inLanguage": "de", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}}]
         write(f"{slug}.html", "game.html", title=f"{title} | Rätsellotse", description=desc, h1=name, lead=lead, ui=ui, game=slug,
-              body=body, related=[BY[s] for s in rel], crumbs=crumbs, jsonld=ld, priority=0.9)
+              body=body, related=[BY[s] for s in rel], crumbs=crumbs, jsonld=ld, priority=0.9, lastmod=CONTENT_UPDATED)
 
     for level, intro in (("leicht", "Für Einsteiger: viele Vorgaben, lösbar allein mit den beiden einfachsten Techniken."),
                          ("mittel", "Weniger Vorgaben, aber weiterhin ohne Raten mit einfachen Techniken lösbar."),
@@ -211,7 +215,7 @@ def main():
 <p class="small muted" style="margin-top:18px">Alle Werte stehen nur in deinem Browser (lokaler Speicher) und werden nicht übertragen. Auf einem anderen Gerät beginnst du von vorn. <button type="button" class="linkbtn" data-reset>Statistik zurücksetzen</button></p></section>""")
 
     write("about.html", "page.html", title="Über Rätsellotse", description="Wer hinter Rätsellotse steht und wie die Rätsel entstehen.",
-          h1="Über Rätsellotse", lead="Täglich frische Rätsel – fair, eindeutig lösbar und ohne Anmeldung.", priority=0.3,
+          h1="Über Rätsellotse", lead="Täglich frische Rätsel – fair, eindeutig lösbar und ohne Anmeldung.", priority=0.3, lastmod=CONTENT_UPDATED,
           body="""<p>Rätsellotse ist ein Projekt der Wiener Agentur AdStern. Jeden Tag erscheinen neue Rätsel – Codeknacker, Sudoku in drei Stufen, Zielzahl und Nonogramm in drei Größen –, für alle Spielerinnen und Spieler dieselben. Die Idee: eine kurze, faire Knobelpause, die man mit anderen vergleichen kann, ohne Konto und ohne Zeitdruck.</p>
 <h2>Unsere Grundsätze</h2>
 <ul><li><strong>Fair:</strong> Jedes Rätsel ist eindeutig lösbar. Nonogramme lassen sich ohne Raten lösen, Sudokus der Stufen leicht und mittel mit einfachen Techniken, schwere teils nur mit fortgeschrittenen Techniken; jede Zielzahl ist nachweislich erreichbar.</li>
@@ -219,8 +223,14 @@ def main():
 <li><strong>Ohne Anmeldung:</strong> Fortschritt, Serien und Statistik bleiben in deinem Browser.</li>
 <li><strong>Für alle Geräte:</strong> Alle Rätsel funktionieren mit Maus, Tastatur und Touchscreen.</li></ul>
 <h2>Wie die Rätsel entstehen</h2><p>Die Rätsel werden von einem Programm erzeugt und automatisch geprüft, bevor sie erscheinen. Der Zufall hängt vom Datum ab – deshalb bekommen alle am selben Tag dasselbe Rätsel, und das Archiv kann jeden vergangenen Tag exakt wiederherstellen. Die Details erklärt der Beitrag <a href="/wie-unsere-raetsel-entstehen.html">Wie unsere Rätsel entstehen</a>.</p>
-<h2>Deine Daten</h2><p>Fortschritt und Serien speichern wir nur in deinem Browser. Es gibt kein Konto und keine Bestenliste mit persönlichen Daten. Die Besucherstatistik (Google Analytics) läuft nur, wenn du im Einwilligungsfenster zustimmst. Auch personalisierte Anzeigen erscheinen nur mit deiner Einwilligung. Stimmst du nicht zu, kann Google eingeschränkte, nicht personalisierte Anzeigen ausliefern, die ohne Werbe-Cookies auskommen; ist in deinem Browser „Global Privacy Control“ aktiv, laden wir keine Werbung. Was genau dabei passiert, erklärt die <a href="/privacy.html">Datenschutzerklärung</a>.</p>
-<h2>Fehler oder Ideen?</h2><p>Hast du ein Rätsel gefunden, das sich nicht eindeutig lösen lässt, oder wünschst du dir eine neue Rätselart? Schreib uns – wir lesen jede Nachricht.</p>
+<h2>Deine Daten</h2><p>Fortschritt und Serien speichern wir nur in deinem Browser. Es gibt kein Konto und keine Bestenliste mit persönlichen Daten. Die Besucherstatistik (Google Analytics) läuft nur, wenn du im Einwilligungsfenster zustimmst. Auch personalisierte Anzeigen erscheinen nur mit deiner Einwilligung. Stimmst du nicht zu, kann Google eingeschränkte, nicht personalisierte Anzeigen ausliefern, die ohne Werbe-Cookies auskommen; ist in deinem Browser „Global Privacy Control“ aktiv, halten wir alle Anzeigenanfragen an und befüllen keine Werbeplätze. Was genau dabei passiert, erklärt die <a href="/privacy.html">Datenschutzerklärung</a>.</p>
+<h2>Wer dahintersteht</h2><p>Betrieben wird Rätsellotse von AdStern :: Agentur für digitales Marketing mit Sitz in der Seilerstätte 8 in 1010 Wien. AdStern entwickelt die Rätselprogramme, schreibt die Anleitungen und Beiträge und ist für alle Inhalte verantwortlich. Die vollständigen Angaben stehen im <a href="/imprint.html">Impressum</a>. Die Angabe „Redaktion Rätsellotse“ unter den Beiträgen steht für AdStern als Herausgeber.</p>
+<h2>Was es hier gibt</h2><p>Herzstück sind die vier Tagesrätsel. Dazu kommen drei Druckseiten mit je sechs Sudokus samt Lösungen in den Stufen <a href="/sudoku-zum-ausdrucken-leicht.html">leicht</a>, <a href="/sudoku-zum-ausdrucken-mittel.html">mittel</a> und <a href="/sudoku-zum-ausdrucken-schwer.html">schwer</a>, und eine Reihe von Beiträgen: Anleitungen und Strategien zu jedem Rätsel, Hintergrund zur Mathematik hinter dem Codeknacker und zu schweren Sudokus, ein nüchterner Blick auf die Forschung zu Denksport und Gehirn sowie praktische Tipps für Rätselrunden mit Kindern, in der Schule oder im Seniorentreff. Alle Beiträge sind über die <a href="/">Startseite</a> erreichbar.</p>
+<h2>Wie wir Inhalte prüfen</h2><p>Für die Rätsel selbst übernehmen Prüfprogramme die Kontrolle: Sie stellen sicher, dass jedes Sudoku und jedes Nonogramm genau eine Lösung hat und jede Zielzahl erreichbar ist. Aussagen über bestimmte Rätsel – etwa welche Techniken die Sudokus auf den Druckseiten verlangen – haben wir mit einem Löseprogramm nachgeprüft, und die Beispielrätsel auf den Spielseiten sind vollständig nachgerechnet. Jeder Beitrag trägt das Datum seiner letzten Prüfung; wo wir uns auf Studien oder Fachstellen stützen, nennen wir die Quellen am Ende des Beitrags.</p>
+<h2>Werbung auf Rätsellotse</h2><p>Rätsellotse ist kostenlos und finanziert sich über Anzeigen von Google. Werbeplätze sind mit „Werbung“ gekennzeichnet. Auf den Spielseiten steht keine Werbung neben dem Spielfeld oder den Bedienknöpfen, damit niemand beim Knobeln versehentlich auf eine Anzeige tippt. Die Rätsel, Tipps und Lösungen funktionieren unabhängig davon, ob du der Werbung zustimmst.</p>
+<h2>Ergebnisse teilen, ohne zu spoilern</h2><p>Nach dem Lösen kannst du dein Ergebnis teilen. Verschickt wird nur, was nichts verrät: beim Codeknacker die farbigen Punkte deiner Versuche, beim Sudoku die Stufe und beim Nonogramm die Größe, jeweils mit der Zahl der genutzten Tipps, bei der Zielzahl, dass du sie getroffen hast. Die Lösung selbst und deine Rechnungen bleiben bei dir, so können Freunde dasselbe Rätsel noch unbefangen spielen.</p>
+<h2>Bedienung</h2><p>Alle Rätsel lassen sich mit Maus, Finger oder Tastatur spielen: beim Codeknacker mit den Ziffern 1 bis 6, Enter und Rücktaste, beim Sudoku mit Pfeil- und Zifferntasten und der Taste N für Notizen, beim Nonogramm mit Leertaste oder Enter auf dem gewählten Feld. Die Felder sind für Bildschirmleser beschriftet. Wenn dir etwas umständlich vorkommt oder nicht funktioniert, freuen wir uns über einen Hinweis.</p>
+<h2>Fehler oder Ideen?</h2><p>Hast du ein Rätsel gefunden, das sich nicht eindeutig lösen lässt, oder wünschst du dir eine neue Rätselart? Schreib uns – wir lesen jede Nachricht. Nenne dabei Datum und Rätselart, bei Sudoku und Nonogramm auch Stufe oder Größe: Weil jedes Rätsel aus dem Datum entsteht, können wir es damit exakt nachbauen und prüfen.</p>
 <h2>Kontakt</h2><p><a href="mailto:office@adstern.com">office@adstern.com</a></p>""")
     write("imprint.html", "page.html", title="Impressum | Rätsellotse", description="Impressum von Rätsellotse.", h1="Impressum", ads=False, robots="noindex,follow",
           body=f"""<h2>Medieninhaber und Herausgeber</h2><p>{LEGAL_ADDR}</p>
@@ -244,7 +254,20 @@ def main():
     (OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {SITE}/sitemap.xml\n")
     urls = "".join(f"<url><loc>{SITE}{p}</loc><lastmod>{lm}</lastmod><priority>{pr}</priority></url>" for p, pr, lm in PAGES)
     (OUT / "sitemap.xml").write_text(f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n')
+    check_head()
     print(f"{len(PAGES)} indexierbare Seiten")
+
+
+def check_head():
+    """Indexierbare Seiten: Consent-Default → AdSense-Loader (genau einmal) → consent.js. noindex-Seiten: kein Loader."""
+    indexed = {("/index.html" if p == "/" else p) for p, _, _ in PAGES}
+    for f in OUT.glob("*.html"):
+        html = f.read_text(encoding="utf-8"); head = html.split("</head>", 1)[0]
+        if "/" + f.name in indexed:
+            d, l, c = head.find('gtag("consent","default"'), head.find(LOADER), head.find("/assets/consent.js")
+            assert html.count("adsbygoogle.js") == 1 and -1 < d < l < c, f"Kopf falsch: {f.name}"
+        else:
+            assert "adsbygoogle" not in html, f"Loader auf nicht indexierbarer Seite: {f.name}"
 
 
 if __name__ == "__main__":

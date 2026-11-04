@@ -15,8 +15,28 @@
   <div class="prose" style="max-width:none">
     <h2>So funktioniert Rätsellotse</h2>
     <div class="prose"><p>Jeden Tag um Mitternacht (Wiener Zeit) erscheinen vier neue Rätsel. Alle Spielerinnen und Spieler bekommen dieselben Aufgaben – so kannst du dein Ergebnis mit Freunden vergleichen, ohne die Lösung zu verraten.</p>
-    <p>Dein Fortschritt und deine Serie bleiben in deinem Browser gespeichert. Verpasste Tage findest du im Archiv jedes Rätsels.</p></div>
+    <p>Dein Fortschritt und deine Serie bleiben in deinem Browser gespeichert. Verpasste Tage findest du im Archiv jedes Rätsels.</p>
+    <h2>Die vier Rätsel im Überblick</h2>
+    <p><strong><a href="/codeknacker.html">Codeknacker</a></strong> ist ein Logikrätsel um einen vierstelligen Zahlencode aus verschiedenen Ziffern von 1 bis 6. Nach jedem Versuch zeigen Punkte, wie viele Ziffern stimmen und wie viele davon an der richtigen Stelle stehen. Zehn Versuche hast du; mit sauberem Schließen reichen deutlich weniger.</p>
+    <p><strong><a href="/sudoku.html">Sudoku</a></strong> gibt es täglich in drei Stufen: leicht mit 38, mittel mit 30 und schwer mit rund 25 Vorgaben. Notizen für Kandidaten sind eingebaut, und der Tipp-Knopf erklärt den nächsten Schritt, statt nur eine Ziffer zu verraten.</p>
+    <p><strong><a href="/zielzahl.html">Zielzahl</a></strong> ist Kopfrechnen mit Knobelanteil: Aus zwei großen und vier kleinen Zahlen sollst du mit den vier Grundrechenarten eine Zahl zwischen 101 und 999 treffen. Meist gibt es mehrere Wege, und der eleganteste ist selten der erste.</p>
+    <p><strong><a href="/nonogramm.html">Nonogramm</a></strong> ist ein Malrätsel: Zahlen am Rand verraten, wie viele Felder in jeder Zeile und Spalte gefüllt sind. Du wählst zwischen 5 × 5 zum Kennenlernen, 10 × 10 als Tagesrätsel und 15 × 15 für längere Pausen.</p></div>
     {{ m.ad("rect") }}
+    <h2>Wie die Rätsel entstehen und geprüft werden</h2>
+    <div class="prose"><p>Kein Rätsel wird von Hand abgetippt. Ein Programm erzeugt sie aus einem Zufallswert, der vom Datum abhängt. Deshalb bekommen alle am selben Tag dieselbe Aufgabe, und jedes Rätsel lässt sich später exakt wiederherstellen. Bevor eine Aufgabe erscheint, wird sie automatisch geprüft:</p>
+    <ul><li><strong>Sudoku:</strong> Nach jeder entfernten Ziffer prüft ein Löser, ob es noch genau eine Lösung gibt. Bei leicht und mittel muss das Rätsel außerdem allein mit den zwei Grundtechniken lösbar bleiben.</li>
+    <li><strong>Nonogramm:</strong> Ein Löser muss das Rätsel vollständig mit Zeile-für-Zeile-Logik schaffen, sonst wird es verworfen. Damit ist es ohne Raten lösbar und hat genau eine Lösung.</li>
+    <li><strong>Zielzahl:</strong> Die Zielzahl entsteht, indem das Programm die Zahlen des Tages selbst verrechnet. Sie ist also immer erreichbar.</li>
+    <li><strong>Codeknacker:</strong> Wir haben alle 360 möglichen Codes durchgerechnet. Mit bestem Spiel ist jeder in höchstens fünf Versuchen zu finden.</li></ul>
+    <p>Bei den schweren Sudokus haben wir zusätzlich nachgemessen, welche Techniken sie verlangen – denn dort schwankt die Schwierigkeit am stärksten. Alle Einzelheiten stehen im Beitrag <a href="/wie-unsere-raetsel-entstehen.html">Wie unsere Rätsel entstehen</a>.</p>
+    <h2>Sudokus zum Ausdrucken</h2>
+    <p>Lieber mit Bleistift? Für jede Stufe gibt es eine Druckseite mit sechs Sudokus: <a href="/sudoku-zum-ausdrucken-leicht.html">leicht</a>, <a href="/sudoku-zum-ausdrucken-mittel.html">mittel</a> und <a href="/sudoku-zum-ausdrucken-schwer.html">schwer</a>. Auch sie haben jeweils genau eine Lösung. Der Knopf „Drucken oder als PDF speichern“ öffnet den Druckdialog deines Browsers; dort kannst du statt eines Druckers „Als PDF speichern“ wählen und die Datei später beliebig oft ausdrucken. Gedruckt werden nur die Rätsel, immer zwei nebeneinander, und die Lösungen auf einer eigenen Seite – Navigation und Werbung bleiben weg. Anders als die Tagesrätsel wechseln die Druckblätter nicht täglich, sie eignen sich also gut für Gruppen, in denen alle dasselbe Blatt lösen sollen.</p>
+    <h2>Archiv und Statistik</h2>
+    <p>Über das Datumsfeld oben in jedem Spiel kannst du jeden Tag seit dem 1. Januar 2026 nachspielen. Unter <a href="/archiv.html">Meine Statistik</a> siehst du deine Serien, Erfolgsquoten und die Rätsel der letzten 30 Tage auf einen Blick. Alle diese Werte stehen nur in deinem Browser; ein Konto brauchst du nicht.</p>
+    <h2>Für wen Rätsellotse gedacht ist</h2>
+    <p>Für die kurze Pause zwischendurch reichen ein Codeknacker oder ein 5×5-Nonogramm. Wer länger knobeln will, nimmt sich ein schweres Sudoku oder das 15×15-Nonogramm vor. Familien finden im Beitrag <a href="/logikraetsel-mit-kindern.html">Logikrätsel mit Kindern lösen</a> Ideen für den Einstieg, und wer Rätsel für eine Gruppe ausdruckt, findet Tipps in <a href="/raetsel-ausdrucken-seniorenrunde-schule.html">Rätsel ausdrucken für Seniorenrunde, Schule und Wartezimmer</a>.</p>
+    <h2>Kostenlos – und wie wir das finanzieren</h2>
+    <p>Alle Rätsel und Druckseiten sind kostenlos. Die Seite finanziert sich über Werbung, die als solche gekennzeichnet ist. Reichweitenmessung und personalisierte Anzeigen laufen nur mit deiner Einwilligung; die Einstellung kannst du jederzeit über „Datenschutz-Einstellungen“ im Seitenfuß ändern. Wer hinter Rätsellotse steht, erklärt die Seite <a href="/about.html">Über Rätsellotse</a>.</p></div>
     <h2>Strategien und Anleitungen</h2>
     <ul class="cards">{% for a in articles %}<li><a href="/{{ a.slug }}.html"><strong>{{ a.title }}</strong><span>{{ a.teaser }}</span></a></li>{% endfor %}</ul>
   </div>

@@ -1,6 +1,7 @@
 /* Werbung und Statistik — beides läuft über Googles zertifizierte Einwilligungsverwaltung (TCF 2.2).
+   Der AdSense-Loader steht statisch im <head>, direkt nach einem Inline-Skript mit dem Consent-Default (alles denied).
    Ablauf Statistik:
-   1) Sofort, vor allen Google-Skripten: gtag-Warteschlange + consent default (alles denied, 500 ms), ga-disable an.
+   1) Sofort, vor allen Google-Skripten (im <head>; hier nur als Rückfall): gtag-Warteschlange + consent default (alles denied, 500 ms), ga-disable an.
    2) Bei jeder Meldung der Google-CMP (TCF-Ereignis, CONSENT_MODE_DATA_READY, US-Status) wird neu entschieden.
       DSGVO-Zweig: messen nur bei TCF Zweck 1 + Anbieter 755 UND Consent Mode analytics GRANTED (1).
       Außerhalb der DSGVO (gdprApplies false): nur bei GRANTED (1) oder NOT_APPLICABLE (3) und wenn die CMP
@@ -19,7 +20,11 @@
   window.dataLayer = window.dataLayer || [];
   const gtag = window.gtag = typeof window.gtag === "function" ? window.gtag : function(){ window.dataLayer.push(arguments); };
   window[SPERRE] = true;
-  gtag("consent", "default", { ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied", analytics_storage: "denied", wait_for_update: 500 });
+  // Der Standard steht schon im <head> vor dem AdSense-Loader; nur ohne ihn (z. B. ältere Seiten im Cache) hier setzen.
+  if (!window.rlConsentDefault) {
+    gtag("consent", "default", { ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied", analytics_storage: "denied", wait_for_update: 500 });
+    window.rlConsentDefault = true;
+  }
   window.googlefc = window.googlefc || {};
   window.googlefc.callbackQueue = window.googlefc.callbackQueue || [];
 
@@ -32,11 +37,14 @@
   const gpc = navigator.globalPrivacyControl === true;
 
   function loadAds(){
-    if (gpc) return;
-    const s = document.createElement("script");
-    s.async = true; s.crossOrigin = "anonymous";
-    s.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${PUB}`;
-    document.head.appendChild(s);
+    if (gpc) { (window.adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 1; return; }   // keine Anzeigenanfragen
+    // Der Loader steht statisch im <head>; nur falls er fehlt, wird er hier nachgeladen – nie doppelt.
+    if (!document.querySelector('script[src*="pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]')) {
+      const s = document.createElement("script");
+      s.async = true; s.crossOrigin = "anonymous";
+      s.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${PUB}`;
+      document.head.appendChild(s);
+    }
     document.querySelectorAll(".ad[data-ad]").forEach(box => {
       const id = SLOTS[box.dataset.ad];
       if (!id) return;
