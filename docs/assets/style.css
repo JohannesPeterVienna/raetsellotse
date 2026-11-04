@@ -168,3 +168,23 @@ main{overflow-wrap:break-word}main a{overflow-wrap:anywhere}
 
 /* Abstand Superbanner – Fußzeilen-Knopf (≥ 150 px) */
 .ad--superbanner{margin-bottom:120px}
+
+/* Logbuch-Zettel: Übergangsfenster nur für die Besucherstatistik (unten fixiert, blockiert nichts) */
+.logbuch{position:fixed;z-index:30;left:16px;right:16px;bottom:16px;margin-left:auto;max-width:27rem;max-height:calc(100vh - 32px);overflow:auto;
+  background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:var(--r);padding:18px 18px 16px;font-size:.9rem;line-height:1.5;
+  box-shadow:0 14px 40px -12px rgba(16,43,42,.45)}
+.logbuch__boje{display:block;height:6px;margin:-18px -18px 14px;border-radius:var(--r) var(--r) 0 0;
+  background:repeating-linear-gradient(-45deg,var(--buoy) 0 12px,var(--card) 12px 20px,var(--sea) 20px 32px,var(--card) 32px 40px)}
+.logbuch__titel{font:700 1.2rem/1.15 var(--head);margin:0 0 .5em;padding-right:36px;letter-spacing:0}
+.logbuch__titel:focus{outline:none}.logbuch__titel:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.logbuch p{margin:0 0 .7em}.logbuch a{color:var(--sea)}
+.logbuch__stand{color:var(--muted);font-size:.85rem}
+.logbuch__wahl{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.logbuch .logbuch__knopf{flex:1 1 6rem;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 16px;border-radius:999px;
+  font:600 .95rem var(--text);background:var(--sea-soft);color:var(--ink);border:2px solid var(--sea);cursor:pointer;text-decoration:none;text-align:center}
+.logbuch .logbuch__knopf:hover{background:var(--sea);color:var(--card)}
+.logbuch__weg{position:absolute;top:12px;right:8px;width:40px;height:40px;border:0;border-radius:50%;background:transparent;color:var(--muted);font:400 1.5rem/1 var(--text);cursor:pointer}
+.logbuch__weg:hover{background:var(--soft);color:var(--ink)}
+@media (max-width:480px){.logbuch{left:12px;right:12px;bottom:12px;padding:14px 14px 12px;font-size:.85rem}
+  .logbuch__boje{margin:-14px -14px 10px}.logbuch__titel{font-size:1.05rem}.logbuch__weg{top:8px;right:4px}.logbuch p{margin-bottom:.5em}.logbuch__wahl{margin-top:8px}}
+@media print{.logbuch{display:none!important}}

@@ -7,7 +7,7 @@ from content.articles import ARTICLES
 from content import gamepages as GP
 
 ROOT = Path(__file__).parent; OUT = ROOT / "docs"
-SITE = "https://raetsellotse.de"; V = "20261104b"; UPDATED = "Oktober 2026"
+SITE = "https://raetsellotse.de"; V = "20261104c"; UPDATED = "Oktober 2026"
 NAV = [("/", "Heute"), ("/codeknacker.html", "Codeknacker"), ("/sudoku.html", "Sudoku"), ("/zielzahl.html", "Zielzahl"), ("/nonogramm.html", "Nonogramm"),
        ("/sudoku-zum-ausdrucken-mittel.html", "Zum Ausdrucken"), ("/archiv.html", "Meine Statistik")]
 env = Environment(loader=FileSystemLoader(ROOT / "templates"), autoescape=True, trim_blocks=True, lstrip_blocks=True)
@@ -260,7 +260,8 @@ def main():
 
 
 def check_head():
-    """Indexierbare Seiten: Consent-Default → AdSense-Loader (genau einmal) → consent.js. noindex-Seiten: kein Loader."""
+    """Indexierbare Seiten: Consent-Default → AdSense-Loader (genau einmal) → consent.js. noindex-Seiten: kein Loader.
+    Jede Seite: Knopf „Datenschutz-Einstellungen“ (Widerruf) und consent.js; ohne Werbung mit data-ohne-werbung."""
     indexed = {("/index.html" if p == "/" else p) for p, _, _ in PAGES}
     for f in OUT.glob("*.html"):
         html = f.read_text(encoding="utf-8"); head = html.split("</head>", 1)[0]
@@ -269,6 +270,10 @@ def check_head():
             assert html.count("adsbygoogle.js") == 1 and -1 < d < l < c, f"Kopf falsch: {f.name}"
         else:
             assert "adsbygoogle" not in html, f"Loader auf nicht indexierbarer Seite: {f.name}"
+        if f.name.startswith("google"): continue   # Bestätigungsdatei der Search Console
+        assert html.count("data-privacy-settings") == 1, f"Knopf Datenschutz-Einstellungen fehlt: {f.name}"
+        assert html.count("/assets/consent.js") == 1 and ("data-ohne-werbung" in head) == ("/" + f.name not in indexed), f"consent.js falsch: {f.name}"
+        assert "googletagmanager" not in html, f"gtag.js statisch eingebunden: {f.name}"
 
 
 if __name__ == "__main__":
