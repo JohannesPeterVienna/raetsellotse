@@ -328,7 +328,7 @@ test("localStorage gesperrt: kein Absturz, Zettel erscheint trotzdem", () => {
   assert.equal(p.gtm(), 1);
 });
 
-test("„ד schließt ohne zu entscheiden; Freiraum unten nur, solange der Zettel offen ist; Titel ist h2", () => {
+test("„×“ schließt ohne zu entscheiden; Freiraum unten nur, solange der Zettel offen ist; Titel ist h2", () => {
   const p = seite({ tcfapi: false });
   p.document.body.style.paddingBottom = "4px";
   p.ticken(3000);
@@ -365,4 +365,33 @@ test("Google-Dialog sichtbar, aber unentschieden: keine neue eigene Abfrage; ber
   sofort.tcf({ ...VERBORGEN, eventStatus: "cmpuishown", displayStatus: "visible" }); sofort.ticken(5000);
   assert.equal(sofort.gtm(), 0, "Dialog schon beim Aufruf sichtbar: Statistik bleibt aus");
   assert.equal(sofort.zettel(), null);
+});
+
+test("Zeichen: kein hebräisches Dalet (U+05D3) statt „×“ in den Quellen", () => {
+  for (const f of ["assets/consent.js", "assets/style.css", "content/privacy_body.html", "templates/base.html", "build.py", "test_consent.js"]) {
+    assert.ok(!fs.readFileSync(__dirname + "/" + f, "utf8").includes("\u05d3"), f);
+  }
+  assert.ok(SRC.includes("\u00d7"), "„×“ (U+00D7) im Zettel");
+});
+
+test("Google-Nein gleich beim Laden (Zettel nie aktiv): gespeichertes eigenes Ja verworfen, _ga-Cookies gelöscht", () => {
+  const p = seite({ speicher: { "rl-statistik-wahl": { v: 1, wahl: "ja", zeit: Date.now() - 864e5 } } });
+  p.tcf(GOOGLE_NEIN);
+  assert.ok(!p.jar.has("_ga") && !p.jar.has("_ga_T00HRG2YVF"), "Cookies weg, ohne dass der Zettel aktiv war");
+  assert.ok(p.jar.has("rl-andere"));
+  assert.equal(p.wahl(), null);
+  p.ticken(5000);
+  assert.equal(p.zettel(), null); assert.equal(p.gtm(), 0);
+  const ohneWahl = seite();   // nur alte Cookies, keine eigene Wahl
+  ohneWahl.tcf(GOOGLE_NEIN);
+  assert.ok(!ohneWahl.jar.has("_ga"));
+});
+
+test("Zeitstempel aus der Zukunft (> 1 Tag) wird verworfen: neu fragen, nicht messen", () => {
+  const p = seite({ tcfapi: false, speicher: { "rl-statistik-wahl": { v: 1, wahl: "ja", zeit: Date.now() + 3 * 864e5 } } });
+  p.ticken(3000);
+  assert.ok(p.zettel()); assert.equal(p.gtm(), 0);
+  const knapp = seite({ tcfapi: false, speicher: { "rl-statistik-wahl": { v: 1, wahl: "ja", zeit: Date.now() + 36e5 } } });
+  knapp.ticken(3000);
+  assert.equal(knapp.zettel(), null, "kleine Uhrabweichung (1 h) wird toleriert"); assert.equal(knapp.gtm(), 1);
 });

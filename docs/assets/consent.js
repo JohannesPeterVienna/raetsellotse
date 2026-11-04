@@ -134,6 +134,7 @@
     gtag("consent", "update", Object.assign({ analytics_storage: "denied" },
       ohneSpeichern ? { ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" } : {}));
     lage.misst = false; lage.gesperrtGemeldet = true;
+    analyseSpurenTilgen();   // auch bei Google-Nein gleich beim Laden: alte _ga-Cookies (z. B. aus einem früheren Ja) entfernen
   }
 
   /* ---------- Logbuch-Zettel: eigenes Übergangsfenster nur für die Statistik ---------- */
@@ -146,6 +147,7 @@
     try {
       const w = JSON.parse(window.localStorage.getItem(schluessel));
       if (!w || w.v !== FASSUNG || !Number.isFinite(w.zeit)) return null;
+      if (w.zeit > Date.now() + 864e5) return null;   // Zeitstempel aus der Zukunft (verstellte Uhr, Manipulation) gilt nicht
       const bis = new Date(w.zeit); bis.setMonth(bis.getMonth() + MONATE);
       return Date.now() < bis.getTime() ? w : null;   // nach 12 Monaten neu fragen
     } catch (_) { return null; }
@@ -197,8 +199,8 @@
     zettelWeg(true);
     const knoepfe = [], text = [];
     if (art === "wahl"){
-      text.push(teil("p", {}, "Wir würden mit Google Analytics (Google Ireland Ltd.) und Cookies zählen, welche Seiten besucht werden – nur Statistik, keine Werbung. Ohne Ja bleibt sie aus."));
-      text.push(teil("p", { class: "logbuch__stand" }, "Widerruf jederzeit über „Datenschutz-Einstellungen“ im Seitenfuß · ", datenschutzLink()));
+      text.push(teil("p", {}, "Wir würden mit Google Analytics (Google Ireland Ltd.) und Cookies zählen, welche Seiten besucht werden – nur Statistik, keine Werbung. Google kann Daten auch in den USA verarbeiten."));
+      text.push(teil("p", { class: "logbuch__stand" }, "Widerruf jederzeit: „Datenschutz-Einstellungen“ im Seitenfuß · ", datenschutzLink()));
       const w = eigeneWahl();
       if (w) text.push(teil("p", { class: "logbuch__stand" }, `Deine aktuelle Wahl: ${w.wahl === "ja" ? "zugestimmt" : "abgelehnt"} am ${datum(w.zeit)}.`));
       if (ohneWerbung) text.push(teil("p", { class: "logbuch__stand" }, "Auf dieser Seite wird nie gemessen; deine Wahl gilt für die Rätsel- und Beitragsseiten."));
@@ -214,7 +216,7 @@
     }
     const titel = teil("h2", { class: "logbuch__titel", id: "logbuch-titel", tabindex: "-1" },
       art === "wahl" ? "Besuche ins Logbuch eintragen?" : "Deine Datenschutz-Einstellungen");
-    // Neutrales „ד: nur wegklappen, nichts speichern – bewusst leiser als die zwei Entscheidungsknöpfe
+    // Neutrales „×“: nur wegklappen, nichts speichern – bewusst leiser als die zwei Entscheidungsknöpfe
     if (art === "wahl") knoepfe.push(teil("button", { type: "button", class: "logbuch__weg", "data-logbuch-zu": "", "aria-label": "Schließen, ohne zu entscheiden" }, "×"));
     const el = teil("section", { class: "logbuch", role: "region", "aria-labelledby": "logbuch-titel", "data-logbuch": art },
       teil("span", { class: "logbuch__boje", "aria-hidden": "true" }), titel, ...text, teil("div", { class: "logbuch__wahl" }, ...knoepfe));
@@ -307,7 +309,7 @@
       }
       const gemessen = lage.misst;
       uebergangBeenden();
-      if (u === "nein" && gemessen){ ausschalten(); analyseSpurenTilgen(); return; }
+      if (u === "nein" && gemessen){ ausschalten(); return; }
     } else if (u === "offen" && zettel.faellig && !zettel.abgeloest) { uebergangPruefen(); return; }
     else if (u !== "offen") zettel.abgeloest = true;
     if (u === "ja" && !lage.misst) einschalten();
