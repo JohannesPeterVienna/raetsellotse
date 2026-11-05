@@ -6,3 +6,5 @@ Statische Website für https://raetsellotse.de – tägliche Rätsel (Codeknacke
 - `build.py` – erzeugt `docs/` inkl. geprüfter Druck-Sudokus
 
 Bauen: `pip install jinja2 && python3 build.py`
+
+Test Werbeplätze (nach dem Bauen, Playwright): `node --test test_werbeplaetze.js` – leere Werbeplätze bleiben unsichtbar, gefüllte erscheinen mit Abstand.

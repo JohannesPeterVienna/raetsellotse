@@ -73,8 +73,18 @@
         ins.dataset.fullWidthResponsive = "true";
       }
       box.appendChild(ins);
+      aufAnzeigeWarten(box, ins);
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     });
+  }
+
+  // Ohne :has() blendet style.css den Platz über .ad--belegt ein – gesetzt erst, wenn Google
+  // data-ad-status="filled" an das <ins> schreibt („unfilled“ oder keine Antwort: bleibt zu).
+  function aufAnzeigeWarten(box, ins){
+    if (!(window.CSS && CSS.supports && CSS.supports("selector(:has(a))"))) document.documentElement.classList.add("kein-has");
+    const status = () => box.classList.toggle("ad--belegt", ins.getAttribute("data-ad-status") === "filled");
+    status();
+    if (typeof MutationObserver === "function") new MutationObserver(status).observe(ins, { attributes: true, attributeFilter: ["data-ad-status"] });
   }
 
   const lage = { tc: null, misst: false, gesperrtGemeldet: false, tagDa: false };
