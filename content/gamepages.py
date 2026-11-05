@@ -48,7 +48,7 @@ SUDOKU = """
 <ol><li>Gehe die Ziffern der Reihe nach durch: Wo kann die 1 in jedem Block noch stehen? Dann die 2, und so weiter.</li>
 <li>Schau auf fast volle Zeilen, Spalten und Blöcke – dort fehlen nur wenige Ziffern.</li>
 <li>Trage Notizen ein und suche Paare: Zwei Felder mit denselben zwei Kandidaten blockieren diese Ziffern für den Rest der Einheit.</li></ol>
-<p>Alle Techniken mit Beispielen erklären die <a href="/sudoku-strategien.html">Sudoku-Strategien</a>. Lieber auf Papier? Dann probier die <a href="/sudoku-zum-ausdrucken-mittel.html">Sudokus zum Ausdrucken</a> mit Lösungen.</p>
+<p>Alle Techniken mit Beispielen erklären die <a href="/sudoku-strategien.html">Sudoku-Strategien</a>. Hängst du bei einem Sudoku aus Zeitung oder Heft fest, erklärt dir der <a href="/sudoku-loeser.html">Sudoku-Löser mit Lösungsweg</a> den nächsten Schritt. Lieber auf Papier? Dann probier die <a href="/sudoku-zum-ausdrucken-mittel.html">Sudokus zum Ausdrucken</a> mit Lösungen.</p>
 <h2>Ein Beispiel Schritt für Schritt (4 × 4)</h2>
 <p>Die beiden Grundtechniken lassen sich am kleinen Mini-Sudoku am besten zeigen. Hier stehen die Ziffern 1 bis 4 in einem 4×4-Gitter mit vier 2×2-Blöcken; jede Ziffer kommt in jeder Zeile, Spalte und jedem Block genau einmal vor. Vorgegeben sind nur vier Ziffern: Zeile 1 beginnt mit 1 und endet mit 4, in Zeile 4 stehen an zweiter und dritter Stelle die 3 und die 2. Das Rätsel hat genau eine Lösung; das haben wir mit einem Programm geprüft.</p>
 <table class="tbl" aria-label="Mini-Sudoku 4 × 4, Ausgangslage"><tbody><tr><td>1</td><td></td><td></td><td>4</td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td></tr><tr><td></td><td>3</td><td>2</td><td></td></tr></tbody></table>

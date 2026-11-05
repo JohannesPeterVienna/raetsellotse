@@ -5,9 +5,10 @@ from jinja2 import Environment, FileSystemLoader
 sys.path.insert(0, str(Path(__file__).parent))
 from content.articles import ARTICLES
 from content import gamepages as GP
+from content import loeser as LO
 
 ROOT = Path(__file__).parent; OUT = ROOT / "docs"
-SITE = "https://raetsellotse.de"; V = "20261105b"; UPDATED = "Oktober 2026"
+SITE = "https://raetsellotse.de"; V = "20261105s"; UPDATED = "Oktober 2026"
 NAV = [("/", "Heute"), ("/codeknacker.html", "Codeknacker"), ("/sudoku.html", "Sudoku"), ("/zielzahl.html", "Zielzahl"), ("/nonogramm.html", "Nonogramm"),
        ("/raetselblatt.html", "Zum Ausdrucken"), ("/archiv.html", "Meine Statistik")]
 env = Environment(loader=FileSystemLoader(ROOT / "templates"), autoescape=True, trim_blocks=True, lstrip_blocks=True)
@@ -138,6 +139,7 @@ UI_ZIEL = """<div class="daynav" data-daynav></div>
 def main():
     import subprocess
     subprocess.run(["node", "--test", str(ROOT / "test_consent.js")], check=True, capture_output=True)   # Einwilligung/Loader-Test
+    subprocess.run(["node", "--test", str(ROOT / "test_solver.js")], check=True, capture_output=True)    # Sudoku-Löser: jeder Schritt korrekt
     if OUT.exists(): shutil.rmtree(OUT)
     (OUT / "assets").mkdir(parents=True)
     for f in (ROOT / "assets").iterdir(): shutil.copy(f, OUT / "assets" / f.name)
@@ -207,6 +209,15 @@ def main():
               body=a["body"], crumbs=crumbs, related=[BY[s] for s in a.get("related", [])] or [x for x in ARTICLES if x["slug"] != a["slug"]][:3],
               jsonld=ld, priority=0.7, lastmod=REVIEWED)
 
+    crumbs = [("/", "Rätsellotse"), ("/sudoku-loeser.html", "Sudoku-Löser")]
+    write("sudoku-loeser.html", "game.html", title="Sudoku-Löser mit Lösungsweg – jeder Schritt erklärt",
+          description="Sudoku eingeben und Schritt für Schritt lösen lassen: Jeder Schritt wird erklärt – vom Hidden Single bis zum XY-Wing. Mit Stufenbewertung, kostenlos, ohne Anmeldung.",
+          h1="Sudoku-Löser mit Lösungsweg", lead="Gib dein Sudoku ein und hol dir genau einen Hinweis – mit Begründung. Oder lass dir den ganzen Lösungsweg zeigen, Technik für Technik.",
+          ui=LO.UI.replace("{v}", V), game="loeser", body=LO.BODY,
+          related=[BY[s] for s in ("sudoku-strategien", "schweres-sudoku-erkennen", "sudoku-regeln-und-geschichte")], crumbs=crumbs,
+          jsonld=[crumbs_ld(crumbs), {"@context": "https://schema.org", "@type": "WebApplication", "name": "Sudoku-Löser mit Lösungsweg – Rätsellotse", "url": f"{SITE}/sudoku-loeser.html",
+                  "applicationCategory": "GameApplication", "operatingSystem": "Web", "inLanguage": "de", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}}],
+          priority=0.8, lastmod="2026-11-05")
     crumbs = [("/", "Rätsellotse"), ("/raetselblatt.html", "Rätselblatt")]
     write("raetselblatt.html", "game.html", title="Rätselblatt zum Ausdrucken – Sudoku, Nonogramm, Zielzahl",
           description="Jeden Tag ein neues Rätselblatt: Sudoku, Nonogramm und Zielzahl des Tages auf einer A4-Seite – kostenlos drucken oder als PDF speichern.",

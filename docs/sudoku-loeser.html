@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="google-adsense-account" content="ca-pub-7811071715414905">
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("consent","default",{ad_storage:"denied",ad_user_data:"denied",ad_personalization:"denied",analytics_storage:"denied",wait_for_update:500});window["ga-disable-G-T00HRG2YVF"]=true;window.rlConsentDefault=true;if(navigator.globalPrivacyControl===true){(window.adsbygoogle=window.adsbygoogle||[]).pauseAdRequests=1}</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7811071715414905" crossorigin="anonymous"></script>
+<title>Sudoku-Löser mit Lösungsweg – jeder Schritt erklärt</title>
+<meta name="description" content="Sudoku eingeben und Schritt für Schritt lösen lassen: Jeder Schritt wird erklärt – vom Hidden Single bis zum XY-Wing. Mit Stufenbewertung, kostenlos, ohne Anmeldung.">
+<link rel="canonical" href="https://raetsellotse.de/sudoku-loeser.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Rätsellotse">
+<meta property="og:title" content="Sudoku-Löser mit Lösungsweg – jeder Schritt erklärt">
+<meta property="og:description" content="Sudoku eingeben und Schritt für Schritt lösen lassen: Jeder Schritt wird erklärt – vom Hidden Single bis zum XY-Wing. Mit Stufenbewertung, kostenlos, ohne Anmeldung.">
+<meta property="og:url" content="https://raetsellotse.de/sudoku-loeser.html">
+<meta property="og:locale" content="de_AT">
+<meta name="theme-color" content="#F6F5F1">
+<meta property="og:image" content="https://raetsellotse.de/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/assets/icon.svg" type="image/svg+xml">
+<link rel="preload" href="/assets/bricolage-grotesque-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/style.css?v=20261105s">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "item": "https://raetsellotse.de/", "name": "R\u00e4tsellotse", "position": 1}, {"@type": "ListItem", "item": "https://raetsellotse.de/sudoku-loeser.html", "name": "Sudoku-L\u00f6ser", "position": 2}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "applicationCategory": "GameApplication", "inLanguage": "de", "name": "Sudoku-L\u00f6ser mit L\u00f6sungsweg \u2013 R\u00e4tsellotse", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "operatingSystem": "Web", "url": "https://raetsellotse.de/sudoku-loeser.html"}</script>
+<script src="/assets/consent.js?v=20261105s" defer></script><script src="/assets/games.js?v=20261105s" defer></script>
+</head>
+<body>
+<a class="skip" href="#inhalt">Zum Inhalt</a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="/"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14.5" fill="#141414"/><path d="M16 6v14" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><path d="M9 17a7 7 0 0 0 14 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="8.5" r="3.2" fill="#E8622A" stroke="#fff" stroke-width="1.6"/></svg>Rätsellotse</a>
+  <nav class="nav" aria-label="Hauptmenü">
+<a href="/">Heute</a><a href="/codeknacker.html">Codeknacker</a><a href="/sudoku.html">Sudoku</a><a href="/zielzahl.html">Zielzahl</a><a href="/nonogramm.html">Nonogramm</a><a href="/raetselblatt.html">Zum Ausdrucken</a><a href="/archiv.html">Meine Statistik</a>  </nav>
+</div></header>
+<main id="inhalt">
+<nav class="crumbs wrap" aria-label="Brotkrumen"><a href="/">Rätsellotse</a> › <span>Sudoku-Löser</span></nav>
+<div class="wrap layout" style="padding-top:18px">
+  <div>
+    <h1>Sudoku-Löser mit Lösungsweg</h1><p class="lead">Gib dein Sudoku ein und hol dir genau einen Hinweis – mit Begründung. Oder lass dir den ganzen Lösungsweg zeigen, Technik für Technik.</p>
+    <section class="game" data-game="loeser"><div class="ltools no-print">
+<label class="small">Beispiel laden <select data-beispiel><option value="">– wählen –</option><option value="stufe1">Stufe 1 · Einstieg</option><option value="stufe2">Stufe 2 · Fortgeschritten</option><option value="stufe3">Stufe 3 · Schwer (mit XY-Wing)</option><option value="stufe4">Stufe 4 · Sehr schwer</option></select></label>
+</div>
+<div class="sgrid lgrid" data-lgrid role="group" aria-label="Sudoku zum Lösen: 81 Eingabefelder, Pfeiltasten wechseln das Feld"></div>
+<div class="pad">
+<button type="button" class="btn" data-next>Nächster Schritt</button>
+<button type="button" class="wide" data-all>Ganzer Lösungsweg</button>
+<button type="button" class="wide" data-check>Prüfen &amp; Stufe</button>
+<button type="button" class="wide" data-cands aria-pressed="false">Kandidaten</button>
+<button type="button" class="wide" data-clear>Leeren</button>
+</div>
+<p class="msg" data-lmsg aria-live="polite"></p>
+<details class="lpaste no-print"><summary>Sudoku als Zeichenkette einfügen oder als Link teilen</summary>
+<p class="small muted">81 Zeichen, Zeile für Zeile von links oben: Ziffern 1–9, leere Felder als 0 oder Punkt. Leerzeichen und Zeilenumbrüche werden ignoriert.</p>
+<textarea data-text rows="3" spellcheck="false" aria-label="Sudoku als Zeichenkette"></textarea>
+<p><button type="button" class="btn small" data-load>Übernehmen</button> <button type="button" class="btn small ghost" data-link>Link zu diesem Sudoku kopieren</button></p>
+</details>
+<ol class="lsteps" data-steps aria-label="Lösungsweg"></ol>
+<noscript><p>Für den Löser wird JavaScript benötigt. Die Techniken erklären die <a href="/sudoku-strategien.html">Sudoku-Strategien</a>.</p></noscript>
+<script src="/assets/solver.js?v=20261105s" defer></script></section>
+    <nav class="more no-print" aria-label="Weiterspielen"><span class="small muted">Weiterspielen:</span><a class="btn ghost small" href="/codeknacker.html">Codeknacker</a><a class="btn ghost small" href="/sudoku.html">Sudoku</a><a class="btn ghost small" href="/zielzahl.html">Zielzahl</a><a class="btn ghost small" href="/nonogramm.html">Nonogramm</a><a class="btn ghost small" href="/archiv.html">Meine Statistik</a></nav>
+    <div class="prose"><h2>So benutzt du den Sudoku-Löser</h2>
+<p>Tippe die Vorgaben deines Sudokus in das Gitter: Feld anklicken, Ziffer eingeben, der Cursor springt weiter. Mit den Pfeiltasten wechselst du das Feld, mit der Rücktaste löschst du. Auf dem Handy öffnet sich automatisch die Zifferntastatur. Leere Felder bleiben einfach leer. Wer das Rätsel schon als Text hat, etwa aus einer anderen App, fügt es unter „Sudoku als Zeichenkette einfügen“ ein: 81 Zeichen, Zeile für Zeile, leere Felder als 0 oder Punkt.</p>
+<p>Dann hast du drei Möglichkeiten. <strong>Nächster Schritt</strong> zeigt genau einen logischen Schritt und begründet ihn: welche Ziffer wohin gehört oder welche Kandidaten wegfallen – und warum. Die beteiligten Felder werden hervorgehoben, gestrichene Kandidaten erscheinen durchgestrichen in Orange. <strong>Ganzer Lösungsweg</strong> rechnet alle Schritte bis zum Ende durch und listet sie unter dem Gitter auf. <strong>Prüfen &amp; Stufe</strong> verrät nichts, sondern sagt nur, ob das Sudoku genau eine Lösung hat und wie schwer es ist.</p>
+<p>Zur Orientierung: Zeilen zählen wir von oben nach unten, Spalten von links nach rechts, jeweils 1 bis 9. Im Lösungsweg kürzen wir Felder ab – „Z3/S5“ ist das fünfte Feld in der dritten Zeile. Die neun Blöcke sind wie beim Lesen nummeriert: Block 1 oben links, Block 3 oben rechts, Block 9 unten rechts. Vom Löser gesetzte Ziffern erscheinen blau, deine Vorgaben schwarz.</p>
+<p>Über „Link zu diesem Sudoku kopieren“ kannst du ein Rätsel weitergeben: Wer den Link öffnet, sieht genau deine Vorgaben – praktisch, wenn in der Familie oder im Rätselclub alle am selben Zeitungs-Sudoku hängen.</p>
+
+<h2>Lösungsweg statt Lösung: warum Schritt für Schritt?</h2>
+<p>Die meisten Sudoku-Löser im Netz füllen das Gitter in einem Rutsch aus. Das ist schnell, aber man lernt nichts daraus – und das Rätsel ist verdorben. Unser Löser arbeitet so, wie ein Mensch mit Bleistift vorgeht: Er sucht immer zuerst den einfachsten Schritt, der noch weiterhilft, und erklärt ihn in Worten. Wer an einer Stelle festhängt, holt sich genau einen Hinweis und rätselt danach selbst weiter.</p>
+<p>Technisch steckt dahinter kein Ausprobieren. Der Löser führt für jedes leere Feld eine Liste der Kandidaten, also der Ziffern, die dort nach den Regeln noch möglich sind. Jeder Schritt setzt entweder eine Ziffer, die sich zwingend ergibt, oder streicht Kandidaten, die nachweislich nicht in Frage kommen. Raten, Zurücknehmen und „mal sehen, ob es aufgeht“ gibt es im Lösungsweg nicht.</p>
+
+<h2>Die Techniken im Lösungsweg</h2>
+<p>Der Löser kennt zehn Lösungstechniken und probiert sie in dieser Reihenfolge. Die Einteilung in Stufen entspricht der in unserem Beitrag <a href="/schweres-sudoku-erkennen.html">Woran man ein schweres Sudoku erkennt</a>; Diagramme zu den wichtigsten Techniken findest du in den <a href="/sudoku-strategien.html">Sudoku-Strategien</a>.</p>
+<div class="scroll"><table class="tbl"><thead><tr><th scope="col">Technik</th><th scope="col">Stufe</th><th scope="col">Was dabei passiert</th></tr></thead><tbody>
+<tr><td>Einziger Platz (Hidden Single)</td><td>1</td><td>Eine Ziffer kann in einem Block, einer Zeile oder Spalte nur noch an einer Stelle stehen.</td></tr>
+<tr><td>Einzige Möglichkeit (Naked Single)</td><td>1</td><td>In einem Feld ist nur noch eine Ziffer möglich.</td></tr>
+<tr><td>Block-Zeile-Regel</td><td>2</td><td>Liegen alle Kandidaten einer Ziffer in einem Block auf einer Linie, fällt sie im Rest dieser Linie weg – und umgekehrt.</td></tr>
+<tr><td>Paar (Naked Pair)</td><td>2</td><td>Zwei Felder einer Einheit haben dieselben zwei Kandidaten; diese Ziffern fallen in den übrigen Feldern weg.</td></tr>
+<tr><td>Verstecktes Paar (Hidden Pair)</td><td>2</td><td>Zwei Ziffern passen nur in dieselben zwei Felder; alle anderen Kandidaten dort fallen weg.</td></tr>
+<tr><td>Tripel und verstecktes Tripel</td><td>3</td><td>Dasselbe Prinzip mit drei Feldern und drei Ziffern.</td></tr>
+<tr><td>X-Wing</td><td>3</td><td>Eine Ziffer ist in zwei Zeilen nur in denselben zwei Spalten möglich (oder umgekehrt) und fällt im Rest dieser Spalten weg.</td></tr>
+<tr><td>Swordfish</td><td>3</td><td>Der große Bruder des X-Wing: drei Zeilen, drei Spalten.</td></tr>
+<tr><td>XY-Wing</td><td>3</td><td>Drei Felder mit je zwei Kandidaten bilden eine Zange: Ein Feld, das beide Zangenenden sieht, kann die gemeinsame Ziffer nicht haben.</td></tr>
+</tbody></table></div>
+<p>Die Reihenfolge ist bewusst gewählt. Hidden Singles kommen vor Naked Singles, weil man sie ohne Notizen findet: Man fährt mit dem Blick eine Ziffer durch alle Blöcke. Erst wenn das nichts mehr bringt, lohnt es sich, Kandidaten zu notieren. Der Knopf „Kandidaten“ blendet sie im Gitter ein, so wie sie der Löser gerade sieht.</p>
+
+<h2>Wie schwer ist mein Sudoku?</h2>
+<p>Die Zahl der Vorgaben sagt wenig über die Schwierigkeit. Entscheidend ist die anspruchsvollste Technik, ohne die es nicht weitergeht. Genau so bewertet „Prüfen &amp; Stufe“ dein Rätsel: Stufe 1 heißt, dass die beiden Grundtechniken reichen. Stufe 2 verlangt Notizen und gezieltes Streichen. Stufe 3 braucht Muster über mehrere Einheiten wie X-Wing oder XY-Wing. Stufe 4 bedeutet: Mit den zehn Techniken dieser Seite geht es irgendwo nicht weiter.</p>
+<p>Wie sich das in der Praxis verteilt, haben wir für diese Seite nachgezählt. Wir haben mit dem Generator unserer <a href="/sudoku.html">Tagessudokus</a> je 100 leichte und mittlere sowie 300 schwere Rätsel erzeugt und vom Löser bewerten lassen:</p>
+<div class="scroll"><table class="tbl"><thead><tr><th scope="col">Rätsel</th><th scope="col">Stufe 1</th><th scope="col">Stufe 2</th><th scope="col">Stufe 3</th><th scope="col">Stufe 4</th></tr></thead><tbody>
+<tr><td>leicht (100, 38 Vorgaben)</td><td>100 %</td><td>–</td><td>–</td><td>–</td></tr>
+<tr><td>mittel (100, 30 Vorgaben)</td><td>100 %</td><td>–</td><td>–</td><td>–</td></tr>
+<tr><td>schwer (300, rund 25 Vorgaben)</td><td>53 %</td><td>18 %</td><td>5 %</td><td>24 %</td></tr>
+</tbody></table></div>
+<p>Bei den schweren Rätseln der Stufe 2 war fast immer die Block-Zeile-Regel der schwierigste Schritt (53 von 54). In Stufe 3 gaben am häufigsten der XY-Wing (7 Rätsel) und der X-Wing (4) den Ausschlag, dazu Tripel (4). Knapp ein Viertel verlangte mehr, als dieser Löser erklären kann. Die Stichprobe ist eine andere als im Beitrag über schwere Sudokus, deshalb weichen die Anteile dort leicht ab; das Bild ist dasselbe: Leichte und mittlere Tagessudokus gehen allein mit Stufe-1-Techniken auf, schwere streuen stark.</p>
+
+<h2>Wenn der Löser nicht weiterkommt</h2>
+<p>Manche Sudokus lassen sich nur mit sogenannten Ketten-Techniken knacken: Man verfolgt eine Annahme über viele Felder hinweg, bis sie zu einem Widerspruch führt. Solche Schritte lassen sich schwer in zwei Sätzen erklären, deshalb macht unser Löser sie nicht. Er sagt dann offen, dass es mit den erklärten Techniken nicht weitergeht. Du kannst anschließend ein einzelnes Feld aufdecken lassen – der Löser wählt das Feld mit den wenigsten Kandidaten – oder dir die ganze Lösung zeigen lassen. Aufgedeckte Ziffern erscheinen in Orange, damit klar bleibt, was erklärt wurde und was nicht. Danach geht der Lösungsweg oft wieder mit einfachen Schritten weiter.</p>
+
+<h2>„Keine Lösung“ oder „mehr als eine Lösung“?</h2>
+<p>Bevor der Löser den ersten Schritt macht, prüft er dein Sudoku vollständig. Steht eine Ziffer doppelt in einer Zeile, Spalte oder einem Block, werden die Felder markiert. Hat das Rätsel gar keine Lösung, steckt fast immer ein Tippfehler in den Vorgaben: eine 6 statt einer 8, eine Ziffer eine Spalte zu weit rechts. Vergleiche die Eingabe dann Zeile für Zeile mit deiner Vorlage.</p>
+<p>Hat es mehr als eine Lösung, fehlt meist eine Vorgabe. Ein ordentliches Sudoku hat genau eine Lösung, sonst müsste man an irgendeiner Stelle raten. Mit weniger als 17 Vorgaben ist das sogar mathematisch ausgeschlossen: Gary McGuire, Bastian Tugemann und Gilles Civario haben 2012 mit einer großen Computersuche gezeigt, dass es kein eindeutiges Sudoku mit 16 Vorgaben gibt. Mehr Zahlen rund um das Rätsel stehen in <a href="/sudoku-regeln-und-geschichte.html">Sudoku: Regeln und Geschichte</a>.</p>
+
+<h2>Wie wir den Löser geprüft haben</h2>
+<p>Ein Löser, der falsche Hinweise gibt, wäre schlimmer als gar keiner. Deshalb läuft vor jeder Veröffentlichung ein automatischer Test: Für mehr als 260 Rätsel mit 24 bis 38 Vorgaben wird zuerst per vollständiger Suche die einzige Lösung bestimmt. Danach geht der Test den erklärten Lösungsweg Schritt für Schritt durch und kontrolliert, dass jede gesetzte Ziffer mit dieser Lösung übereinstimmt und keine gestrichene Ziffer die richtige war. Jede der zehn Techniken kommt in den Testrätseln vor. Auch die Beispiele im Auswahlfeld oben sind so geprüft und haben die angegebene Stufe.</p>
+
+<h2>Deine Daten</h2>
+<p>Der Löser läuft vollständig in deinem Browser. Die eingegebenen Ziffern werden nicht an uns oder an Dritte übertragen und nicht gespeichert. Nur wenn du selbst einen Link kopierst, stehen die Vorgaben als Zeichenkette in der Adresse.</p>
+
+<h2>Häufige Fragen</h2>
+<h3>Ist das nicht Schummeln?</h3>
+<p>Wenn du dir die Lösung zeigen lässt, ein bisschen. Wenn du dir einen Schritt erklären lässt und danach selbst weitermachst, ist es eher Nachhilfe. Viele lernen neue Techniken genau so: an der Stelle, an der sie selbst feststecken.</p>
+<h3>Funktioniert der Löser mit Sudokus aus Zeitung und Rätselheft?</h3>
+<p>Ja, mit jedem klassischen 9×9-Sudoku. Varianten wie Killer-Sudoku, Diagonal-Sudoku oder Sudokus mit Zusatzregeln kann er nicht lösen, weil dort andere Regeln gelten.</p>
+<h3>Warum zeigt der Löser andere Schritte als mein Rätselheft?</h3>
+<p>Meist führen mehrere Wege zum Ziel. Der Löser nimmt immer den einfachsten verfügbaren Schritt und sucht Hidden Singles zuerst in den Blöcken, dann in Zeilen und Spalten. Ein anderer Weg ist deshalb nicht falsch, nur anders.</p>
+<h3>Kann ich das Ergebnis ausdrucken?</h3>
+<p>Für Papier gibt es eigene Seiten: <a href="/sudoku-zum-ausdrucken-leicht.html">Sudokus zum Ausdrucken</a> mit Lösungen und das tägliche <a href="/raetselblatt.html">Rätselblatt</a>.</p>
+
+<h2>Quellen</h2>
+<ul class="small"><li>McGuire, Tugemann, Civario: <a href="https://arxiv.org/abs/1201.0749" rel="noopener">There is no 16-Clue Sudoku</a> (arXiv, 2012); verständliche Zusammenfassung bei <a href="https://www.sudokuwiki.org/17_clue_proof" rel="noopener">SudokuWiki</a>.</li>
+<li>Überblick über menschliche und maschinelle Lösungsverfahren: <a href="https://en.wikipedia.org/wiki/Sudoku_solving_algorithms" rel="noopener">Sudoku solving algorithms</a> (Wikipedia, englisch).</li>
+<li>Auswertung der Stufen: eigene Zählung mit dem Generator und dem Löser dieser Website, November 2026.</li></ul></div>
+    <div class="ad ad--rect" data-ad="rect" role="complementary" aria-label="Werbung"></div>
+<h2>Passend dazu</h2><ul class="cards"><li><a href="/sudoku-strategien.html"><strong>Sudoku-Strategien: von einfach bis schwer</strong><span>Sechs Techniken mit Diagrammen – vom einzigen Kandidaten bis zum X-Wing.</span></a></li><li><a href="/schweres-sudoku-erkennen.html"><strong>Woran man ein schweres Sudoku erkennt</strong><span>Die Zahl der Vorgaben täuscht. Entscheidend ist, welche Technik das Rätsel verlangt – mit Zahlen aus 400 geprüften Sudokus.</span></a></li><li><a href="/sudoku-regeln-und-geschichte.html"><strong>Sudoku: Regeln, Herkunft und erstaunliche Zahlen</strong><span>Woher das Zahlenrätsel kommt, warum es eigentlich amerikanisch ist und warum 17 eine magische Zahl ist.</span></a></li></ul>  </div>
+  <aside class="side"><div class="box"><h3>Tagesrätsel</h3><ul><li><a href="/codeknacker.html">Codeknacker</a></li><li><a href="/sudoku.html">Sudoku</a></li><li><a href="/sudoku-loeser.html">Sudoku-Löser</a></li><li><a href="/zielzahl.html">Zielzahl</a></li><li><a href="/nonogramm.html">Nonogramm</a></li><li><a href="/raetselblatt.html">Rätselblatt zum Ausdrucken</a></li><li><a href="/archiv.html">Meine Statistik</a></li></ul></div>
+<div class="box"><h3>Zum Ausdrucken</h3><ul><li><a href="/sudoku-zum-ausdrucken-leicht.html">Sudoku leicht</a></li><li><a href="/sudoku-zum-ausdrucken-mittel.html">Sudoku mittel</a></li><li><a href="/sudoku-zum-ausdrucken-schwer.html">Sudoku schwer</a></li></ul></div></aside>
+</div>
+<div class="wrap"><div class="ad ad--superbanner" data-ad="superbanner" role="complementary" aria-label="Werbung"></div><div class="ad ad--mbanner" data-ad="mbanner" role="complementary" aria-label="Werbung"></div></div></main>
+<footer class="foot"><div class="wrap">
+  <div>Rätsellotse – jeden Tag neue Logikrätsel: Sudoku, Nonogramm, Codeknacker und Zielzahl. Kostenlos und ohne Anmeldung.</div>
+  <nav aria-label="Rechtliches"><a href="/about.html">Über uns</a><a href="/imprint.html">Impressum</a><a href="/privacy.html">Datenschutz</a><button class="linkbtn" type="button" data-privacy-settings>Datenschutz-Einstellungen</button></nav>
+</div></footer>
+</body>
+</html>

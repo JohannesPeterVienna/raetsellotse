@@ -230,3 +230,18 @@ main{overflow-wrap:break-word}main a{overflow-wrap:anywhere}
 @media (max-width:480px){.logbuch{left:12px;right:12px;bottom:12px;padding:14px 14px 12px;font-size:.85rem}
   .logbuch__boje{margin:-14px -14px 10px}.logbuch__titel{font-size:1.05rem}.logbuch__weg{top:8px;right:4px}.logbuch p{margin-bottom:.5em}.logbuch__wahl{margin-top:8px}}
 @media print{.logbuch{display:none!important}}
+/* Sudoku-Löser */
+.lgrid{margin-top:12px}
+.lc{cursor:text}.lc input{position:absolute;inset:0;width:100%;height:100%;border:0;background:transparent;text-align:center;font:inherit;color:inherit;padding:0;caret-color:var(--buoy)}
+.lc input:focus{outline:none;box-shadow:inset 0 0 0 3px var(--focus)}
+.lc .notes{position:absolute;inset:0;pointer-events:none}
+.lc.given{color:var(--ink);font-weight:800}.lc.solved{color:var(--focus);font-weight:600}.lc.shown{color:var(--buoy);font-weight:500}
+.lc.hl{background:var(--sea-soft)}.lc.tg{background:var(--buoy-soft)}
+.lc .notes i.x{color:var(--buoy);text-decoration:line-through;font-weight:700}
+.ltools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.ltools select{font:inherit;border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--card);color:var(--ink);min-height:40px}
+.msg.warn{color:var(--ink);background:var(--buoy-soft);border-radius:10px;padding:10px 12px}
+.lpaste{margin-top:14px}.lpaste summary{cursor:pointer;font-weight:600}
+.lpaste textarea{width:100%;font:500 .95rem ui-monospace,monospace;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--card);color:var(--ink);box-sizing:border-box}
+.lsteps{margin:16px 0 0;padding-left:1.4em;max-height:420px;overflow:auto}.lsteps:empty{display:none}.lsteps li{margin:0 0 .6em}.lsteps strong{display:block}
+[data-game=loeser] .pad .btn{background:var(--buoy);color:#fff;border-color:var(--buoy);font:600 .95rem var(--text);padding:0 18px}
