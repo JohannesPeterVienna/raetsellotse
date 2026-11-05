@@ -78,11 +78,11 @@
     });
   }
 
-  // Ohne :has() blendet style.css den Platz über .ad--belegt ein – gesetzt erst, wenn Google
-  // data-ad-status="filled" an das <ins> schreibt („unfilled“ oder keine Antwort: bleibt zu).
+  // Ohne :has() zeigt style.css Beschriftung und Abstände über .ad--belegt – gesetzt erst, wenn Google
+  // data-ad-status="filled" oder "unfill-optimized" an das <ins> schreibt. Das <ins> selbst bleibt immer sichtbar.
   function aufAnzeigeWarten(box, ins){
     if (!(window.CSS && CSS.supports && CSS.supports("selector(:has(a))"))) document.documentElement.classList.add("kein-has");
-    const status = () => box.classList.toggle("ad--belegt", ins.getAttribute("data-ad-status") === "filled");
+    const status = () => box.classList.toggle("ad--belegt", ["filled", "unfill-optimized"].includes(ins.getAttribute("data-ad-status")));
     status();
     if (typeof MutationObserver === "function") new MutationObserver(status).observe(ins, { attributes: true, attributeFilter: ["data-ad-status"] });
   }
