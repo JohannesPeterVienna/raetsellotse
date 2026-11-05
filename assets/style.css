@@ -1,12 +1,12 @@
-/* Rätsellotse — Seeglas, Tiefsee-Tinte, Bojen-Orange */
+/* Rätsellotse — Rätselseite der Zeitung: Papier, schwarze Tinte, Bojen-Orange als einzige Farbe */
 @font-face{font-family:"Bricolage Grotesque";src:url("bricolage-grotesque-latin-wght-normal.woff2") format("woff2");font-weight:200 800;font-display:swap}
 @font-face{font-family:"Inter";src:url("inter-latin-wght-normal.woff2") format("woff2");font-weight:100 900;font-display:swap}
 :root{
-  --bg:#EAF2EF;--card:#FFFFFF;--ink:#102B2A;--muted:#4F6664;--line:#CFDDD9;--soft:#DCEAE5;
-  --buoy:#E8622A;--buoy-soft:#FCE6DB;--sea:#21786C;--sea-soft:#D3EDE7;--focus:#1D5FD0;
+  --bg:#F6F5F1;--card:#FFFFFF;--ink:#141414;--muted:#5A5A57;--line:#DAD7CF;--soft:#EEECE6;
+  --buoy:#D9541E;--buoy-soft:#FBE7DD;--sea:#141414;--sea-soft:#EEECE6;--focus:#1D5FD0;
   --head:"Bricolage Grotesque",system-ui,sans-serif;--text:"Inter",system-ui,-apple-system,sans-serif;--r:14px;--wrap:1160px;
 }
-@media (prefers-color-scheme:dark){:root{--bg:#0D1A1A;--card:#132424;--ink:#E3EFEC;--muted:#97B0AC;--line:#24403E;--soft:#1A3130;--buoy:#FF8A57;--buoy-soft:#3A2116;--sea:#4FC7B5;--sea-soft:#163A35;--focus:#8FB4FF}}
+@media (prefers-color-scheme:dark){:root{--bg:#121212;--card:#1B1B1B;--ink:#EDEDEA;--muted:#A3A39E;--line:#33332F;--soft:#242422;--buoy:#FF8A57;--buoy-soft:#3A2116;--sea:#EDEDEA;--sea-soft:#242422;--focus:#8FB4FF}}
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 var(--text);font-feature-settings:"tnum" 1}
 a{color:var(--sea);text-underline-offset:3px}
@@ -168,3 +168,41 @@ main{overflow-wrap:break-word}main a{overflow-wrap:anywhere}
 
 /* Abstand Superbanner – Fußzeilen-Knopf (≥ 150 px) */
 .ad--superbanner{margin-bottom:120px}
+
+/* Zeitungs-Rätselseite: Karten mit Linien statt Schatten, eckiger */
+:root{--r:4px}
+.today a{border-top:3px solid var(--ink)}
+.today a:hover{border-color:var(--buoy);border-top-color:var(--buoy)}
+.nav a{border-radius:4px}
+
+/* Vorteile */
+.vorteile{margin:2rem 0 .5rem}
+.vorteile ul{list-style:none;padding:0;margin:.6rem 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0 1.5rem;border-top:2px solid var(--ink)}
+.vorteile li{display:flex;flex-direction:column;gap:2px;padding:.8rem 0;border-bottom:1px solid var(--line)}
+.vorteile b{font:700 1.02rem var(--head)}
+.vorteile b::before{content:"✓";color:var(--buoy);margin-right:.45rem}
+.vorteile span{color:var(--muted);font-size:.93rem}
+
+/* Rätselblatt des Tages (A4 zum Ausdrucken) */
+.blatt{background:#fff;color:#111;border:1px solid var(--line);padding:22px 26px;max-width:860px}
+.blatt-kopf{display:flex;justify-content:space-between;align-items:baseline;border-bottom:3px double #111;padding-bottom:6px;margin-bottom:14px;gap:12px;flex-wrap:wrap}
+.blatt-kopf b{font:800 1.6rem var(--head)}
+.blatt-raster{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.blatt h3{margin:0 0 6px;font:700 1.05rem var(--head)}
+.blatt .ps{width:100%;max-width:330px}
+.bnono{border-collapse:collapse;font:600 .7rem var(--text)}
+.bnono td{width:22px;height:22px;border:1px solid #999;text-align:center;padding:0}
+.bnono td.k{border:0;color:#111;text-align:right;padding-right:4px;white-space:nowrap}
+.bnono th{font-weight:600;vertical-align:bottom;padding:0 0 2px;line-height:1.05;font-size:.7rem}
+.bnono td.b5{border-right:2px solid #111}.bnono tr.b5 td:not(.k){border-bottom:2px solid #111}
+.bziel{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 8px}
+.bziel span{border:1.5px solid #111;padding:6px 10px;font:700 1.1rem var(--head)}
+.bziel .ziel{border-color:var(--buoy);color:var(--buoy)}
+.blatt .linien{height:120px;background:repeating-linear-gradient(transparent 0 27px,#ccc 27px 28px)}
+.blatt-fuss{border-top:1px solid #111;margin-top:16px;padding-top:6px;font-size:.75rem;color:#555;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+@media (max-width:700px){.blatt-raster{grid-template-columns:1fr}.blatt{padding:14px}}
+@media print{.blatt{border:0;padding:0;max-width:none}.blatt-raster{gap:14mm}@page{size:A4;margin:12mm}}
+
+/* Mobile Banner 320×100 nur auf dem Handy */
+.ad--mbanner{width:320px;min-height:100px;margin-bottom:120px}
+@media (min-width:768px){.ad--mbanner{display:none!important}}

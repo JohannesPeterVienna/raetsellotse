@@ -7,9 +7,9 @@ from content.articles import ARTICLES
 from content import gamepages as GP
 
 ROOT = Path(__file__).parent; OUT = ROOT / "docs"
-SITE = "https://raetsellotse.de"; V = "20261104b"; UPDATED = "Oktober 2026"
+SITE = "https://raetsellotse.de"; V = "20261105a"; UPDATED = "Oktober 2026"
 NAV = [("/", "Heute"), ("/codeknacker.html", "Codeknacker"), ("/sudoku.html", "Sudoku"), ("/zielzahl.html", "Zielzahl"), ("/nonogramm.html", "Nonogramm"),
-       ("/sudoku-zum-ausdrucken-mittel.html", "Zum Ausdrucken"), ("/archiv.html", "Meine Statistik")]
+       ("/raetselblatt.html", "Zum Ausdrucken"), ("/archiv.html", "Meine Statistik")]
 env = Environment(loader=FileSystemLoader(ROOT / "templates"), autoescape=True, trim_blocks=True, lstrip_blocks=True)
 PAGES = []
 BY = {a["slug"]: a for a in ARTICLES}
@@ -174,7 +174,7 @@ def main():
         crumbs = [("/", "Rätsellotse"), (f"/{slug}.html", name)]
         ld = [crumbs_ld(crumbs), {"@context": "https://schema.org", "@type": "WebApplication", "name": f"{name} – Rätsellotse", "url": f"{SITE}/{slug}.html",
               "applicationCategory": "GameApplication", "operatingSystem": "Web", "inLanguage": "de", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}}]
-        write(f"{slug}.html", "game.html", title=f"{title} | Rätsellotse", description=desc, h1=name, lead=lead, ui=ui, game=slug,
+        write(f"{slug}.html", "game.html", title=(f"{title} | Rätsellotse" if len(title) < 50 else title), description=desc, h1=name, lead=lead, ui=ui, game=slug,
               body=body, related=[BY[s] for s in rel], crumbs=crumbs, jsonld=ld, priority=0.9, lastmod=CONTENT_UPDATED)
 
     for level, intro in (("leicht", "Für Einsteiger: viele Vorgaben, lösbar allein mit den beiden einfachsten Techniken."),
@@ -192,7 +192,7 @@ def main():
                 f"<div class='no-print'>{after}</div>"
                 "<p class='small muted no-print'>Jedes Sudoku hat genau eine Lösung. Beim Drucken werden Navigation, Werbung und Erklärungen ausgeblendet; Lösungen beginnen auf einer neuen Seite.</p>")
         crumbs = [("/", "Rätsellotse"), (f"/sudoku-zum-ausdrucken-{level}.html", f"Sudoku zum Ausdrucken ({level})")]
-        write(f"sudoku-zum-ausdrucken-{level}.html", "page.html", title=f"Sudoku zum Ausdrucken – {level} (6 Rätsel mit Lösungen, PDF) | Rätsellotse",
+        write(f"sudoku-zum-ausdrucken-{level}.html", "page.html", title=f"Sudoku zum Ausdrucken – {level}: 6 Rätsel mit Lösungen",
               description=f"Sechs Sudokus zum Ausdrucken, Schwierigkeit {level}, mit Lösungen auf separater Seite. Kostenlos drucken oder als PDF speichern.",
               h1=f"Sudoku zum Ausdrucken: {level}", lead=intro, body=body, crumbs=crumbs, jsonld=[crumbs_ld(crumbs)],
               active="/sudoku-zum-ausdrucken-mittel.html", priority=0.8)
@@ -202,11 +202,17 @@ def main():
         ld = [crumbs_ld(crumbs), {"@context": "https://schema.org", "@type": "Article", "headline": a["title"], "description": a["description"], "inLanguage": "de",
               "datePublished": a.get("published", "2026-10-29"), "dateModified": REVIEWED, "author": {"@type": "Organization", "name": "AdStern", "url": SITE + "/about.html"},
               "publisher": {"@type": "Organization", "name": "AdStern"}}]
-        write(a["slug"] + ".html", "page.html", title=f"{a['title']} | Rätsellotse", description=a["description"], h1=a["title"], lead=a["teaser"],
+        write(a["slug"] + ".html", "page.html", title=(f"{a['title']} | Rätsellotse" if len(a['title']) < 50 else a['title']), description=a["description"], h1=a["title"], lead=a["teaser"],
               reviewed=REVIEWED_TEXT,
               body=a["body"], crumbs=crumbs, related=[BY[s] for s in a.get("related", [])] or [x for x in ARTICLES if x["slug"] != a["slug"]][:3],
               jsonld=ld, priority=0.7, lastmod=REVIEWED)
 
+    crumbs = [("/", "Rätsellotse"), ("/raetselblatt.html", "Rätselblatt")]
+    write("raetselblatt.html", "game.html", title="Rätselblatt zum Ausdrucken – Sudoku, Nonogramm, Zielzahl",
+          description="Jeden Tag ein neues Rätselblatt: Sudoku, Nonogramm und Zielzahl des Tages auf einer A4-Seite – kostenlos drucken oder als PDF speichern.",
+          h1="Rätselblatt des Tages", lead="Sudoku, Nonogramm und Zielzahl von heute auf einem A4-Blatt – für Bleistift, Kaffee und die Zeitungsrunde.",
+          ui="", game="blatt", body="<h2>So nutzt du das Rätselblatt</h2><p>Das Blatt entsteht jeden Tag neu aus denselben Aufgaben wie die Online-Rätsel. Drucke es aus oder speichere es über den Druckdialog als PDF. Die Lösungen findest du online beim jeweiligen Rätsel – so kannst du auf Papier rätseln und am Bildschirm vergleichen.</p><p>Über den Link „Link zu diesem Tag“ lässt sich jedes Blatt später wieder aufrufen, etwa für die Rätselrunde im Seniorenclub oder in der Schule.</p>",
+          related=[BY[s] for s in ("raetsel-ausdrucken-seniorenrunde-schule", "sudoku-strategien") if s in BY], crumbs=crumbs, jsonld=[crumbs_ld(crumbs)], priority=0.8)
     write("archiv.html", "page.html", title="Meine Statistik & Rätsel-Archiv | Rätsellotse", description="Deine Serien, Erfolgsquoten und alle Rätsel der letzten 30 Tage zum Nachspielen.",
           h1="Meine Statistik & Archiv", lead="Serien, Quoten und die Rätsel der letzten 30 Tage – verpasste Tage einfach nachspielen.", ads=False, robots="noindex,follow",
           body="""<section data-game="archiv"><div class="stats" data-stats><p class="muted">Statistik wird geladen …</p></div>

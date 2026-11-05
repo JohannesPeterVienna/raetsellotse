@@ -192,21 +192,8 @@
   /* ================= Zielzahl ================= */
   function zielzahl(root) {
     const day = dayFromUrl(); dayNav(root, day);
-    const r = rng(hash("ziel" + day));
-    const big = shuffle([25, 50, 75, 100], r).slice(0, 2);
-    const small = shuffle([1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10], r).slice(0, 4);
-    const nums = [...big, ...small].sort((a, b) => b - a);
-    // Zielzahl durch zufällige gültige Rechnung erzeugen (garantiert lösbar)
-    let target = 0;
-    for (let tries = 0; tries < 500 && !(target >= 101 && target <= 999); tries++) {
-      let pool = shuffle(nums.slice(), r), k = 3 + Math.floor(r() * 3);
-      while (pool.length > 1 && k-- > 0) {
-        const a = pool.pop(), b = pool.pop(), op = Math.floor(r() * 4); let v;
-        if (op === 0) v = a + b; else if (op === 1) v = a * b; else if (op === 2) v = Math.abs(a - b) || a + b; else v = (b && a % b === 0) ? a / b : a + b;
-        pool.unshift(v);
-      }
-      target = pool[0];
-    }
+    // Zahlen und Zielzahl aus demselben Generator wie das Rätselblatt (garantiert lösbar)
+    const { nums, target } = zielGen(day);
     const KEY = `rl-ziel-${day}`; let st = store.get(KEY, { best: null, expr: "", done: false, shown: false });
     $("[data-target]", root).textContent = target;
     $("[data-nums]", root).innerHTML = nums.map(n => `<span class="tile">${n}</span>`).join("");
@@ -425,7 +412,52 @@
     if (reset) reset.addEventListener("click", () => { if (!reset.dataset.armed) { reset.dataset.armed = 1; reset.textContent = "Wirklich alles löschen? Nochmal tippen"; return; } keys.filter(k => k.startsWith("rl-")).forEach(k => { try { localStorage.removeItem(k); } catch {} }); location.reload(); });
   }
 
-  const games = { codeknacker, sudoku, zielzahl, nonogramm, archiv };
-  const init = () => $$("[data-game]").forEach(el => games[el.dataset.game]?.(el));
+  /* ================= Rätselblatt des Tages: Sudoku, Nonogramm, Zielzahl auf einem A4-Blatt ================= */
+  function zielGen(day) {
+    const r = rng(hash("ziel" + day));
+    const big = shuffle([25, 50, 75, 100], r).slice(0, 2);
+    const small = shuffle([1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10], r).slice(0, 4);
+    const nums = [...big, ...small].sort((a, b) => b - a);
+    let target = 0;
+    for (let tries = 0; tries < 500 && !(target >= 101 && target <= 999); tries++) {
+      let pool = shuffle(nums.slice(), r), k = 3 + Math.floor(r() * 3);
+      while (pool.length > 1 && k-- > 0) {
+        const a = pool.pop(), b = pool.pop(), op = Math.floor(r() * 4); let v;
+        if (op === 0) v = a + b; else if (op === 1) v = a * b; else if (op === 2) v = Math.abs(a - b) || a + b; else v = (b && a % b === 0) ? a / b : a + b;
+        pool.unshift(v);
+      }
+      target = pool[0];
+    }
+    return { nums, target };
+  }
+  function blatt(root) {
+    const day = dayFromUrl();
+    root.innerHTML = '<p class="muted">Rätselblatt wird erstellt …</p>';
+    setTimeout(() => {
+      const S = makeSudoku(hash(`sudoku${day}mittel`), "mittel"), N = makeNono(hash(`nono${day}10`), 10), Z = zielGen(day);
+      const sud = '<table class="ps" aria-label="Sudoku">' + [...Array(9)].map((_, r) => "<tr>" + [...Array(9)].map((_, c) => `<td>${S.puzzle[r * 9 + c] || ""}</td>`).join("") + "</tr>").join("") + "</table>";
+      let nono = "";
+      if (N) {
+        const head = '<tr><td class="k"></td>' + N.cc.map((c, i) => `<th${(i + 1) % 5 === 0 && i < 9 ? ' class="b5"' : ""}>${c.join("<br>")}</th>`).join("") + "</tr>";
+        const rows = N.rc.map((rc, y) => `<tr${(y + 1) % 5 === 0 && y < 9 ? ' class="b5"' : ""}><td class="k">${rc.join(" ")}</td>` + [...Array(10)].map((_, x) => `<td${(x + 1) % 5 === 0 && x < 9 ? ' class="b5"' : ""}></td>`).join("") + "</tr>").join("");
+        nono = `<table class="bnono" aria-label="Nonogramm">${head}${rows}</table>`;
+      }
+      root.innerHTML = `<div class="blatt"><div class="blatt-kopf"><b>Rätselblatt</b><span>${fmtDate(day)} · raetsellotse.de</span></div>
+<div class="blatt-raster"><div><h3>Sudoku · mittel</h3>${sud}</div><div><h3>Nonogramm · 10 × 10</h3>${nono || '<p class="muted">Heute ohne Nonogramm.</p>'}</div>
+<div><h3>Zielzahl</h3><p class="small">Erreiche die Zielzahl mit + − × ÷. Jede Zahl höchstens einmal, Teilen nur ohne Rest.</p><div class="bziel">${Z.nums.map(n => `<span>${n}</span>`).join("")}<span class="ziel">→ ${Z.target}</span></div><div class="linien"></div></div>
+<div><h3>Notizen</h3><div class="linien" style="height:190px"></div></div></div>
+<div class="blatt-fuss"><span>Lösungen: online unter raetsellotse.de – Sudoku, Nonogramm und Zielzahl des Tages</span><span>Rätsellotse · jeden Tag neu</span></div></div>
+<p class="no-print" style="margin-top:14px"><button class="btn" type="button" data-blatt-druck>Drucken oder als PDF speichern</button> <a class="small" href="?tag=${day}">Link zu diesem Tag</a></p>`;
+      $("[data-blatt-druck]", root).onclick = () => { track("raetselblatt_drucken"); print(); };
+    }, 20);
+  }
+  /* Ereignisse für Google Analytics – wirken nur nach Einwilligung (consent.js) */
+  function track(name, p = {}) { try { if (typeof window.gtag === "function") window.gtag("event", name, p); } catch {} }
+
+  const games = { codeknacker, sudoku, zielzahl, nonogramm, archiv, blatt };
+  const init = () => {
+    $$("[data-game]").forEach(el => games[el.dataset.game]?.(el));
+    document.addEventListener("click", e => { const b = e.target.closest("[data-share]"); if (b) track("ergebnis_teilen", { seite: location.pathname }); });
+  };
   document.readyState === "loading" ? document.addEventListener("DOMContentLoaded", init) : init();
 })();

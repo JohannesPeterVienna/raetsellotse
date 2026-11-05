@@ -5,8 +5,8 @@ const body = src.slice(src.indexOf("(() => {") + 8, src.lastIndexOf("const init 
 global.document = { querySelector: () => null, querySelectorAll: () => [] };
 global.localStorage = { getItem: () => null, setItem() {} };
 const G = new Function(body + "; return { makeSudoku, makeNono, hash };")();
-const { jsPDF } = require("/tmp/npmx/node_modules/jspdf/dist/jspdf.node.min.js");
-const NR = 1, W = 210, H = 297, M = 15, INK = [16, 43, 42], BUOY = [232, 98, 42], SEA = [33, 120, 108], MUTED = [110, 128, 126];
+const { jsPDF } = require(process.env.JSPDF || "/tmp/npmx/node_modules/jspdf/dist/jspdf.node.min.js");
+const NR = 1, W = 210, H = 297, M = 15, INK = [20, 20, 20], BUOY = [217, 84, 30], SEA = [20, 20, 20], MUTED = [110, 128, 126];
 const doc = new jsPDF({ unit: "mm", format: "a4", compress: true });
 doc.setProperties({ title: `Rätsellotse Rätselheft Nr. ${NR}`, author: "Rätsellotse", creator: "raetsellotse.de" });
 let page = 1;
@@ -38,7 +38,7 @@ fill([234, 242, 239]); doc.rect(0, 0, W, H, "F");
 fill(BUOY); doc.circle(W / 2, 92, 22, "F"); doc.setFont("helvetica", "bold"); doc.setFontSize(26); col([255, 255, 255]); doc.text(String(NR), W / 2, 101, { align: "center" });
 doc.setFontSize(40); col(INK); doc.text("Rätselheft", W / 2, 140, { align: "center" });
 doc.setFont("helvetica", "normal"); doc.setFontSize(13); col(SEA); doc.text("60 Sudokus · 24 Nonogramme · mit allen Lösungen", W / 2, 152, { align: "center" });
-doc.setFontSize(10); col(MUTED); doc.text("Jedes Rätsel hat genau eine Lösung und ist ohne Raten lösbar.", W / 2, 162, { align: "center" });
+doc.setFontSize(10); col(MUTED); doc.text("Jedes Rätsel hat genau eine Lösung – automatisch geprüft.", W / 2, 162, { align: "center" });
 doc.text("Zum Ausdrucken – für dich, deine Familie oder den Unterricht.", W / 2, 168, { align: "center" });
 doc.setFontSize(9); doc.text("raetsellotse.de", W / 2, H - 20, { align: "center" });
 // ---------------- Anleitung
