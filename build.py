@@ -195,7 +195,7 @@ def main():
         write(f"sudoku-zum-ausdrucken-{level}.html", "page.html", title=f"Sudoku zum Ausdrucken – {level}: 6 Rätsel mit Lösungen",
               description=f"Sechs Sudokus zum Ausdrucken, Schwierigkeit {level}, mit Lösungen auf separater Seite. Kostenlos drucken oder als PDF speichern.",
               h1=f"Sudoku zum Ausdrucken: {level}", lead=intro, body=body, crumbs=crumbs, jsonld=[crumbs_ld(crumbs)],
-              active="/sudoku-zum-ausdrucken-mittel.html", priority=0.8)
+              active="/raetselblatt.html", priority=0.8)
 
     for a in ARTICLES:
         crumbs = [("/", "Rätsellotse"), ("/" + a["slug"] + ".html", a["title"])]

@@ -428,6 +428,7 @@
       }
       target = pool[0];
     }
+    if (!(target >= 101 && target <= 999)) target = nums[0] + nums[1] * nums[2]; // Rückfall: immer erreichbar
     return { nums, target };
   }
   function blatt(root) {
@@ -448,11 +449,11 @@
 <div><h3>Notizen</h3><div class="linien" style="height:190px"></div></div></div>
 <div class="blatt-fuss"><span>Lösungen: online unter raetsellotse.de – Sudoku, Nonogramm und Zielzahl des Tages</span><span>Rätsellotse · jeden Tag neu</span></div></div>
 <p class="no-print" style="margin-top:14px"><button class="btn" type="button" data-blatt-druck>Drucken oder als PDF speichern</button> <a class="small" href="?tag=${day}">Link zu diesem Tag</a></p>`;
-      $("[data-blatt-druck]", root).onclick = () => { track("raetselblatt_drucken"); print(); };
+      $("[data-blatt-druck]", root).onclick = () => { track("raetselblatt_drucken"); document.body.classList.add("blatt-druck"); const f = () => { document.body.classList.remove("blatt-druck"); removeEventListener("afterprint", f); }; addEventListener("afterprint", f); print(); };
     }, 20);
   }
   /* Ereignisse für Google Analytics – wirken nur nach Einwilligung (consent.js) */
-  function track(name, p = {}) { try { if (typeof window.gtag === "function") window.gtag("event", name, p); } catch {} }
+  function track(name, p = {}) { try { if (typeof window.gtag === "function" && window["ga-disable-G-T00HRG2YVF"] === false) window.gtag("event", name, p); } catch {} }
 
   const games = { codeknacker, sudoku, zielzahl, nonogramm, archiv, blatt };
   const init = () => {
