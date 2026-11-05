@@ -172,9 +172,9 @@ main{overflow-wrap:break-word}main a{overflow-wrap:anywhere}
 /* Werbeplatz ohne Anzeige = kein Platz: keine Höhe, kein Abstand, kein „Werbung“, bis Google an ins.adsbygoogle
    data-ad-status="filled" meldet (Breite bleibt für die AdSense-Messung). Basis :has(); Browser ohne :has()
    bekommen von consent.js <html class="kein-has"> und .ad--belegt, sobald die Anzeige da ist. */
-.ad.on:not(:has(ins.adsbygoogle[data-ad-status="filled"])),
+.ad.on:not(:has(ins.adsbygoogle[data-ad-status="filled"])){height:0!important;min-height:0!important;margin-top:0!important;margin-bottom:0!important;padding:0!important;border:0!important;overflow:hidden!important}
 .kein-has .ad.on:not(.ad--belegt){height:0!important;min-height:0!important;margin-top:0!important;margin-bottom:0!important;padding:0!important;border:0!important;overflow:hidden!important}
-.ad.on:not(:has(ins.adsbygoogle[data-ad-status="filled"]))::before,
+.ad.on:not(:has(ins.adsbygoogle[data-ad-status="filled"]))::before{display:none}
 .kein-has .ad.on:not(.ad--belegt)::before{display:none}
 
 /* Zeitungs-Rätselseite: Karten mit Linien statt Schatten, eckiger */
