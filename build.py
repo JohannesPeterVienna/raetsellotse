@@ -7,7 +7,7 @@ from content.articles import ARTICLES
 from content import gamepages as GP
 
 ROOT = Path(__file__).parent; OUT = ROOT / "docs"
-SITE = "https://raetsellotse.de"; V = "20261105d"; UPDATED = "Oktober 2026"
+SITE = "https://raetsellotse.de"; V = "20261105e"; UPDATED = "Oktober 2026"
 NAV = [("/", "Heute"), ("/codeknacker.html", "Codeknacker"), ("/sudoku.html", "Sudoku"), ("/zielzahl.html", "Zielzahl"), ("/nonogramm.html", "Nonogramm"),
        ("/raetselblatt.html", "Zum Ausdrucken"), ("/archiv.html", "Meine Statistik")]
 env = Environment(loader=FileSystemLoader(ROOT / "templates"), autoescape=True, trim_blocks=True, lstrip_blocks=True)
@@ -243,14 +243,15 @@ def main():
           body=f"""<h2>Medieninhaber und Herausgeber</h2><p>{LEGAL_ADDR}</p>
 <h2>Unternehmensangaben</h2><p>Unternehmensgegenstand: Werbeagentur<br>UID-Nummer: ATU54682507<br>Gewerbebehörde: Magistratisches Bezirksamt für den 1. und 8. Bezirk, Wien<br>Kammerzugehörigkeit: Wirtschaftskammer Wien, Fachgruppe Werbung und Marktkommunikation<br>Berufsbezeichnung: Werbeagentur (Gewerbe, verliehen in Österreich)<br>Anwendbare Rechtsvorschriften: Gewerbeordnung, abrufbar unter <a href="https://www.ris.bka.gv.at" rel="noopener">www.ris.bka.gv.at</a></p>
 <p>Angaben nach § 5 E-Commerce-Gesetz und § 25 Mediengesetz.</p>
-<h2>Grundlegende Richtung</h2><p>Rätsellotse ist eine unabhängige Unterhaltungsseite mit täglichen Logik- und Zahlenrätseln. Die Seite finanziert sich über Werbung.</p>""")
+<h2>Grundlegende Richtung</h2><p>Rätsellotse ist eine unabhängige Unterhaltungsseite mit täglichen Logik- und Zahlenrätseln. Die Seite finanziert sich über Werbung.</p>
+<h2 id="kontakt">Kontakt</h2><p>Fragen, Hinweise oder ein Rätsel, das sich nicht eindeutig lösen lässt? Schreib an <a href="mailto:office@adstern.com">office@adstern.com</a> – wir lesen jede Nachricht.</p>""")
     body = (ROOT / "content" / "privacy_body.html").read_text(encoding="utf-8")
     import re
     body = re.sub(r"<h2>Werkzeuge</h2><p>.*?</p>", "<h2>Rätsel und Spielstand</h2><p>" + 
 "Alle Rätsel laufen ausschließlich in deinem Browser. Damit du ein Rätsel später fortsetzen kannst und deine Serie sichtbar bleibt, speichern wir Spielstand, Serie und gewählte Schwierigkeit im lokalen Speicher deines Browsers (localStorage). Diese Speicherung ist für die von dir gewünschte Funktion erforderlich (§ 165 Abs. 3 TKG 2021); die Daten werden nicht an uns übertragen und lassen sich jederzeit über die Browser-Einstellungen löschen.</p>", body, flags=re.S)
     assert "Alle Rätsel laufen" in body
     write("privacy.html", "page.html", title="Datenschutz | Rätsellotse", description="Datenschutzerklärung von Rätsellotse.", h1="Datenschutzerklärung",
-          lead="Stand: 4. November 2026", ads=False, robots="noindex,follow", body=body)
+          lead="Stand: 5. November 2026", ads=False, robots="noindex,follow", body=body)
     write("404.html", "page.html", title="Seite nicht gefunden | Rätsellotse", description="Diese Seite gibt es nicht.", h1="Diese Seite gibt es nicht",
           lead="Die heutigen Rätsel warten trotzdem.", ads=False, robots="noindex", body="<p><a href='/'>Zu den Tagesrätseln</a></p>")
 

@@ -4,16 +4,18 @@
    1) Sofort, vor allen Google-Skripten (im <head>; hier nur als Rückfall): gtag-Warteschlange + consent default (alles denied, 500 ms), ga-disable an.
    2) Bei jeder Meldung der Google-CMP (TCF-Ereignis, CONSENT_MODE_DATA_READY, US-Status) wird neu entschieden.
       DSGVO-Zweig: messen nur bei TCF Zweck 1 + Anbieter 755 UND Consent Mode analytics GRANTED (1).
-      Außerhalb der DSGVO (gdprApplies false): nur bei GRANTED (1) oder NOT_APPLICABLE (3) und wenn die CMP
-      ausdrücklich keinen US-Opt-out meldet (Status 1/2). Fehlend/UNKNOWN (0)/DENIED (2)/NOT_CONFIGURED (4)/Schnittstellenfehler = nicht messen.
+      Außerhalb der DSGVO (gdprApplies false): nur nach ausdrücklicher Zustimmung – GRANTED (1) und die CMP meldet
+      ausdrücklich keinen US-Opt-out (Status 1/2) – oder „Zustimmen“ im Logbuch-Zettel (unten). NOT_APPLICABLE (3) ist
+      keine Einwilligung: dann fragt der Zettel (seit 5.11.2026). DENIED (2) oder gemeldeter US-Opt-out (3) = Nein ohne Zettel.
+      Fehlend/UNKNOWN (0)/NOT_CONFIGURED (4)/Schnittstellenfehler = keine Zustimmung.
       Ein TCF-Nein entscheidet sofort, ohne die Consent-Mode-Schnittstelle zu fragen.
    3) Ablehnung oder Widerruf: consent update denied + ga-disable → keine weiteren Treffer.
    Statuswerte: developers.google.com/funding-choices/fc-api-docs. Signals/Werbepersonalisierung aus.
 
    Übergang (seit 4.11.2026), nur Statistik – der „Logbuch-Zettel“:
    Liefert die Google-CMP nach 3 s keine echte TCF-Entscheidung (kein __tcfapi oder TCData ohne
-   „useractioncomplete“ bzw. „tcloaded“ mit tcString, Meldung nicht sichtbar) und meldet sie nicht gdprApplies false,
-   fragt Rätsellotse selbst – nur nach Google Analytics. Zustimmen: analytics_storage granted + gtag.js.
+   „useractioncomplete“ bzw. „tcloaded“ mit tcString, Meldung nicht sichtbar) – oder meldet sie gdprApplies false ohne
+   ausdrückliche Statistik-Entscheidung (GRANTED/DENIED/US-Opt-out) –, fragt Rätsellotse selbst – nur nach Google Analytics. Zustimmen: analytics_storage granted + gtag.js.
    Ablehnen/Widerruf: analytics_storage denied, ga-disable, _ga-Cookies löschen. ad_storage, ad_user_data und
    ad_personalization fasst der Zettel nie an. Wahl in localStorage „rl-statistik-wahl“ (Version, Zeitpunkt), 12 Monate.
    Sobald Google echt entscheidet, gilt nur noch die Logik oben; der Zettel verschwindet, die eigene Wahl wird gelöscht.
@@ -100,12 +102,27 @@
     } catch (_) { return STATUS.UNKNOWN; }
   }
 
-  function usOptOutGemeldet(){
+  // usstatesoptout-Status: 0 UNKNOWN, 1 DOES_NOT_APPLY, 2 NOT_OPTED_OUT, 3 OPTED_OUT; fehlende Schnittstelle oder Fehler → 0
+  function usStatus(){
     try {
       const u = window.googlefc && window.googlefc.usstatesoptout;
-      return !(u && typeof u.getInitialUsStatesOptOutStatus === "function" && US_KEIN_OPTOUT.includes(u.getInitialUsStatesOptOutStatus()));
-    } catch (_) { return true; }
+      if (!u || typeof u.getInitialUsStatesOptOutStatus !== "function") return 0;
+      const st = u.getInitialUsStatesOptOutStatus();
+      return Number.isInteger(st) ? st : 0;
+    } catch (_) { return 0; }
   }
+
+  // Außerhalb der DSGVO (gdprApplies false): ausdrückliche Entscheidung der Google-CMP – "ja" nur bei GRANTED und
+  // bestätigt ohne US-Opt-out, "nein" bei DENIED oder gemeldetem US-Opt-out, sonst null (NOT_APPLICABLE ist keine
+  // Einwilligung → der Logbuch-Zettel fragt).
+  function aussenWert(cm, us){
+    if (us === 3 || cm === STATUS.DENIED) return "nein";
+    if (cm === STATUS.GRANTED && US_KEIN_OPTOUT.includes(us)) return "ja";
+    return null;
+  }
+  const aussen = () => aussenWert(statistikLautCmp(), usStatus());
+  // Google ist außerhalb der DSGVO zuständig, sobald sie ausdrücklich entschieden hat
+  const googleAussen = tc => !!tc && tc.gdprApplies === false && aussen() !== null;
 
   // Echte TCF-Entscheidung: Nutzer hat im Google-Dialog gewählt, oder eine gespeicherte Wahl (tcString) wurde geladen
   const cmpEntschieden = tc => !!tc && (tc.eventStatus === "useractioncomplete" ||
@@ -116,10 +133,7 @@
     const tc = lage.tc;
     if (gpc) return "nein";
     if (!tc) return "offen";
-    if (tc.gdprApplies === false){
-      const cm = statistikLautCmp();
-      return (cm === STATUS.GRANTED || cm === STATUS.NOT_APPLICABLE) && !usOptOutGemeldet() ? "ja" : "nein";
-    }
+    if (tc.gdprApplies === false) return aussen() || "offen";   // ohne ausdrückliche Google-Entscheidung fragt der Zettel
     if (!cmpEntschieden(tc)) return "offen";   // z. B. Meldung verborgen, tcloaded ohne tcString
     if (!zugestimmt(tc.purpose, 1) || !zugestimmt(tc.vendor, GOOGLE_VENDOR)) return "nein";   // ohne weitere CMP-Abfrage
     return statistikLautCmp() === STATUS.GRANTED ? "ja" : "nein";
@@ -278,7 +292,7 @@
     if (zettel.aktiv) return true;
     if (ohneWerbung || gpc || zettel.abgeloest) return false;
     const tc = lage.tc;
-    if (cmpEntschieden(tc) || (tc && tc.gdprApplies === false) || (tc && tc.displayStatus === "visible")) return false;
+    if (cmpEntschieden(tc) || googleAussen(tc) || (tc && tc.displayStatus === "visible")) return false;
     zettel.aktiv = true;
     vergessen(GOOGLE_MERKER);
     const w = eigeneWahl();
@@ -292,7 +306,7 @@
   function uebergangBeenden(){
     zettel.aktiv = false; zettel.abgeloest = true;
     zettelWeg();
-    vergessen(WAHL);   // auch bei gdprApplies false: die eigene Wahl gilt nicht mehr
+    vergessen(WAHL);   // auch bei ausdrücklicher Google-Entscheidung außerhalb der DSGVO: die eigene Wahl gilt nicht mehr
     lage.gesperrtGemeldet = false;   // damit ein Google-Nein vollständig angewendet wird
   }
 
@@ -310,7 +324,7 @@
 
   function neuBewerten(){
     const u = urteil();
-    if (cmpEntschieden(lage.tc)){   // Google hat Vorrang: eigene Wahl verwerfen; Merker für Seiten ohne Werbung
+    if (cmpEntschieden(lage.tc) || googleAussen(lage.tc)){   // Google hat Vorrang: eigene Wahl verwerfen; Merker für Seiten ohne Werbung
       schreiben(GOOGLE_MERKER, {}); vergessen(WAHL);
     }
     if (zettel.aktiv){
