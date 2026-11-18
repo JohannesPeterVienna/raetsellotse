@@ -242,35 +242,50 @@ ARTICLES = [
 {
 "slug": "sudoku-strategien",
 "title": "Sudoku-Strategien: von einfach bis schwer",
-"teaser": "Sechs Techniken mit Diagrammen – vom einzigen Kandidaten bis zum X-Wing.",
-"description": "Sudoku lösen ohne Raten: Naked Single, Hidden Single, Block-Zeile, Paare und X-Wing mit Diagrammen und einer bewährten Reihenfolge erklärt.",
-"published": "2026-10-29", "modified": "2026-10-31",
+"teaser": "Zehn Techniken – jede an einem echten Tagessudoku durchgespielt, vom einzigen Kandidaten bis zum XY-Wing.",
+"description": "Sudoku lösen ohne Raten: zehn Techniken vom Hidden Single bis zum XY-Wing, jede an einem echten Tagessudoku durchgespielt und im Löser nachspielbar.",
+"published": "2026-10-29", "modified": "2026-10-31", "stand": "2026-11-18",
 "related": ["schweres-sudoku-erkennen", "sudoku-regeln-und-geschichte", "raetsel-ausdrucken-seniorenrunde-schule"],
 "body": """
-<p>Ein Sudoku mit genau einer Lösung lässt sich durch logisches Schließen lösen – die Frage ist nur, wie viel Aufwand es kostet. Leichte Rätsel brauchen nur die ersten beiden Techniken dieser Seite, schwere verlangen mehr. Zu jeder Technik zeigt ein Diagramm, worauf du achten musst.</p>
+<p>Ein Sudoku mit genau einer Lösung lässt sich durch logisches Schließen lösen – die Frage ist nur, wie viel Aufwand es kostet. Leichte Rätsel brauchen nur die ersten beiden Techniken dieser Seite, schwere verlangen mehr. Zu jeder Technik zeigt zuerst ein vereinfachtes Diagramm das Prinzip. Darunter steht jeweils eine echte Stellung: ein schweres Tagessudoku dieser Website an genau der Stelle, an der unser <a href="/sudoku-loeser.html">Sudoku-Löser</a> die Technik zum ersten Mal braucht. Über den Link unter dem Gitter öffnest du diese Stellung im Löser und spielst von dort weiter.</p>
 <p>Zur Orientierung: Wir zählen Zeilen von oben nach unten und Spalten von links nach rechts, jeweils 1 bis 9. „Zeile 3, Spalte 5“ ist also das fünfte Feld in der dritten Zeile. Ein <strong>Kandidat</strong> ist eine Ziffer, die in einem leeren Feld nach den bisherigen Regeln noch möglich ist.</p>
 <h2>1. Einzige Möglichkeit im Feld (Naked Single)</h2>
 <p>Streiche für ein leeres Feld alle Ziffern, die schon in derselben Zeile, Spalte oder im selben 3×3-Block stehen. Bleibt nur eine übrig, ist sie die Lösung.</p>
 <figure>""" + FIG_NAKED_SINGLE + """<figcaption>Zeile 5 enthält 1, 3 und 7, Spalte 5 enthält 2, 8 und 4, der mittlere Block zusätzlich 5 und 9. Für das orange Feld bleibt nur die 6.</figcaption></figure>
 <p>Am schnellsten findest du solche Felder dort, wo sich volle Zeilen, Spalten und Blöcke kreuzen. Ein Feld, das von drei fast vollen Einheiten „gesehen“ wird, hat oft nur noch einen Kandidaten.</p>
+<!--BSP:naked-single-->
 <h2>2. Einziger Platz für eine Ziffer (Hidden Single)</h2>
 <p>Frag umgekehrt: Wo in dieser Zeile, Spalte oder in diesem Block kann die 7 noch stehen? Gibt es nur ein passendes Feld, gehört die 7 dorthin – auch wenn in diesem Feld rechnerisch noch andere Ziffern möglich wären.</p>
 <figure>""" + FIG_HIDDEN_SINGLE + """<figcaption>Die 7 in Zeile 1, die 7 in Zeile 2 und die 7 in Spalte 1 sperren sieben Felder des linken oberen Blocks, ein weiteres ist mit der 4 belegt. Die 7 des Blocks muss in Zeile 3, Spalte 3 stehen.</figcaption></figure>
 <p>Diese Technik ist bei den meisten Menschen die wichtigste. Ein bewährtes Vorgehen: Nimm dir eine Ziffer vor, etwa die 1, und prüfe Block für Block, wo sie noch hinpasst. Dann die 2, und so weiter.</p>
+<!--BSP:hidden-single-->
 <h2>3. Block und Zeile (Pointing)</h2>
 <p>Kann eine Ziffer innerhalb eines Blocks nur noch in einer einzigen Zeile stehen, weißt du zwar noch nicht, in welchem Feld – aber sicher, dass sie in dieser Zeile liegt. Dann darf sie in derselben Zeile außerhalb des Blocks nicht mehr vorkommen.</p>
 <figure>""" + FIG_POINTING + """<figcaption>Eingezeichnet sind nur die Kandidaten für die 5. Im linken oberen Block sind die Zeilen 1 und 3 voll, in Zeile 2 steht schon die 4. Die 5 des Blocks liegt also in Zeile 2 – und kann in Zeile 2, Spalte 5 und Spalte 8 gestrichen werden. Die übrigen 5-Kandidaten bleiben.</figcaption></figure>
 <p>Das funktioniert auch umgekehrt: Kann eine Ziffer in einer Zeile nur noch innerhalb eines Blocks stehen, streichst du sie in den übrigen Feldern dieses Blocks.</p>
+<!--BSP:pointing-->
 <h2>4. Paare (Naked Pair)</h2>
 <p>Haben zwei Felder einer Einheit genau dieselben zwei Kandidaten, etwa 3 und 8, müssen die 3 und die 8 in diesen beiden Feldern stehen – nur die Reihenfolge ist offen. In allen anderen Feldern der Einheit kannst du 3 und 8 streichen.</p>
 <figure class="wide">""" + FIG_PAIR + """<figcaption>In der Zeile haben das dritte und das sechste Feld nur die Kandidaten 3 und 8. Nach dem Streichen bleibt im ersten Feld nur die 2 – ein neuer Naked Single, und damit fällt auch die 2 im achten Feld weg.</figcaption></figure>
+<!--BSP:naked-pair-->
 <p>Dasselbe gilt für drei Felder, die zusammen nur drei Kandidaten haben (Tripel). Das ist schwerer zu sehen, weil nicht jedes der drei Felder alle drei Ziffern enthalten muss.</p>
+<!--BSP:naked-triple-->
 <h2>5. Versteckte Paare (Hidden Pair)</h2>
 <p>Das Gegenstück zum Paar: Kommen zwei Ziffern in einer Einheit nur in denselben zwei Feldern vor, gehören diese Felder den beiden Ziffern. Alle anderen Kandidaten in diesen zwei Feldern darfst du streichen. Ein Beispiel: In einem Block passen die 4 und die 9 nur noch in zwei bestimmte Felder, die außerdem die Kandidaten 1, 6 und 7 haben. Dann stehen 4 und 9 in diesen beiden Feldern, und 1, 6 und 7 fallen dort weg.</p>
+<!--BSP:hidden-pair-->
+<p>Mit drei Ziffern in drei Feldern heißt dasselbe Muster verstecktes Tripel. Es ist selten: In den 322 schweren Tagessudokus vom 1.1. bis 18.11.2026 kam es im Lösungsweg unseres Lösers nur zweimal vor.</p>
+<!--BSP:hidden-triple-->
 <h2>6. X-Wing</h2>
 <p>Kommt eine Ziffer in zwei Zeilen jeweils nur in denselben zwei Spalten in Frage, bilden diese vier Felder ein Rechteck. Die Ziffer steht dann in zwei gegenüberliegenden Ecken – welche, ist noch offen. Sicher ist aber: In diesen beiden Spalten ist sie in allen anderen Zeilen ausgeschlossen.</p>
 <figure>""" + FIG_XWING + """<figcaption>Nur die Kandidaten für die 4 sind eingezeichnet. In Zeile 2 und Zeile 7 passt die 4 nur in Spalte 3 oder 8. Entweder steht sie oben links und unten rechts oder oben rechts und unten links – in beiden Fällen sind Spalte 3 und Spalte 8 belegt. Die drei orange markierten Kandidaten fallen weg.</figcaption></figure>
 <p>Den X-Wing gibt es auch um 90 Grad gedreht: zwei Spalten, in denen die Ziffer nur in denselben zwei Zeilen möglich ist.</p>
+<!--BSP:x-wing-->
+<h2>7. Swordfish</h2>
+<p>Der Swordfish ist ein X-Wing mit drei statt zwei Linien: Kommt eine Ziffer in drei Zeilen zusammen nur in denselben drei Spalten in Frage, verteilen sich die drei Ziffern dieser Zeilen genau auf diese drei Spalten. In allen anderen Zeilen fällt die Ziffer in diesen Spalten weg. Nicht jede der drei Zeilen muss alle drei Spalten nutzen, zwei genügen. In unseren schweren Tagessudokus ist das Muster die Ausnahme: Im ausgewerteten Zeitraum kam es genau einmal vor, und zwar in einem Rätsel, das danach noch Ketten-Techniken verlangt.</p>
+<!--BSP:swordfish-->
+<h2>8. XY-Wing</h2>
+<p>Drei Felder mit je genau zwei Kandidaten bilden eine Zange. Das mittlere Feld (der Drehpunkt) hat die Kandidaten X und Y. Es sieht zwei weitere Felder: eines mit X und Z, eines mit Y und Z. Steht im Drehpunkt X, bekommt das zweite äußere Feld die Z; steht dort Y, bekommt das erste die Z. In jedem Fall steht in einem der beiden äußeren Felder die Z. Ein Feld, das beide äußeren Felder sieht, kann deshalb keine Z sein. Unter den Mustern jenseits der Paare ist der XY-Wing in unseren schweren Tagessudokus das häufigste: Der Löser brauchte ihn in 20 von 322 Rätseln.</p>
+<!--BSP:xy-wing-->
 <h2>Eine Reihenfolge, die sich bewährt</h2>
 <ol><li>Zuerst alle Hidden Singles suchen, Ziffer für Ziffer – ganz ohne Notizen.</li>
 <li>Sobald nichts mehr geht: Kandidaten in allen leeren Feldern notieren. Im <a href="/sudoku.html">Tagessudoku</a> schaltet die Taste N in den Notizmodus.</li>
@@ -282,12 +297,12 @@ ARTICLES = [
 <li><strong>Raten statt schließen:</strong> Wer eine Ziffer „probeweise“ einträgt und weitermacht, merkt den Fehler oft erst viele Schritte später.</li>
 <li><strong>Nur auf Zeilen schauen:</strong> Viele Hidden Singles verstecken sich in Blöcken und Spalten.</li></ul>
 <h2>Wie oft braucht man welche Technik?</h2>
-<p>Wir haben je 100 leichte und mittlere sowie 200 schwere Sudokus aus unserem Generator mit einem Löseprogramm geprüft, das die Techniken in der Reihenfolge dieser Seite anwendet. Alle leichten und mittleren gingen allein mit den Techniken 1 und 2 auf. Bei den schweren reichten diese beiden in gut der Hälfte der Fälle; bei den übrigen kamen Block-Zeile und Paare dazu, und ein Teil brauchte noch weitergehende Techniken. Die genauen Zahlen und was ein Sudoku wirklich schwer macht, erklärt der Beitrag <a href="/schweres-sudoku-erkennen.html">Woran man ein schweres Sudoku erkennt</a>.</p>
-<div class="example"><strong>Tipp:</strong> Die Tipp-Funktion im <a href="/sudoku.html">Tagessudoku</a> zeigt zuerst falsche Einträge und erklärt sonst den nächsten Schritt mit den Techniken 1 und 2. Greifen die nicht mehr – das kann nur bei schweren Rätseln passieren –, deckt sie ein Feld ohne Begründung auf. Lieber auf Papier üben? Die <a href="/sudoku-zum-ausdrucken-leicht.html">leichten Sudokus zum Ausdrucken</a> eignen sich gut, um Hidden Singles zu trainieren.</div>
+<p>Wir haben alle Tagessudokus vom 1. Januar bis 18. November 2026 mit unserem Löser bewertet, je 322 Rätsel pro Stufe. Alle leichten und mittleren gingen allein mit den Techniken 1 und 2 auf. Von den 322 schweren reichten diese beiden bei 176; in 135 Lösungswegen kam die Block-Zeile-Regel vor, in 47 ein Paar, in 37 ein verstecktes Paar, in 20 ein XY-Wing, in 10 ein X-Wing, in 9 ein Tripel, in 2 ein verstecktes Tripel und in einem ein Swordfish. Bei 83 Rätseln blieb der Löser stecken; sie verlangen Ketten-Techniken, die diese Seite nicht erklärt. Die vollständige Liste mit Datum steht unter <a href="/sudoku-techniken-ueben.html">Sudoku-Techniken gezielt üben</a>; was ein Sudoku schwer macht, erklärt <a href="/schweres-sudoku-erkennen.html">Woran man ein schweres Sudoku erkennt</a>.</p>
+<div class="example"><strong>Tipp:</strong> Die Tipp-Funktion im <a href="/sudoku.html">Tagessudoku</a> zeigt zuerst falsche Einträge und erklärt sonst den nächsten Schritt mit allen Techniken dieser Seite, samt Technikname. Nur wenn keine davon mehr greift, deckt sie ein Feld ohne Begründung auf. Lieber auf Papier üben? Die <a href="/sudoku-zum-ausdrucken-leicht.html">leichten Sudokus zum Ausdrucken</a> eignen sich gut, um Hidden Singles zu trainieren.</div>
 """,
 },
 {
-"slug": "sudoku-regeln-und-geschichte",
+"slug": "sudoku-regeln-und-geschichte", "stand": "2026-11-18",
 "title": "Sudoku: Regeln, Herkunft und erstaunliche Zahlen",
 "teaser": "Woher das Zahlenrätsel kommt, warum es eigentlich amerikanisch ist und warum 17 eine magische Zahl ist.",
 "description": "Sudoku-Regeln einfach erklärt, die Geschichte von Number Place über Nikoli bis zur Times, erstaunliche Zahlen und beliebte Varianten.",
@@ -321,7 +336,7 @@ ARTICLES = [
 <li><strong>Samurai-Sudoku:</strong> Fünf Sudokus überlappen sich in den Eckblöcken.</li>
 <li><strong>Puzzle-Sudoku (Jigsaw):</strong> Die Blöcke sind keine Quadrate, sondern unregelmäßige Formen aus je neun Feldern.</li></ul>
 <h2>Selbst ausprobieren</h2>
-<p>Auf Rätsellotse gibt es jeden Tag drei neue Sudokus: leicht, mittel und schwer. Jedes hat genau eine Lösung, und die Tipp-Funktion erklärt den nächsten Schritt mit den Grundtechniken; bei schweren Rätseln deckt sie notfalls ein Feld ohne Erklärung auf. Wer lieber mit Bleistift arbeitet, findet sechs Rätsel je Stufe mit Lösungen zum Ausdrucken: <a href="/sudoku-zum-ausdrucken-leicht.html">leicht</a>, <a href="/sudoku-zum-ausdrucken-mittel.html">mittel</a> und <a href="/sudoku-zum-ausdrucken-schwer.html">schwer</a>.</p>
+<p>Auf Rätsellotse gibt es jeden Tag drei neue Sudokus: leicht, mittel und schwer. Jedes hat genau eine Lösung, und die Tipp-Funktion erklärt den nächsten Schritt mit Technikname; nur bei den schwersten Rätseln deckt sie notfalls ein Feld ohne Erklärung auf. Wer lieber mit Bleistift arbeitet, findet sechs Rätsel je Stufe mit Lösungen zum Ausdrucken: <a href="/sudoku-zum-ausdrucken-leicht.html">leicht</a>, <a href="/sudoku-zum-ausdrucken-mittel.html">mittel</a> und <a href="/sudoku-zum-ausdrucken-schwer.html">schwer</a>.</p>
 <p><a href="/sudoku.html">Zum heutigen Sudoku</a></p>
 """,
 },
@@ -418,7 +433,7 @@ ARTICLES = [
 """,
 },
 {
-"slug": "wie-unsere-raetsel-entstehen",
+"slug": "wie-unsere-raetsel-entstehen", "stand": "2026-11-18",
 "title": "Wie unsere Rätsel entstehen – und warum sie fair sind",
 "teaser": "Ein Blick hinter die Kulissen: Zufall mit Datum, Eindeutigkeit, Prüfprogramme – und wo die Grenzen liegen.",
 "description": "Wie Rätsellotse täglich Sudokus, Nonogramme, Codes und Zielzahlen erzeugt, wie wir Eindeutigkeit prüfen und was unsere eigene Auswertung zeigt.",
@@ -433,7 +448,7 @@ ARTICLES = [
 <p>Ein Sudoku entsteht in zwei Schritten. Zuerst füllt das Programm ein vollständiges, gültiges Gitter mit zufälliger Ziffernfolge. Dann entfernt es Ziffern in zufälliger Reihenfolge. Nach jedem Schritt prüft ein Löser, ob das Rätsel noch <strong>genau eine</strong> Lösung hat. Hätte es zwei, wird die Ziffer zurückgelegt.</p>
 <p>Die Stufen unterscheiden sich in zwei Punkten. Erstens in der Zielzahl an Vorgaben: 38 für leicht, 30 für mittel, 25 für schwer. Zweitens prüfen wir bei leicht und mittel nach jedem Entfernen zusätzlich, ob sich das Rätsel noch allein mit den zwei Grundtechniken lösen lässt – „einzige Möglichkeit im Feld“ und „einziger Platz für eine Ziffer“. Wäre das nicht mehr der Fall, bleibt die Ziffer stehen.</p>
 <h3>Was wir bei den schweren Sudokus nachgemessen haben</h3>
-<p>Bei schweren Sudokus garantiert das Programm die Eindeutigkeit, schreibt aber keine bestimmten Techniken vor. Wir wollten wissen, was das in der Praxis heißt, und haben 200 schwere Rätsel aus unserem Generator mit einem Löseprogramm geprüft, das typische menschliche Techniken anwendet. Ergebnis: Gut die Hälfte ging allein mit den Grundtechniken auf; rund ein Fünftel brauchte Block-Zeile, Paare oder ähnliche Techniken; und etwas mehr als ein Viertel verlangte Techniken, die über das hinausgehen, was wir in den <a href="/sudoku-strategien.html">Sudoku-Strategien</a> erklären. Die genauen Zahlen stehen in <a href="/schweres-sudoku-erkennen.html">Woran man ein schweres Sudoku erkennt</a>.</p>
+<p>Bei schweren Sudokus garantiert das Programm die Eindeutigkeit, schreibt aber keine bestimmten Techniken vor. Wir wollten wissen, was das in der Praxis heißt, und haben alle 322 schweren Tagessudokus vom 1. Januar bis 18. November 2026 mit unserem <a href="/sudoku-loeser.html">Sudoku-Löser</a> bewertet, der zehn menschliche Techniken anwendet. Ergebnis: 176 gingen allein mit den Grundtechniken auf; 44 brauchten zusätzlich Block-Zeile oder Paare, 19 ein Muster wie Tripel, X-Wing oder XY-Wing; und 83, also rund ein Viertel, verlangten Techniken, die über das hinausgehen, was wir in den <a href="/sudoku-strategien.html">Sudoku-Strategien</a> erklären. Jedes einzelne Rätsel mit seiner Bewertung steht in der Liste <a href="/sudoku-techniken-ueben.html">Sudoku-Techniken gezielt üben</a>.</p>
 <p>Für dich heißt das: Die Stufe „schwer“ schwankt stärker als die anderen beiden. Wenn ein schweres Sudoku sich ungewohnt zäh anfühlt, liegt das nicht an dir – manche davon sind wirklich deutlich anspruchsvoller als andere.</p>
 <h2>Nonogramm: lösbar ohne Raten</h2>
 <p>Für Nonogramme erzeugt das Programm zunächst ein zufälliges Muster, in dem gut die Hälfte der Felder gefüllt ist. Dann glättet es das Muster einmal: Jedes Feld übernimmt den Zustand, den die Mehrheit seiner Nachbarn hat. So entstehen zusammenhängende Formen statt Rauschen. Muster, die danach zu leer oder zu voll sind, werden verworfen.</p>
@@ -498,9 +513,9 @@ ARTICLES = [
 """,
 },
 {
-"slug": "schweres-sudoku-erkennen",
+"slug": "schweres-sudoku-erkennen", "stand": "2026-11-18",
 "title": "Woran man ein schweres Sudoku erkennt",
-"teaser": "Die Zahl der Vorgaben täuscht. Entscheidend ist, welche Technik das Rätsel verlangt – mit Zahlen aus 400 geprüften Sudokus.",
+"teaser": "Die Zahl der Vorgaben täuscht. Entscheidend ist, welche Technik das Rätsel verlangt – mit Zahlen aus 966 bewerteten Tagessudokus.",
 "description": "Warum die Zahl der Vorgaben wenig über die Schwierigkeit sagt, welche Technikstufen es gibt und was unsere Auswertung von 400 Sudokus zeigt.",
 "published": "2026-10-31",
 "related": ["sudoku-strategien", "sudoku-regeln-und-geschichte", "wie-unsere-raetsel-entstehen"],
@@ -508,7 +523,7 @@ ARTICLES = [
 <p>Leicht, mittel, schwer, teuflisch: Fast jedes Sudoku trägt ein Etikett. Aber was steckt dahinter? Viele glauben, die Zahl der vorgegebenen Ziffern entscheide. Das stimmt nur zum Teil. Ein Sudoku ist so schwer wie der schwierigste Gedankenschritt, den man zum Lösen braucht. Dieser Beitrag erklärt die Stufen, zeigt, woran man sie früh erkennt – und legt offen, wie sich unsere eigenen Rätsel verteilen.</p>
 <h2>Warum die Vorgaben täuschen</h2>
 <p>Die Zahl der Vorgaben ist eine grobe Richtschnur: Mit 38 Vorgaben ist ein Sudoku meist leichter als mit 25. Doch wie die Vorgaben verteilt sind, wiegt schwerer als ihre Anzahl. Zwei Rätsel mit gleich vielen Ziffern können sich anfühlen wie zwei verschiedene Spiele – das eine löst sich wie von selbst, beim anderen geht nach fünf Minuten nichts mehr.</p>
-<p>Das zeigt sich auch an unseren eigenen Rätseln. Wir haben 200 schwere Sudokus aus unserem Generator ausgewertet, alle mit 25 bis 27 Vorgaben. Gut die Hälfte davon ließ sich mit denselben zwei Grundtechniken lösen wie ein leichtes Rätsel. Gleich viele Vorgaben, völlig unterschiedlicher Aufwand.</p>
+<p>Das zeigt sich auch an unseren eigenen Rätseln. Wir haben die 322 schweren Tagessudokus vom 1. Januar bis 18. November 2026 ausgewertet; 272 davon haben 25 Vorgaben, die übrigen 26 bis 28. Gut die Hälfte ließ sich mit denselben zwei Grundtechniken lösen wie ein leichtes Rätsel. Fast gleich viele Vorgaben, völlig unterschiedlicher Aufwand.</p>
 <h2>Die Schwierigkeit steckt in den Techniken</h2>
 <p>Rätselautoren und Bewertungsprogramme ordnen Lösungstechniken in Stufen. Ein Sudoku bekommt die Stufe der anspruchsvollsten Technik, ohne die es nicht weitergeht. Eine übliche Einteilung:</p>
 <div class="scroll"><table class="tbl"><thead><tr><th scope="col">Stufe</th><th scope="col">Typische Techniken</th><th scope="col">Was man tun muss</th></tr></thead><tbody>
@@ -516,20 +531,21 @@ ARTICLES = [
 <tr><td>2 · Fortgeschritten</td><td>Block-Zeile, Paare, versteckte Paare</td><td>Kandidaten notieren und gezielt streichen</td></tr>
 <tr><td>3 · Schwer</td><td>Tripel, X-Wing, Swordfish, XY-Wing</td><td>Muster über mehrere Einheiten hinweg erkennen</td></tr>
 <tr><td>4 · Sehr schwer</td><td>Ketten und ähnliche Techniken</td><td>lange Folgerungen über viele Felder hinweg verfolgen</td></tr></tbody></table></div>
-<p>Die Stufen 1 und 2 sowie den X-Wing erklären die <a href="/sudoku-strategien.html">Sudoku-Strategien</a> mit Diagrammen. Der Sprung von Stufe 1 zu Stufe 2 ist für die meisten Menschen der größte: Plötzlich findet man keine Ziffern mehr, sondern streicht Möglichkeiten, bis irgendwo eine Ziffer übrig bleibt.</p>
+<p>Die Stufen 1 bis 3 erklären die <a href="/sudoku-strategien.html">Sudoku-Strategien</a> mit Diagrammen und je einer echten Stellung aus einem Tagessudoku. Der Sprung von Stufe 1 zu Stufe 2 ist für die meisten Menschen der größte: Plötzlich findet man keine Ziffern mehr, sondern streicht Möglichkeiten, bis irgendwo eine Ziffer übrig bleibt.</p>
 <h2>Was unsere Auswertung zeigt</h2>
-<p>Für diesen Beitrag haben wir 100 leichte, 100 mittlere und 200 schwere Sudokus mit demselben Verfahren erzeugt wie die Rätsel auf dieser Seite. Ein Löseprogramm hat sie dann nur mit menschlichen Techniken bearbeitet – immer zuerst die einfachste, die noch weiterhilft. Notiert wurde die schwierigste Technik, die nötig war.</p>
-<div class="scroll"><table class="tbl"><thead><tr><th scope="col">Stufe</th><th scope="col">Vorgaben</th><th scope="col">nur Grundtechniken</th><th scope="col">Block-Zeile</th><th scope="col">Paare, Tripel</th><th scope="col">XY-Wing</th><th scope="col">darüber hinaus</th></tr></thead><tbody>
-<tr><td>leicht (100)</td><td>38</td><td>100 %</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
-<tr><td>mittel (100)</td><td>30</td><td>100 %</td><td>–</td><td>–</td><td>–</td><td>–</td></tr>
-<tr><td>schwer (200)</td><td>25–27</td><td>52 %</td><td>10,5 %</td><td>7 %</td><td>2 %</td><td>28,5 %</td></tr></tbody></table></div>
-<p>Drei Dinge fallen auf. Erstens: Leichte Sudokus sind bei uns wirklich leicht – 91 der 100 ließen sich sogar allein mit „einzige Möglichkeit im Feld“ lösen. Mittlere brauchen öfter den Blick „wo kann diese Ziffer noch hin?“. Zweitens: In der Stufe schwer streuen die Rätsel enorm. Drittens: Mehr als ein Viertel der schweren Rätsel verlangte Techniken jenseits von Paaren, Tripeln, X-Wing, Swordfish und XY-Wing. Das sind die Rätsel, bei denen auch geübte Spielerinnen und Spieler ins Grübeln kommen. Einen X-Wing oder Swordfish als schwierigsten Schritt brauchte übrigens keines der 200 Rätsel – sie waren immer entweder nicht nötig oder nicht ausreichend.</p>
+<p>Für diesen Beitrag haben wir alle Tagessudokus vom 1. Januar bis 18. November 2026 bewertet: 322 Tage, je ein leichtes, mittleres und schweres Rätsel, zusammen 966. Unser <a href="/sudoku-loeser.html">Sudoku-Löser</a> hat sie nur mit menschlichen Techniken bearbeitet – immer zuerst die einfachste, die noch weiterhilft. Notiert wurde die Stufe der schwierigsten Technik, die dabei nötig war.</p>
+<div class="scroll"><table class="tbl"><thead><tr><th scope="col">Tagessudoku</th><th scope="col">Vorgaben</th><th scope="col">Stufe 1 · nur Grundtechniken</th><th scope="col">Stufe 2 · Block-Zeile, Paare</th><th scope="col">Stufe 3 · Tripel, X-Wing, XY-Wing</th><th scope="col">Stufe 4 · darüber hinaus</th></tr></thead><tbody>
+<tr><td>leicht (322)</td><td>38</td><td>322</td><td>–</td><td>–</td><td>–</td></tr>
+<tr><td>mittel (322)</td><td>30</td><td>322</td><td>–</td><td>–</td><td>–</td></tr>
+<tr><td>schwer (322)</td><td>25–28</td><td>176 (55 %)</td><td>44 (14 %)</td><td>19 (6 %)</td><td>83 (26 %)</td></tr></tbody></table></div>
+<p>Drei Dinge fallen auf. Erstens: Leichte und mittlere Sudokus gehen bei uns ausnahmslos mit den beiden Grundtechniken auf; der Unterschied liegt in der Länge des Wegs (43 Schritte bei leicht, 51 bei mittel). Zweitens: In der Stufe schwer streuen die Rätsel enorm. Drittens: Rund ein Viertel der schweren Rätsel verlangte Techniken jenseits von Paaren, Tripeln, X-Wing, Swordfish und XY-Wing. Das sind die Rätsel, bei denen auch geübte Spielerinnen und Spieler ins Grübeln kommen.</p>
+<p>In Stufe 2 war fast immer die Block-Zeile-Regel der schwierigste Schritt (43 von 44 Rätseln), einmal ein Paar. In Stufe 3 gab zwölfmal der XY-Wing den Ausschlag, je dreimal ein Tripel und ein X-Wing, einmal ein verstecktes Tripel. Welches Rätsel an welchem Tag welche Technik verlangt, zeigt die Liste <a href="/sudoku-techniken-ueben.html">Sudoku-Techniken gezielt üben</a> – jedes davon lässt sich nachspielen.</p>
 <h2>Fünf Anzeichen, die du schon am Anfang siehst</h2>
 <ol><li><strong>Der erste Durchgang stockt früh.</strong> Wenn du nach einer Runde Hidden Singles (jede Ziffer einmal durch alle Blöcke) weniger als fünf neue Ziffern gefunden hast, wird es meist zäh.</li>
 <li><strong>Eine Ziffer fehlt fast ganz.</strong> Kommt eine Ziffer unter den Vorgaben gar nicht oder nur einmal vor, fehlen für sie die Ansatzpunkte. Das ist kein Beweis für Schwierigkeit, aber ein häufiges Zeichen.</li>
 <li><strong>Leere Blöcke oder Zeilen.</strong> Ein Block mit nur einer oder zwei Vorgaben lässt sich oft erst ganz am Ende füllen.</li>
 <li><strong>Viele Felder mit drei oder mehr Kandidaten.</strong> Sobald du Notizen machst: Haben kaum Felder nur zwei Kandidaten, gibt es wenig Ansatzpunkte für Paare und Muster.</li>
-<li><strong>Die Tipp-Funktion deckt nur noch auf.</strong> Im <a href="/sudoku.html">Tagessudoku</a> erklärt der Tipp nur Schritte mit den beiden Grundtechniken. Findet er keinen mehr, deckt er ein Feld ohne Begründung auf – ein sicheres Zeichen, dass das Rätsel ab hier fortgeschrittene Techniken verlangt.</li></ol>
+<li><strong>Die Bewertung unter dem Gitter.</strong> Im <a href="/sudoku.html">Tagessudoku</a> steht unter dem Spielfeld, welche Stufe das Rätsel hat und welche Technik die schwierigste ist. Und der Tipp nennt bei jedem Schritt die Technik – beginnt er mit „Vorarbeit mit Kandidaten“, bist du in Stufe 2 oder höher angekommen.</li></ol>
 <h2>Was tun, wenn es nicht weitergeht?</h2>
 <ul><li><strong>Kandidaten vollständig notieren.</strong> Viele „unlösbare“ Stellen sind in Wahrheit übersehene Kandidaten oder vergessene Streichungen.</li>
 <li><strong>Systematisch nach Paaren suchen.</strong> Gehe jede Einheit durch und schau nur auf Felder mit genau zwei Kandidaten.</li>
@@ -538,7 +554,7 @@ ARTICLES = [
 <h2>Und wie viele Vorgaben braucht es mindestens?</h2>
 <p>Mathematisch steht fest: Ein Sudoku mit genau einer Lösung braucht mindestens 17 Vorgaben. Das zeigten Gary McGuire, Bastian Tugemann und Gilles Civario 2012 mit einer großen Computersuche (<a href="https://arxiv.org/abs/1201.0749" rel="noopener">arXiv</a>). Die Grenze sagt aber nichts über die Schwierigkeit – auch bei wenigen Vorgaben kann ein Rätsel freundlich sein, wenn sie gut verteilt sind. Mehr Hintergrund steht in <a href="/sudoku-regeln-und-geschichte.html">Sudoku: Regeln, Herkunft und erstaunliche Zahlen</a>.</p>
 <h2>So haben wir gemessen</h2>
-<p>Unser Löseprogramm kennt diese Techniken: einzige Möglichkeit im Feld, einziger Platz für eine Ziffer, Block-Zeile in beide Richtungen, offene und versteckte Paare und Tripel, X-Wing, Swordfish und XY-Wing. Jede Streichung wurde gegen die bekannte Lösung geprüft. Die Rätsel stammen aus demselben Generator wie die Druckseiten; die tägliche Online-Version arbeitet nach demselben Verfahren. Die Zahlen beschreiben unsere Rätsel, nicht Sudokus im Allgemeinen – andere Verlage und Apps setzen ihre Grenzen anders.</p>
+<p>Unser Löseprogramm kennt diese Techniken: einzige Möglichkeit im Feld, einziger Platz für eine Ziffer, Block-Zeile in beide Richtungen, offene und versteckte Paare und Tripel, X-Wing, Swordfish und XY-Wing. Jede Streichung wurde gegen die bekannte Lösung geprüft. Bewertet wurden genau die Rätsel, die an den genannten Tagen online standen; über das Archiv im <a href="/sudoku.html">Tagessudoku</a> lässt sich jedes davon aufrufen und im Löser nachprüfen. Die Druckseiten nutzen dasselbe Verfahren mit eigenen Startwerten. Die Zahlen beschreiben unsere Rätsel, nicht Sudokus im Allgemeinen – andere Verlage und Apps setzen ihre Grenzen anders. Bei Gleichstand innerhalb einer Stufe zählt die Technik, die im Lösungsweg zuerst nötig war.</p>
 <div class="example"><strong>Zum Ausprobieren:</strong> Auf der Seite <a href="/sudoku-zum-ausdrucken-schwer.html">Sudoku zum Ausdrucken – schwer</a> sind die Rätsel 1, 2 und 4 nach unserer Auswertung deutlich anspruchsvoller als 3, 5 und 6. Vergleiche selbst, ob du den Unterschied spürst.</div>
 """,
 },

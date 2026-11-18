@@ -136,8 +136,15 @@
         P = makeSudoku(hash(`sudoku${day}${level}`), level);
         KEY = `rl-sudoku-${day}-${level}`;
         st = store.get(KEY, { v: P.puzzle.slice(), n: Array(81).fill(0).map(() => []), done: false, t: 0, hints: 0 });
-        sel = P.puzzle.indexOf(0); msg.textContent = ""; render();
+        sel = P.puzzle.indexOf(0); msg.textContent = ""; render(); rating();
       }, 10);
+    }
+    /* Bewertung des Rätsels mit dem Löser (assets/solver.js): anspruchsvollste Technik des erklärten Lösungswegs */
+    function rating() {
+      const el = $("[data-rating]", root), S = window.RLSolver; if (!el) return;
+      if (!S) { el.textContent = ""; return; }
+      const rt = S.rate(P.puzzle), code = S.stringify(P.puzzle);
+      el.innerHTML = `Bewertung dieses Rätsels: <strong>${rt.label}</strong>${rt.stuck ? " – verlangt irgendwo mehr als die zehn Techniken unseres Lösers" : ` – schwierigste nötige Technik: ${rt.hardest}`}. <a href="/sudoku-loeser.html?s=${code}">Lösungsweg im Sudoku-Löser ansehen</a>`;
     }
     function conflicts(i) { const v = st.v[i]; return v && peers[i].some(p => st.v[p] === v); }
     function render() {
@@ -162,19 +169,33 @@
       if (st.v.every((v, i) => v === P.sol[i])) { st.done = true; if (day === todayVienna()) streak("sudoku-" + level, day, true); }
       store.set(KEY, st); msg.textContent = ""; render();
     }
+    function fill(d) { const n = notes; notes = false; put(d); notes = n; }   // Tipp trägt immer die Ziffer ein, auch im Notizmodus
     function hint() {
       if (st.done) return;
       // falsche Einträge zuerst melden
       const wrong = st.v.findIndex((v, i) => v && v !== P.sol[i]);
       if (wrong >= 0) { sel = wrong; render(); msg.textContent = `Das markierte Feld (Zeile ${Math.floor(wrong / 9) + 1}, Spalte ${wrong % 9 + 1}) stimmt nicht.`; return; }
-      for (let i = 0; i < 81; i++) if (!st.v[i]) { const c = cands(st.v, i); if (c.length === 1) { sel = i; st.hints++; put(c[0]); msg.textContent = `Tipp: In Zeile ${Math.floor(i / 9) + 1}, Spalte ${i % 9 + 1} passt nur noch die ${c[0]} – alle anderen Ziffern stehen schon in derselben Zeile, Spalte oder im Block.`; return; } }
-      const names = ["dieser Zeile", "dieser Spalte", "diesem Block"];
-      for (let u = 0; u < units.length; u++) for (let d = 1; d <= 9; d++) {
-        const U = units[u]; if (U.some(i => st.v[i] === d)) continue;
-        const pos = U.filter(i => !st.v[i] && cands(st.v, i).includes(d));
-        if (pos.length === 1) { const i = pos[0]; sel = i; st.hints++; put(d); msg.textContent = `Tipp: Die ${d} kann in ${names[u % 3]} nur an einer Stelle stehen: Zeile ${Math.floor(i / 9) + 1}, Spalte ${i % 9 + 1}.`; return; }
+      // Nächster Schritt des Lösers auf dem aktuellen Stand: Streichungen werden als Vorarbeit erklärt, die erste Ziffer wird eingetragen
+      const S = window.RLSolver;
+      if (S) {
+        const ls = S.createState(st.v), pre = [];
+        for (let k = 0; k < 60; k++) {
+          const s = S.findStep(ls);
+          if (!s || s.tech === "contradiction") break;
+          if (s.place.length) {
+            const [i, d] = s.place[0]; sel = i; st.hints++; fill(d);
+            if (st.done) return;
+            msg.innerHTML = pre.length
+              ? `<strong>Tipp – hier braucht es Vorarbeit mit Kandidaten:</strong><ol class="hintsteps">${pre.map(x => `<li><strong>${x.name}:</strong> ${x.text}</li>`).join("")}<li><strong>${s.name}:</strong> ${s.text}</li></ol>`
+              : `<strong>Tipp – ${s.name}:</strong> ${s.text}`;
+            return;
+          }
+          S.applyStep(ls, s); pre.push(s);
+        }
+      } else {
+        for (let i = 0; i < 81; i++) if (!st.v[i]) { const c = cands(st.v, i); if (c.length === 1) { sel = i; st.hints++; fill(c[0]); if (!st.done) msg.textContent = `Tipp: In Zeile ${Math.floor(i / 9) + 1}, Spalte ${i % 9 + 1} passt nur noch die ${c[0]}.`; return; } }
       }
-      const i = st.v.findIndex(v => !v); sel = i; st.hints++; put(P.sol[i]); msg.textContent = `Hier hilft keine einfache Regel mehr – das Feld Zeile ${Math.floor(i / 9) + 1}, Spalte ${i % 9 + 1} wurde aufgedeckt.`;
+      const i = st.v.findIndex(v => !v); sel = i; st.hints++; fill(P.sol[i]); if (!st.done) msg.textContent = `Hier reichen die zehn erklärbaren Techniken nicht mehr (Stufe 4) – das Feld Zeile ${Math.floor(i / 9) + 1}, Spalte ${i % 9 + 1} wurde ohne Begründung aufgedeckt.`;
     }
     gridEl.addEventListener("click", e => { const b = e.target.closest("[data-i]"); if (!b) return; sel = +b.dataset.i; render(); });
     pad.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; if (b.dataset.d) put(+b.dataset.d); if (b.hasAttribute("data-erase")) put(0); if (b.hasAttribute("data-notes")) { notes = !notes; render(); } if (b.hasAttribute("data-hint")) hint(); });
@@ -455,7 +476,24 @@
   /* Ereignisse für Google Analytics – wirken nur nach Einwilligung (consent.js) */
   function track(name, p = {}) { try { if (typeof window.gtag === "function" && window["ga-disable-G-T00HRG2YVF"] === false) window.gtag("event", name, p); } catch {} }
 
-  const games = { codeknacker, sudoku, zielzahl, nonogramm, archiv, blatt };
+  /* Für Tests und die Auswertung der Tagesrätsel (tools/auswertung.js): Generator ohne Oberfläche in Node nutzbar */
+  if (typeof module !== "undefined" && module.exports) { module.exports = { hash, makeSudoku, countSolutions }; return; }
+  /* Liste „Sudoku-Techniken gezielt üben“: Zeilen der fertigen Tabelle nach Technik und Stufe filtern */
+  function ueben(root) {
+    const rows = $$("[data-ueben] tbody tr"), ft = $("[data-f-tech]", root), fs = $("[data-f-stufe]", root), out = $("[data-f-n]", root);
+    const q = new URLSearchParams(location.search);
+    if ([...ft.options].some(o => o.value === q.get("technik"))) ft.value = q.get("technik");
+    if ([...fs.options].some(o => o.value === q.get("stufe"))) fs.value = q.get("stufe");
+    const run = () => {
+      let n = 0;
+      rows.forEach(r => { const ok = (!ft.value || r.dataset.tech.split(" ").includes(ft.value)) && (!fs.value || r.dataset.stufe === fs.value); r.hidden = !ok; if (ok) n++; });
+      out.textContent = `${n} von ${rows.length} Rätseln`;
+      const p = new URLSearchParams(); if (ft.value) p.set("technik", ft.value); if (fs.value) p.set("stufe", fs.value);
+      try { history.replaceState(null, "", location.pathname + (p.toString() ? "?" + p : "")); } catch {}
+    };
+    ft.addEventListener("change", run); fs.addEventListener("change", run); run();
+  }
+  const games = { codeknacker, sudoku, zielzahl, nonogramm, archiv, blatt, ueben };
   const init = () => {
     $$("[data-game]").forEach(el => games[el.dataset.game]?.(el));
     document.addEventListener("click", e => { const b = e.target.closest("[data-share]"); if (b) track("ergebnis_teilen", { seite: location.pathname }); });

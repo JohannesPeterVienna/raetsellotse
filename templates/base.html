@@ -30,7 +30,8 @@
 {% for ld in jsonld %}<script type="application/ld+json">{{ ld | tojson }}</script>
 {% endfor %}
 {% if ads %}<script src="/assets/consent.js?v={{ v }}" defer></script>{% else %}{# ohne Werbung: nur Knopf „Datenschutz-Einstellungen“ (Widerruf), keine Anzeigen, keine Messung #}<script src="/assets/consent.js?v={{ v }}" defer data-ohne-werbung></script>{% endif %}
-<script src="/assets/games.js?v={{ v }}" defer></script>
+{% if solver %}<script src="/assets/solver.js?v={{ v }}" defer></script>
+{% endif %}<script src="/assets/games.js?v={{ v }}" defer></script>
 </head>
 <body>
 <a class="skip" href="#inhalt">Zum Inhalt</a>
