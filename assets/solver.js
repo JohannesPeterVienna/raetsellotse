@@ -92,8 +92,10 @@
         const pos = U.filter(i => has(st.c[i], d));
         if (pos.length === 1) {
           const i = pos[0];
+          // Reicht der Blick auf die gesetzten Ziffern, oder steckt eine frühere Streichung dahinter?
+          const direkt = U.filter(x => !st.g[x] && !PEERS[x].some(p => st.g[p] === d)).length === 1;
           return mk("hidden-single", { place: [[i, d]], cells: U.filter(x => x !== i), unit: u,
-            text: `Die ${d} kann in ${unitName(u)} nur noch an einer Stelle stehen: ${cellName(i)}. In allen anderen freien Feldern von ${unitName(u)} ist die ${d} durch Zeile, Spalte oder Block bereits ausgeschlossen.` });
+            text: `Die ${d} kann in ${unitName(u)} nur noch an einer Stelle stehen: ${cellName(i)}. In allen anderen freien Feldern von ${unitName(u)} ist die ${d} ${direkt ? "durch eine gleiche Ziffer in Zeile, Spalte oder Block bereits ausgeschlossen" : "ausgeschlossen – teils durch gesetzte Ziffern, teils durch die Kandidaten, die in den Schritten davor gestrichen wurden"}.` });
         }
       }
     }
@@ -221,7 +223,7 @@
     for (let i = 0; i < 81; i++) if (!st.g[i] && (best < 0 || pc(st.c[i]) < pc(st.c[best]))) best = i;
     if (best < 0) return null;
     return mk("reveal", { place: [[best, solution[best]]], cells: [],
-      text: `Mit den hier erklärten Techniken geht es nicht weiter. Aufgedeckt wurde ${cellName(best)}: ${solution[best]} (das Feld mit den wenigsten Kandidaten). Begründen ließe sich dieser Schritt nur mit Ketten-Techniken.` });
+      text: `Mit den hier erklärten Techniken geht es nicht weiter. Aufgedeckt wurde ${cellName(best)}: ${solution[best]} (das Feld mit den wenigsten Kandidaten). Begründen ließe sich dieser Schritt nur mit Techniken, die dieser Löser nicht kennt (zum Beispiel XYZ-Wing, Jellyfish oder Ketten).` });
   }
   /* Kompletter Lösungsweg. Mit reveal=true werden Stellen ohne erklärbaren Schritt aufgedeckt. */
   function solvePath(g, opts = {}) {
@@ -264,11 +266,19 @@
     for (let i = 0; i < 81; i++) {
       const r = rowOf(i), c = colOf(i), d = document.createElement("div");
       d.className = "sc lc" + (c % 3 === 2 && c < 8 ? " br" : "") + (r % 3 === 2 && r < 8 ? " bb" : "");
-      d.innerHTML = `<span class="notes" aria-hidden="true">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(() => "<i></i>").join("")}</span><input type="text" inputmode="numeric" maxlength="1" autocomplete="off" aria-label="Zeile ${r + 1}, Spalte ${c + 1}" data-i="${i}">`;
+      d.innerHTML = `<span class="notes" aria-hidden="true">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(() => "<i></i>").join("")}</span><input type="text" inputmode="numeric" autocomplete="off" tabindex="${i ? -1 : 0}" aria-label="Zeile ${r + 1}, Spalte ${c + 1}" data-i="${i}">`;
       gridEl.appendChild(d); cells.push(d);
     }
     const inputs = cells.map(d => d.querySelector("input"));
     const grid = () => inputs.map(x => (/^[1-9]$/.test(x.value) ? +x.value : 0));
+    // nur die Vorgaben: vom Löser hergeleitete oder aufgedeckte Ziffern zählen nicht mit (Prüfen & Stufe, Link)
+    const givens = () => grid().map((v, i) => (origin[i] === "step" || origin[i] === "reveal" ? 0 : v));
+    // Das Gitter ist ein einziger Tab-Stopp (zuletzt benutztes Feld); innerhalb wechseln die Pfeiltasten das Feld
+    gridEl.addEventListener("focusin", e => {
+      const x = e.target; if (!x.dataset || x.dataset.i === undefined) return;
+      inputs.forEach(y => { y.tabIndex = y === x ? 0 : -1; });
+      try { x.select(); } catch {}   // eine vorhandene Ziffer wird beim Tippen ersetzt
+    });
     const say = (h, cls = "") => { msg.className = "msg " + cls; msg.innerHTML = h; };
     function setGrid(g, from = "given") { g.forEach((v, i) => { inputs[i].value = v || ""; origin[i] = v ? from : ""; }); }
     function reset(keepMsg) { st = null; solution = null; last = null; path = []; stepsEl.innerHTML = ""; if (!keepMsg) say(""); }
@@ -306,7 +316,7 @@
       const s = findStep(st);
       if (!s) {
         last = null; render();
-        say(`Mit den hier erklärten Techniken geht es an dieser Stelle nicht weiter. Das Sudoku hat trotzdem genau eine Lösung – der nächste Schritt verlangt Ketten-Techniken (Stufe 4). <button type="button" class="btn small" data-reveal>Ein Feld aufdecken</button> <button type="button" class="btn small ghost" data-solution>Lösung zeigen</button>`, "warn");
+        say(`Mit den hier erklärten Techniken geht es an dieser Stelle nicht weiter. Das Sudoku hat trotzdem genau eine Lösung – der nächste Schritt verlangt Techniken, die dieser Löser nicht kennt, zum Beispiel XYZ-Wing, Jellyfish oder Ketten (Stufe 4). <button type="button" class="btn small" data-reveal>Ein Feld aufdecken</button> <button type="button" class="btn small ghost" data-solution>Lösung zeigen</button>`, "warn");
         return null;
       }
       return apply(s, silent);
@@ -328,14 +338,14 @@
       stepsEl.scrollIntoView && n > 0 && window.matchMedia && !window.matchMedia("(prefers-reduced-motion: reduce)").matches && stepsEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
     function check() {
-      const g = grid(), n = g.filter(Boolean).length;
+      const g = givens(), n = g.filter(Boolean).length;
       if (!n) return say("Trag zuerst die Vorgaben ein.");
       const bad = conflicts(g); if (bad.length) { render(); return say(`Widerspruch in den markierten Feldern (${list(bad.slice(0, 6).map(short))}).`, "warn"); }
       const r = countSolutions(g, 2);
       if (r.count === 0) return say("Keine Lösung möglich – vermutlich ein Tippfehler.", "warn");
       if (r.count > 1) return say(`Mehr als eine Lösung (${n} Vorgaben). Ein echtes Sudoku hat genau eine.`, "warn");
       const rt = rate(g);
-      say(`<strong>Eindeutig lösbar</strong> (${n} Vorgaben). Schwierigkeit nach Lösungsweg: <strong>${rt.label}</strong>${rt.stuck ? " – verlangt Techniken jenseits von XY-Wing" : ` – schwierigste nötige Technik: ${rt.hardest}`}. Verraten wird dabei nichts.`);
+      say(`<strong>Eindeutig lösbar</strong> (${n} Vorgaben). Schwierigkeit nach Lösungsweg: <strong>${rt.label}</strong>${rt.stuck ? " – verlangt Techniken, die dieser Löser nicht kennt" : ` – schwierigste nötige Technik im Weg dieses Lösers: ${rt.hardest}`}. Verraten wird dabei nichts.`);
     }
     function load(g) { reset(); setGrid(g); showC = false; render(); }
     function fromText(s) { const g = parse(s); if (!g) { say("Bitte genau 81 Zeichen einfügen: Ziffern 1–9, leere Felder als 0 oder Punkt.", "warn"); return; } load(g); history.replaceState(null, "", "?s=" + stringify(g)); say("Sudoku übernommen. Jetzt „Nächster Schritt“ oder „Prüfen“."); }
@@ -365,7 +375,7 @@
       else if (b.hasAttribute("data-print")) { if (!path.length) say("Noch kein Lösungsweg vorhanden – zuerst „Nächster Schritt“ oder „Ganzer Lösungsweg“ wählen."); else window.print(); }
       else if (b.hasAttribute("data-load")) fromText(text.value);
       else if (b.hasAttribute("data-link")) {
-        const g = grid(); const url = location.origin + location.pathname + "?s=" + stringify(g); text.value = stringify(g);
+        const g = givens(); const url = location.origin + location.pathname + "?s=" + stringify(g); text.value = stringify(g);
         const ok = () => say("Link kopiert. Wer ihn öffnet, sieht genau diese Vorgaben.");
         if (navigator.clipboard) navigator.clipboard.writeText(url).then(ok, () => say("Link: " + url)); else say("Link: " + url);
       }

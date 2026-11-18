@@ -51,7 +51,7 @@ const DATA = JSON.parse(fs.readFileSync(path.join(__dirname, "content", "tagessu
     const tag = DATA.beispiele.pointing.tag;
     page = await open(width, `/sudoku.html?tag=${tag}&stufe=schwer`);
     await page.waitForFunction(() => document.querySelector("[data-rating]").textContent.includes("Bewertung"));
-    assert.match(await page.textContent("[data-rating]"), /Stufe 2 · Fortgeschritten – schwierigste nötige Technik: Block-Zeile-Regel/);
+    assert.match(await page.textContent("[data-rating]"), /Stufe 2 · Fortgeschritten – schwierigste nötige Technik im Lösungsweg unseres Lösers: Block-Zeile-Regel/);
     assert.equal(await page.getAttribute("[data-rating] a", "href"), "/sudoku-loeser.html?s=" + DATA.beispiele.pointing.s);
     await page.click("[data-notes]");   // Tipp muss auch im Notizmodus die Ziffer setzen
     let vorarbeit = 0, namen = 0;
@@ -111,7 +111,55 @@ const DATA = JSON.parse(fs.readFileSync(path.join(__dirname, "content", "tagessu
     assert.equal(await page.locator("[data-game=loeser] .pad").evaluate(e => getComputedStyle(e).display), "none");
     await page.close();
 
-    // Technik-Liste: Filter, Zähler, Verweis in den Löser
+    // Löser: Ziffer überschreiben, ein Tab-Stopp fürs Gitter, Vorgaben getrennt von hergeleiteten Ziffern
+    page = await open(width, "/sudoku-loeser.html");
+    await page.focus('[data-lgrid] input[data-i="0"]'); await page.keyboard.type("5");
+    await page.focus('[data-lgrid] input[data-i="0"]'); await page.keyboard.type("7");
+    assert.equal(await page.inputValue('[data-lgrid] input[data-i="0"]'), "7", "Ziffer lässt sich überschreiben");
+    await page.keyboard.press("ArrowDown");
+    assert.equal(await page.locator("[data-lgrid] input[tabindex='0']").count(), 1);
+    assert.equal(await page.evaluate(() => document.activeElement.dataset.i), "10");
+    await page.keyboard.press("Tab");
+    assert.equal(await page.evaluate(() => document.activeElement.closest("[data-lgrid]")), null, "Tab verlässt das Gitter in einem Schritt");
+    await page.selectOption("[data-beispiel]", "stufe2");
+    const vor = await page.locator(".lc input").evaluateAll(xs => xs.filter(x => x.value).length);
+    for (let k = 0; k < 6; k++) await page.click("[data-next]");
+    await page.click("[data-check]");
+    assert.match(await page.textContent("[data-lmsg]"), new RegExp(`\\(${vor} Vorgaben\\).*Stufe 2`));
+    await page.click(".lpaste summary"); await page.click("[data-link]");
+    assert.equal((await page.inputValue("[data-text]")).replace(/\./g, "").length, vor, "Link enthält nur die Vorgaben");
+    await page.close();
+    // Startseite: Enter außerhalb des Spielfelds schickt keinen Versuch ab; ?tag= ändert die Überschrift
+    page = await open(width, "/?tag=2026-11-01");
+    assert.match(await page.textContent("[data-heute]"), /Codeknacker vom 1\.11\.2026/);
+    for (const d of [1, 2, 3, 4]) await page.click(`.homegame [data-d="${d}"]`);
+    await page.focus(".foot a"); await page.evaluate(() => document.querySelector(".foot a").addEventListener("click", e => e.preventDefault()));
+    await page.keyboard.press("Enter"); await page.keyboard.press("5");
+    assert.equal(await page.evaluate(() => localStorage.getItem("rl-code-2026-11-01")), null, "kein Versuch ohne Fokus im Spielfeld");
+    await page.click(".homegame [data-ok]");
+    assert.equal(await page.evaluate(() => JSON.parse(localStorage.getItem("rl-code-2026-11-01")).guesses.length), 1);
+    await page.close();
+    // Rätselblatt: Lösungsblatt ein- und ausblenden, Lösung passt zu den Vorgaben
+    page = await open(width, "/raetselblatt.html?tag=2026-11-01");
+    await page.waitForSelector("[data-blatt-zeig]");
+    assert.equal(await page.locator("[data-blatt-loes]").isVisible(), false);
+    await page.click("[data-blatt-zeig]");
+    assert.equal(await page.locator("[data-blatt-loes]").isVisible(), true);
+    const [aufg, los] = await page.evaluate(() => [...document.querySelectorAll(".blatt .ps")].map(t => [...t.querySelectorAll("td")].map(td => td.textContent)));
+    assert.equal(los.filter(v => /^[1-9]$/.test(v)).length, 81); assert.ok(aufg.every((v, i) => !v || v === los[i]));
+    for (let u = 0; u < 9; u++) assert.equal(new Set(los.slice(u * 9, u * 9 + 9)).size, 9);
+    assert.ok(await page.locator(".blatt-loes .bnono td.voll").count() > 30);
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth) <= width);
+    await page.close();
+
+    // Technik-Liste: Filter, Zähler, Leerzustand, Verweis in den Löser
+    page = await open(width, "/sudoku-techniken-ueben.html?technik=swordfish&stufe=1");
+    assert.equal(await page.locator("[data-ueben] tbody tr:visible").count(), 0);
+    assert.equal(await page.locator("[data-f-leer]").isVisible(), true);
+    await page.selectOption("[data-f-tech]", ""); await page.selectOption("[data-f-stufe]", "2+");
+    assert.equal(await page.locator("[data-ueben] tbody tr:visible").count(), DATA.tage.filter(t => t.schwer.stufe > 1).length);
+    assert.equal(await page.locator("[data-f-leer]").isVisible(), false);
+    await page.close();
     page = await open(width, "/sudoku-techniken-ueben.html");
     assert.equal(await page.locator("[data-ueben] tbody tr").count(), DATA.tage.length);
     await page.selectOption("[data-f-tech]", "xy-wing");

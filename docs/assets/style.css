@@ -265,3 +265,5 @@ ins.adsbygoogle[data-ad-status="unfilled"]{display:none!important}
 .hintsteps{margin:.5em 0 0;padding-left:1.3em}.hintsteps li{margin:0 0 .5em}
 .tbl.ueben td{font-size:.92rem}.tbl.ueben tr[hidden]{display:none}.tbl.ueben td:first-child{white-space:nowrap}
 @media print{[data-game=loeser] .pad,[data-game=loeser]~*,.more{display:none!important}[data-game=loeser]{border:0;padding:0}.lsteps{max-height:none;overflow:visible}.lsteps li{break-inside:avoid}.lgrid{max-width:120mm}}
+.blatt[hidden]{display:none}.blatt-loes{margin-top:18px}.blatt-loes .ps td.neu{color:#777;font-weight:500}.bnono td.voll{background:#111}
+@media print{.blatt-loes{break-before:page;margin-top:0}.bnono td.voll{-webkit-print-color-adjust:exact;print-color-adjust:exact}}

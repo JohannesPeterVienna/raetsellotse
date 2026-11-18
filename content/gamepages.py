@@ -69,7 +69,7 @@ SUDOKU = """
 <p>Wie man einem Sudoku seine Schwierigkeit ansieht, erklärt <a href="/schweres-sudoku-erkennen.html">Woran man ein schweres Sudoku erkennt</a>; Herkunft und Zahlen rund um das Rätsel stehen in <a href="/sudoku-regeln-und-geschichte.html">Sudoku: Regeln, Herkunft und erstaunliche Zahlen</a>.</p>
 <h2>Häufige Fragen</h2>
 <p><strong>Wird mein Fortschritt gespeichert?</strong> Ja, automatisch in deinem Browser. Du kannst das Sudoku schließen und später weitermachen – auf demselben Gerät.</p>
-<p><strong>Muss man raten?</strong> Nein. Jedes Sudoku hat genau eine Lösung, die sich durch Schließen finden lässt. Leicht und mittel kommen mit einfachen Techniken aus; schwere Rätsel können fortgeschrittene Techniken bis hin zu Ketten verlangen. An solchen Stellen kann die Tipp-Funktion nur noch ein Feld aufdecken, aber nicht erklären – mehr dazu in <a href="/schweres-sudoku-erkennen.html">Woran man ein schweres Sudoku erkennt</a>.</p>
+<p><strong>Muss man raten?</strong> Nein. Jedes Sudoku hat genau eine Lösung, die sich durch Schließen finden lässt. Leicht und mittel kommen mit einfachen Techniken aus; schwere Rätsel können fortgeschrittene Techniken verlangen. Kennt unser Löser die nötige Technik nicht (etwa XYZ-Wing, Jellyfish oder Ketten), kann die Tipp-Funktion nur noch ein Feld aufdecken, aber nicht erklären – mehr dazu in <a href="/schweres-sudoku-erkennen.html">Woran man ein schweres Sudoku erkennt</a>.</p>
 """
 
 ZIEL = """

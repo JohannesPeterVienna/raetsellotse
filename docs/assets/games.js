@@ -82,7 +82,12 @@
       store.set(KEY, st); render();
     }
     pad.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; if (b.dataset.d) press(+b.dataset.d); if (b.hasAttribute("data-back")) back(); if (b.hasAttribute("data-ok")) submit(); });
-    document.addEventListener("keydown", e => { if (e.target.closest("input,textarea")) return; if (/^[1-6]$/.test(e.key)) press(+e.key); if (e.key === "Backspace") back(); if (e.key === "Enter") submit(); });
+    // Auf der Startseite (data-nur-fokus) gelten die Tasten nur, wenn der Fokus im Spielfeld liegt – sonst würde Enter überall einen Versuch abschicken
+    // (benutzte Ziffernknöpfe werden gesperrt und verlieren den Fokus – deshalb merkt sich „aktiv“, wo zuletzt geklickt oder fokussiert wurde)
+    const nurFokus = root.hasAttribute("data-nur-fokus"); let aktiv = false;
+    if (nurFokus) for (const ev of ["pointerdown", "focusin"]) document.addEventListener(ev, e => { aktiv = root.contains(e.target); });
+    document.addEventListener("keydown", e => { if (e.target.closest("input,textarea,select") || (nurFokus && !(aktiv && (root.contains(e.target) || e.target === document.body)))) return; if (e.key === "Enter" && e.target.closest("a,button") && !e.target.closest("[data-pad]")) return; if (/^[1-6]$/.test(e.key)) press(+e.key); if (e.key === "Backspace") back(); if (e.key === "Enter") { submit(); e.preventDefault(); } });
+    const titel = $("[data-heute]", root); if (titel && day !== todayVienna()) titel.textContent = `Codeknacker vom ${fmtDate(day)} – aus dem Archiv`;
     render();
   }
 
@@ -144,7 +149,7 @@
       const el = $("[data-rating]", root), S = window.RLSolver; if (!el) return;
       if (!S) { el.textContent = ""; return; }
       const rt = S.rate(P.puzzle), code = S.stringify(P.puzzle);
-      el.innerHTML = `Bewertung dieses Rätsels: <strong>${rt.label}</strong>${rt.stuck ? " – verlangt irgendwo mehr als die zehn Techniken unseres Lösers" : ` – schwierigste nötige Technik: ${rt.hardest}`}. <a href="/sudoku-loeser.html?s=${code}">Lösungsweg im Sudoku-Löser ansehen</a>`;
+      el.innerHTML = `Bewertung dieses Rätsels: <strong>${rt.label}</strong>${rt.stuck ? " – verlangt irgendwo eine Technik, die unser Löser nicht kennt" : ` – schwierigste nötige Technik im Lösungsweg unseres Lösers: ${rt.hardest}`}. <a href="/sudoku-loeser.html?s=${code}">Lösungsweg im Sudoku-Löser ansehen</a>`;
     }
     function conflicts(i) { const v = st.v[i]; return v && peers[i].some(p => st.v[p] === v); }
     function render() {
@@ -469,7 +474,12 @@
 <div><h3>Zielzahl</h3><p class="small">Erreiche die Zielzahl mit + − × ÷. Jede Zahl höchstens einmal, Teilen nur ohne Rest.</p><div class="bziel">${Z.nums.map(n => `<span>${n}</span>`).join("")}<span class="ziel">→ ${Z.target}</span></div><div class="linien"></div></div>
 <div><h3>Notizen</h3><div class="linien" style="height:190px"></div></div></div>
 <div class="blatt-fuss"><span>Lösungen: online unter raetsellotse.de – Sudoku, Nonogramm und Zielzahl des Tages</span><span>Rätsellotse · jeden Tag neu</span></div></div>
-<p class="no-print" style="margin-top:14px"><button class="btn" type="button" data-blatt-druck>Drucken oder als PDF speichern</button> <a class="small" href="?tag=${day}">Link zu diesem Tag</a></p>`;
+<div class="blatt blatt-loes" data-blatt-loes hidden><div class="blatt-kopf"><b>Lösungen</b><span>${fmtDate(day)} · raetsellotse.de</span></div>
+<div class="blatt-raster"><div><h3>Sudoku · mittel</h3>${'<table class="ps" aria-label="Lösung des Sudokus">' + [...Array(9)].map((_, r) => "<tr>" + [...Array(9)].map((_, c) => `<td${S.puzzle[r * 9 + c] ? "" : ' class="neu"'}>${S.sol[r * 9 + c]}</td>`).join("") + "</tr>").join("") + "</table>"}</div>
+<div><h3>Nonogramm · 10 × 10</h3>${N ? '<table class="bnono" aria-label="Lösung des Nonogramms">' + [...Array(10)].map((_, y) => "<tr>" + [...Array(10)].map((_, x) => `<td${N.sol[y * 10 + x] ? ' class="voll"' : ""}></td>`).join("") + "</tr>").join("") + "</table>" : ""}</div></div>
+<div class="blatt-fuss"><span>Zielzahl ${Z.target}: Es gibt meist mehrere Rechenwege; einen zeigt „Lösung zeigen“ unter raetsellotse.de/zielzahl.html</span></div></div>
+<p class="no-print" style="margin-top:14px"><button class="btn" type="button" data-blatt-druck>Drucken oder als PDF speichern</button> <button class="btn ghost" type="button" data-blatt-zeig aria-pressed="false">Lösungsblatt einblenden</button> <a class="small" href="?tag=${day}">Link zu diesem Tag</a></p>`;
+      $("[data-blatt-zeig]", root).onclick = e => { const l = $("[data-blatt-loes]", root); l.hidden = !l.hidden; e.target.setAttribute("aria-pressed", !l.hidden); e.target.textContent = l.hidden ? "Lösungsblatt einblenden" : "Lösungsblatt ausblenden"; };
       $("[data-blatt-druck]", root).onclick = () => { track("raetselblatt_drucken"); document.body.classList.add("blatt-druck"); const f = () => { document.body.classList.remove("blatt-druck"); removeEventListener("afterprint", f); }; addEventListener("afterprint", f); print(); };
     }, 20);
   }
@@ -486,8 +496,9 @@
     if ([...fs.options].some(o => o.value === q.get("stufe"))) fs.value = q.get("stufe");
     const run = () => {
       let n = 0;
-      rows.forEach(r => { const ok = (!ft.value || r.dataset.tech.split(" ").includes(ft.value)) && (!fs.value || r.dataset.stufe === fs.value); r.hidden = !ok; if (ok) n++; });
+      rows.forEach(r => { const ok = (!ft.value || r.dataset.tech.split(" ").includes(ft.value)) && (!fs.value || (fs.value === "2+" ? r.dataset.stufe !== "1" : r.dataset.stufe === fs.value)); r.hidden = !ok; if (ok) n++; });
       out.textContent = `${n} von ${rows.length} Rätseln`;
+      const leer = $("[data-f-leer]"); if (leer) leer.hidden = n > 0;
       const p = new URLSearchParams(); if (ft.value) p.set("technik", ft.value); if (fs.value) p.set("stufe", fs.value);
       try { history.replaceState(null, "", location.pathname + (p.toString() ? "?" + p : "")); } catch {}
     };
