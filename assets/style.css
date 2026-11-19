@@ -93,7 +93,7 @@ p{margin:0 0 1em}.lead{font-size:1.15rem;color:var(--muted);max-width:58ch}.mute
 .cards strong{display:block;font:700 1.08rem/1.25 var(--head);margin-bottom:4px}.cards span{color:var(--muted);font-size:.92rem}
 .crumbs{font-size:.85rem;color:var(--muted);padding-top:18px}.crumbs a{color:var(--muted)}
 .ad{display:none;margin:28px auto;text-align:center}.ad.on{display:block}
-.ad::before{content:"Werbung";display:block;font-size:.7rem;color:var(--muted);margin-bottom:4px}
+.ad::before{content:"Anzeige";display:block;font-size:.7rem;color:var(--muted);margin-bottom:4px}
 .ad--billboard{min-height:100px;max-width:970px}.ad--rect{min-height:250px;max-width:336px}.ad--half{min-height:600px;width:300px}
 .foot{border-top:1px solid var(--line);background:var(--card);margin-top:40px;padding:28px 0;font-size:.9rem;color:var(--muted)}
 .foot .wrap{display:flex;gap:24px;flex-wrap:wrap;justify-content:space-between}.foot nav{display:flex;gap:16px;flex-wrap:wrap}.foot a{color:var(--muted)}
@@ -166,16 +166,14 @@ main{overflow-wrap:break-word}main a{overflow-wrap:anywhere}
 .dg .cl{font-size:12px;fill:var(--muted)}.dg .lb{font-size:13px;font-weight:600}
 @media print{.prose{max-width:none}.printgrid>div{break-inside:avoid}}
 
-/* Abstand Superbanner – Fußzeilen-Knopf (≥ 150 px) */
-.ad--superbanner{margin-bottom:120px}
 
 /* Werbeflächen ohne Antwort von Google: Das <ins class="adsbygoogle"> bleibt immer sichtbar und ungeschnitten
    (AdSense-Hilfe 10762946: Anzeigenblöcke nicht anfangs versteckt laden). Nur das Beiwerk – Beschriftung,
    Mindesthöhe, Rahmen, Hintergrund, Polster, Abstände – erscheint erst bei data-ad-status="filled" oder
    "unfill-optimized". Responsive Blöcke haben bis dahin von selbst Höhe 0, feste Formate behalten ihre Größe.
    Grundlage :has(); Rückfall ohne :has(): .kein-has .ad.on:not(.ad--belegt) (Klasse per MutationObserver) in eigenen Regeln. */
-.ad.on:not(:has(ins.adsbygoogle[data-ad-status="filled"])):not(:has(ins.adsbygoogle[data-ad-status="unfill-optimized"])){min-height:0!important;margin-top:0!important;margin-bottom:0!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important}
-.kein-has .ad.on:not(.ad--belegt){min-height:0!important;margin-top:0!important;margin-bottom:0!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important}
+.ad.on:not(.ad--oben):not(:has(ins.adsbygoogle[data-ad-status="filled"])):not(:has(ins.adsbygoogle[data-ad-status="unfill-optimized"])){min-height:0!important;margin-top:0!important;margin-bottom:0!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important}
+.kein-has .ad.on:not(.ad--oben):not(.ad--belegt){min-height:0!important;margin-top:0!important;margin-bottom:0!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important}
 .ad.on:not(:has(ins.adsbygoogle[data-ad-status="filled"])):not(:has(ins.adsbygoogle[data-ad-status="unfill-optimized"]))::before{display:none}
 .kein-has .ad.on:not(.ad--belegt)::before{display:none}
 /* Googles Muster für nicht gefüllte Anzeigenblöcke (AdSense-Hilfe 10762946) */
@@ -216,7 +214,7 @@ ins.adsbygoogle[data-ad-status="unfilled"]{display:none!important}
 @media print{.blatt{border:0;padding:0;max-width:none}.blatt-raster{gap:14mm}@page{size:A4;margin:12mm}}
 
 /* Mobile Banner 320×100 nur auf dem Handy */
-.ad--mbanner{width:320px;min-height:100px;margin-bottom:120px}
+.ad--mbanner{width:320px}
 @media (min-width:768px){.ad--mbanner{display:none!important}}
 /* 320 px Banner nur, wenn er samt Seitenrand Platz hat (sonst seitliches Scrollen auf 320-px-Geräten) */
 .ad--mbanner{max-width:100%}
@@ -267,3 +265,19 @@ ins.adsbygoogle[data-ad-status="unfilled"]{display:none!important}
 @media print{[data-game=loeser] .pad,[data-game=loeser]~*,.more{display:none!important}[data-game=loeser]{border:0;padding:0}.lsteps{max-height:none;overflow:visible}.lsteps li{break-inside:avoid}.lgrid{max-width:120mm}}
 .blatt[hidden]{display:none}.blatt-loes{margin-top:18px}.blatt-loes .ps td.neu{color:#777;font-weight:500}.bnono td.voll{background:#111}
 @media print{.blatt-loes{break-before:page;margin-top:0}.bnono td.voll{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* Oberster Werbeplatz (19.11.2026): Streifen direkt unter der Kopfzeile, im ersten Bildschirm.
+   Die Höhe ist von Anfang an reserviert (Beschriftungszeile 22 px + Format), damit beim Füllen nichts springt und kein Inhalt
+   unter den Finger rutscht. Die Beschriftung liegt in der reservierten Zeile und erscheint erst bei data-ad-status="filled".
+   Bleibt der Platz leer, bleibt nur Weißraum (so hält es auch AdSense selbst bei sichtbaren Blöcken, Hilfe 10762946) –
+   ein Einklappen würde die ganze Seite verschieben. Abstände: 36 px zur Kopfzeile, 22 px + Polster zum Inhalt darunter. */
+.ad.ad--oben{position:relative;margin:14px auto 22px;padding-top:22px;font-size:0;line-height:0}   /* ohne Zeilenabstand: Streifen exakt so hoch wie das Format */
+/* unter dem Streifen braucht der Seitenanfang weniger eigenen Abstand */
+.unter-platz .hero{padding-top:14px}.unter-platz>.crumbs{padding-top:10px}
+.ad.ad--superbanner{display:block;max-width:728px;min-height:112px}
+.ad.ad--mbanner{display:block;min-height:122px}
+.ad--oben::before{position:absolute;top:0;left:0;right:0;margin:0;font-size:11.2px;line-height:18px}
+.ohne-anzeigen .ad--oben{display:none!important}
+/* Seitenleiste: ein Kasten statt zwei, darunter Half Page und Skyscraper – nichts steht unter den Anzeigen, das beim Füllen wandert */
+.side .box h3+ul+h3{margin-top:14px}
+.side ul.reihe{list-style:none;padding:0;display:flex;gap:6px 16px;flex-wrap:wrap}

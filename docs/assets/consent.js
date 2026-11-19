@@ -41,7 +41,8 @@
   // Anzeigenblöcke: Block-IDs werden nach der AdSense-Freigabe hier eingetragen.
   // Gemeinsame AdSense-Blöcke „Themen-Websites – …“ (Konto pub-7811071715414905, angelegt 17.10. und 5.11.2026)
   const SLOTS = { billboard: "7497607759", rect: "1292301217", half: "1292301217", superbanner: "5774811012", sky: "5064364572", mbanner: "5396758258" };
-  // Feste IAB-Formate: Superbanner 728×90, Wide Skyscraper 160×600. Die übrigen Plätze sind responsiv
+  // Feste IAB-Formate: Superbanner 728×90 und Mobile Banner 320×100 (oberster Platz unter der Kopfzeile, Höhe in style.css
+  // reserviert), Wide Skyscraper 160×600. Die übrigen Plätze sind responsiv
   // (Billboard 970×250 / Leaderboard 728×90 / Mobile 320×100, Half Page 300×600, Medium Rectangle 300×250).
   const FIXED = { superbanner: [728, 90], sky: [160, 600], mbanner: [320, 100] };
 
@@ -50,7 +51,10 @@
   const ohneWerbung = !!(skript && skript.hasAttribute && skript.hasAttribute("data-ohne-werbung"));
 
   function loadAds(){
-    if (gpc) { (window.adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 1; return; }   // keine Anzeigenanfragen
+    if (gpc) {   // keine Anzeigenanfragen; der oben reservierte Streifen wird freigegeben
+      (window.adsbygoogle = window.adsbygoogle || []).pauseAdRequests = 1;
+      document.documentElement.classList.add("ohne-anzeigen"); return;
+    }
     // Der Loader steht statisch im <head>; nur falls er fehlt, wird er hier nachgeladen – nie doppelt.
     if (!document.querySelector('script[src*="pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"]')) {
       const s = document.createElement("script");

@@ -11,3 +11,5 @@ Statische Website für https://raetsellotse.de – tägliche Rätsel (Codeknacke
 Bauen: `pip install jinja2 && python3 build.py`
 
 Test Werbeplätze (nach dem Bauen, Playwright): `node --test test_werbeplaetze.js` – leere Werbeplätze bleiben unsichtbar, gefüllte erscheinen mit Abstand.
+
+Werbeplätze (Stand 19.11.2026): oben ein Streifen direkt unter der Kopfzeile (ab 768 px Superbanner 728×90, darunter Mobile Banner 320×100, unter 360 px keiner) – seine Höhe ist in `assets/style.css` von Anfang an reserviert, damit beim Füllen nichts springt; der frühere Platz vor der Fußzeile entfällt dafür. Im Text steht der responsive Platz erst nach dem ersten Inhaltsblock (`teile_text` in `build.py`, Marke `<!--PLATZ-->`), in der Seitenleiste folgen Half Page und Skyscraper auf den Link-Kasten. Auf Spielseiten gibt es keine Seitenleisten-Werbung. Der Test prüft je Seitentyp bei 1366×768 und 390×844: oberster Platz im ersten Bildschirm, ≥ 150 px zu Bedienelementen, ≥ 32 px zu Navigation, Überschrift sichtbar, kein Sprung (CLS), kein Überlauf, keine JS-Fehler über die Sitemap.

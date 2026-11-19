@@ -51,6 +51,7 @@ function seite({ statisch = true, kopfDefault = true, gpc = false, slots = [], t
     }
   };
   document.body = knoten("body", document);
+  const wurzelKlassen = []; document.documentElement = { classList: { add: k => wurzelKlassen.push(k) } };
   const RealDate = Date;
   class FakeDate extends RealDate { constructor(...a) { super(...(a.length ? a : [jetzt + uhr])); } static now() { return jetzt + uhr; } }
   const store = new Map(Object.entries(speicher).map(([k, v]) => [k, JSON.stringify(v)]));
@@ -93,7 +94,7 @@ function seite({ statisch = true, kopfDefault = true, gpc = false, slots = [], t
   };
   const einstellungsKnopf = knoten("button", document); einstellungsKnopf.setAttribute("data-privacy-settings", "");
   document.body.append(einstellungsKnopf);
-  return { window, document, angehaengt, befehle, tcf: d => tcf(d, true), ticken, zettel, knopf, klick, taste, jar, geloeschtAuf, store,
+  return { window, document, wurzelKlassen, angehaengt, befehle, tcf: d => tcf(d, true), ticken, zettel, knopf, klick, taste, jar, geloeschtAuf, store,
            einstellungsKnopf, gtm: () => angehaengt.filter(s => /googletagmanager/.test(s.src || "")).length,
            wahl: () => JSON.parse(store.get("rl-statistik-wahl") || "null") };
 }
@@ -123,6 +124,7 @@ test("Global Privacy Control: Anzeigenanfragen angehalten, kein Werbeplatz befü
   const p = seite({ gpc: true, statisch: false, slots: [box] });
   assert.equal(p.window.adsbygoogle.pauseAdRequests, 1);
   assert.equal(p.angehaengt.length, 0);
+  assert.deepEqual(p.wurzelKlassen, ["ohne-anzeigen"], "reservierter Streifen oben wird freigegeben");
   p.tcf({ gdprApplies: true, eventStatus: "tcloaded", tcString: "CQ-ja", purpose: { consents: { 1: true } }, vendor: { consents: { 755: true } } });
   assert.equal(p.window["ga-disable-G-T00HRG2YVF"], true);
   assert.ok(!p.angehaengt.some(s => /googletagmanager/.test(s.src || "")));

@@ -9,7 +9,7 @@ from content import loeser as LO
 from content.articles import _grid, _svg
 
 ROOT = Path(__file__).parent; OUT = ROOT / "docs"
-SITE = "https://raetsellotse.de"; V = "20261118d"; UPDATED = "Oktober 2026"
+SITE = "https://raetsellotse.de"; V = "20261119a"; UPDATED = "Oktober 2026"
 NAV = [("/", "Heute"), ("/codeknacker.html", "Codeknacker"), ("/sudoku.html", "Sudoku"), ("/zielzahl.html", "Zielzahl"), ("/nonogramm.html", "Nonogramm"),
        ("/raetselblatt.html", "Zum Ausdrucken"), ("/archiv.html", "Meine Statistik")]
 env = Environment(loader=FileSystemLoader(ROOT / "templates"), autoescape=True, trim_blocks=True, lstrip_blocks=True)
@@ -66,7 +66,7 @@ def ueben_body():
                     f'<td>{s["stufe"]}</td><td>{s["vorgaben"]}</td><td>{schw}</td><td>{links or "–"}</td></tr>')
     opt = "".join(f'<option value="{t}">{TECHNIK[t]} ({vor[t]})</option>' for t in TECHNIK)
     return f"""<p>Eine Technik lernt man an Stellungen, in denen man sie wirklich braucht. Diese Liste zeigt für jedes schwere Tagessudoku vom {datum(DATA['von'])} bis {datum(DATA['bis'])}, welche Stufe es hat und welche Techniken sein Lösungsweg verlangt. Ein Klick auf eine Technik öffnet das Rätsel im <a href="/sudoku-loeser.html">Sudoku-Löser</a> genau an der Stelle, an der sie zum ersten Mal nötig ist: Alle Schritte davor sind schon ausgeführt, die Kandidaten eingeblendet. Such das Muster zuerst selbst – „Nächster Schritt“ zeigt die Auflösung.</p>
-<h2>Was die {n} Rätsel verlangen</h2>
+<!--PLATZ--><h2>Was die {n} Rätsel verlangen</h2>
 <div class="scroll"><table class="tbl"><thead><tr><th scope="col">Stufe</th><th scope="col">Bedeutung</th><th scope="col">Rätsel</th></tr></thead><tbody>
 <tr><td>1 · Einstieg</td><td>Einziger Platz und einzige Möglichkeit reichen bis zum Ende</td><td>{stufen[1]}</td></tr>
 <tr><td>2 · Fortgeschritten</td><td>zusätzlich Block-Zeile-Regel oder Paare</td><td>{stufen[2]}</td></tr>
@@ -93,8 +93,18 @@ LEGAL_ADDR = "AdStern – Agentur für digitales Marketing<br>Seilerstätte 8/8,
 def write(path, template, **ctx):
     base = dict(site=SITE, v=V, updated=UPDATED, nav=NAV, active=ctx.get("active", "/" + path), jsonld=[], ads=True, robots=None, og_title=None)
     base.update(ctx); base["path"] = "/" if path == "index.html" else "/" + path
+    if template == "page.html" and base["ads"]: base["body"], base["body_rest"] = teile_text(base["body"])
     (OUT / path).write_text(env.get_template(template).render(**base), encoding="utf-8")
     if base.get("robots") is None: PAGES.append((base["path"], ctx.get("priority", 0.6), ctx.get("lastmod", "2026-10-29")))
+
+
+def teile_text(body):
+    """Teilt den Text einer Beitragsseite für den Werbeplatz im Text: an der Marke <!--PLATZ-->, sonst vor der zweiten
+    Zwischenüberschrift. So steht der Platz nie vor dem ersten Inhaltsblock. Ohne Teilstelle gibt es keinen Platz im Text."""
+    if "<!--PLATZ-->" in body:
+        a, b = body.split("<!--PLATZ-->"); return a, b
+    h = [m.start() for m in re.finditer(r"<h2\b", body)]
+    return (body[:h[1]], body[h[1]:]) if len(h) > 1 else (body, "")
 
 
 def crumbs_ld(items):
@@ -260,7 +270,7 @@ def main():
         before, after = GP.PRINT_TEXT[level]
         body = (f"<div class='no-print'>{before}</div>"
                 f"<p class='no-print'><button class='btn' type='button' onclick='print()'>Drucken oder als PDF speichern</button></p>"
-                f"<div class='printgrid'>{grid}</div><h2 style='break-before:page'>Lösungen</h2><div class='printgrid'>{sols}</div>"
+                f"<div class='printgrid'>{grid}</div><!--PLATZ--><h2 style='break-before:page'>Lösungen</h2><div class='printgrid'>{sols}</div>"
                 f"<h2 class='no-print'>Andere Schwierigkeiten</h2><p class='no-print'>{others} · <a href='/sudoku.html'>Tagessudoku online spielen</a></p>"
                 f"<div class='no-print'>{after}</div>"
                 "<p class='small muted no-print'>Jedes Sudoku hat genau eine Lösung. Beim Drucken werden Navigation, Werbung und Erklärungen ausgeblendet; Lösungen beginnen auf einer neuen Seite.</p>")
@@ -324,7 +334,7 @@ def main():
 <h2>Wer dahintersteht</h2><p>Betrieben wird Rätsellotse von AdStern – Agentur für digitales Marketing mit Sitz in der Seilerstätte 8/8 in 1010 Wien. AdStern entwickelt die Rätselprogramme, schreibt die Anleitungen und Beiträge und ist für alle Inhalte verantwortlich. Die vollständigen Angaben stehen im <a href="/imprint.html">Impressum</a>.</p>
 <h2>Was es hier gibt</h2><p>Herzstück sind die vier Tagesrätsel. Dazu kommen der <a href="/sudoku-loeser.html">Sudoku-Löser mit Lösungsweg</a> für eigene Rätsel, drei Druckseiten mit je sechs Sudokus samt Lösungen in den Stufen <a href="/sudoku-zum-ausdrucken-leicht.html">leicht</a>, <a href="/sudoku-zum-ausdrucken-mittel.html">mittel</a> und <a href="/sudoku-zum-ausdrucken-schwer.html">schwer</a>, und eine Reihe von Beiträgen: Anleitungen und Strategien zu jedem Rätsel, Hintergrund zur Mathematik hinter dem Codeknacker und zu schweren Sudokus, ein nüchterner Blick auf die Forschung zu Denksport und Gehirn sowie praktische Tipps für Rätselrunden mit Kindern, in der Schule oder im Seniorentreff. Alle Beiträge sind über die <a href="/">Startseite</a> erreichbar.</p>
 <h2>Wie wir Inhalte prüfen</h2><p>Für die Rätsel selbst übernehmen Prüfprogramme die Kontrolle: Sie stellen sicher, dass jedes Sudoku und jedes Nonogramm genau eine Lösung hat und jede Zielzahl erreichbar ist. Aussagen über bestimmte Rätsel – etwa welche Techniken die Sudokus auf den Druckseiten verlangen – haben wir mit einem Löseprogramm nachgeprüft, und die Beispielrätsel auf den Spielseiten sind vollständig nachgerechnet. Jeder Beitrag trägt das Datum seiner letzten Prüfung; wo wir uns auf Studien oder Fachstellen stützen, nennen wir die Quellen am Ende des Beitrags.</p>
-<h2>Werbung auf Rätsellotse</h2><p>Rätsellotse ist kostenlos und finanziert sich über Anzeigen von Google. Werbeplätze sind mit „Werbung“ gekennzeichnet. Unsere festen Werbeplätze stehen nie neben dem Spielfeld oder den Bedienknöpfen, damit niemand beim Knobeln versehentlich auf eine Anzeige tippt. Zusätzlich kann Google Anzeigen automatisch platzieren. Die Rätsel, Tipps und Lösungen funktionieren unabhängig davon, ob du der Werbung zustimmst.</p>
+<h2>Werbung auf Rätsellotse</h2><p>Rätsellotse ist kostenlos und finanziert sich über Anzeigen von Google. Werbeplätze sind mit „Anzeige“ gekennzeichnet. Unsere festen Werbeplätze stehen nie neben dem Spielfeld oder den Bedienknöpfen, damit niemand beim Knobeln versehentlich auf eine Anzeige tippt. Zusätzlich kann Google Anzeigen automatisch platzieren. Die Rätsel, Tipps und Lösungen funktionieren unabhängig davon, ob du der Werbung zustimmst.</p>
 <h2>Ergebnisse teilen, ohne zu spoilern</h2><p>Nach dem Lösen kannst du dein Ergebnis teilen. Verschickt wird nur, was nichts verrät: beim Codeknacker die farbigen Punkte deiner Versuche, beim Sudoku die Stufe und beim Nonogramm die Größe, jeweils mit der Zahl der genutzten Tipps, bei der Zielzahl, dass du sie getroffen hast. Die Lösung selbst und deine Rechnungen bleiben bei dir, so können Freunde dasselbe Rätsel noch unbefangen spielen.</p>
 <h2>Bedienung</h2><p>Alle Rätsel lassen sich mit Maus, Finger oder Tastatur spielen: beim Codeknacker mit den Ziffern 1 bis 6, Enter und Rücktaste, beim Sudoku mit Pfeil- und Zifferntasten und der Taste N für Notizen, beim Nonogramm mit Leertaste oder Enter auf dem gewählten Feld. Die Felder sind für Bildschirmleser beschriftet. Wenn dir etwas umständlich vorkommt oder nicht funktioniert, freuen wir uns über einen Hinweis.</p>
 <h2>Fehler oder Ideen?</h2><p>Hast du ein Rätsel gefunden, das sich nicht eindeutig lösen lässt, oder wünschst du dir eine neue Rätselart? Schreib uns – wir lesen jede Nachricht. Nenne dabei Datum und Rätselart, bei Sudoku und Nonogramm auch Stufe oder Größe: Weil jedes Rätsel aus dem Datum entsteht, können wir es damit exakt nachbauen und prüfen.</p>

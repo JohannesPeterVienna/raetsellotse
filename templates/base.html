@@ -41,9 +41,11 @@
     {% for href, label in nav %}<a href="{{ href }}"{% if href == active %} aria-current="page"{% endif %}>{{ label }}</a>{% endfor %}
   </nav>
 </div></header>
-<main id="inhalt">
+{% if ads %}{# Oberster Werbeplatz: fester Streifen direkt unter der Kopfzeile, Höhe von Anfang an reserviert (kein Sprung beim Füllen).
+   Ab 768 px Superbanner 728×90, darunter Mobile Banner 320×100; unter 360 px keiner. #}
+<div class="wrap"><div class="ad ad--oben ad--superbanner" data-ad="superbanner" role="complementary" aria-label="Anzeige"></div><div class="ad ad--oben ad--mbanner" data-ad="mbanner" role="complementary" aria-label="Anzeige"></div></div>
+{% endif %}<main id="inhalt"{% if ads %} class="unter-platz"{% endif %}>
 {% block main %}{% endblock %}
-{% if ads %}<div class="wrap"><div class="ad ad--superbanner" data-ad="superbanner" role="complementary" aria-label="Werbung"></div><div class="ad ad--mbanner" data-ad="mbanner" role="complementary" aria-label="Werbung"></div></div>{% endif %}
 </main>
 <footer class="foot"><div class="wrap">
   <div>Rätsellotse – jeden Tag neue Logikrätsel: Sudoku, Nonogramm, Codeknacker und Zielzahl. Kostenlos und ohne Anmeldung.</div>
