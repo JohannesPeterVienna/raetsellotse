@@ -288,7 +288,7 @@ def main():
           related=[BY[s] for s in ("sudoku-strategien", "schweres-sudoku-erkennen", "sudoku-regeln-und-geschichte")], crumbs=crumbs,
           jsonld=[crumbs_ld(crumbs), {"@context": "https://schema.org", "@type": "WebApplication", "name": "Sudoku-Löser mit Lösungsweg – Rätsellotse", "url": f"{SITE}/sudoku-loeser.html",
                   "applicationCategory": "GameApplication", "operatingSystem": "Web", "inLanguage": "de", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}}],
-          priority=0.8, lastmod=EIGENWERT)
+          priority=0.8, lastmod="2026-11-22")
     crumbs = [("/", "Rätsellotse"), ("/sudoku.html", "Sudoku"), ("/sudoku-techniken-ueben.html", "Techniken gezielt üben")]
     write("sudoku-techniken-ueben.html", "page.html", title="Sudoku-Techniken gezielt üben: 322 schwere Rätsel nach Technik",
           description="Alle schweren Tagessudokus 2026 nach Stufe und Technik sortiert: X-Wing, XY-Wing, Paare oder Block-Zeile an echten Stellungen üben – direkt im Löser.",

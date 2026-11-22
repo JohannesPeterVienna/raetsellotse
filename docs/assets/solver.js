@@ -261,7 +261,7 @@
     const $ = s => root.querySelector(s);
     const gridEl = $("[data-lgrid]"), msg = $("[data-lmsg]"), stepsEl = $("[data-steps]"), text = $("[data-text]");
     const candBtn = $("[data-cands]");
-    let st = null, origin = Array(81).fill(""), solution = null, showC = false, last = null, path = [];
+    let st = null, origin = Array(81).fill(""), solution = null, showC = false, last = null, path = [], snapshots = [];
     const cells = [];
     for (let i = 0; i < 81; i++) {
       const r = rowOf(i), c = colOf(i), d = document.createElement("div");
@@ -281,7 +281,7 @@
     });
     const say = (h, cls = "") => { msg.className = "msg " + cls; msg.innerHTML = h; };
     function setGrid(g, from = "given") { g.forEach((v, i) => { inputs[i].value = v || ""; origin[i] = v ? from : ""; }); }
-    function reset(keepMsg) { st = null; solution = null; last = null; path = []; stepsEl.innerHTML = ""; if (!keepMsg) say(""); }
+    function reset(keepMsg) { st = null; solution = null; last = null; path = []; snapshots = []; stepsEl.innerHTML = ""; if (!keepMsg) say(""); }
     function render() {
       const bad = new Set(conflicts(grid()));
       const elim = new Map(); if (last) for (const [i, d] of last.elim || []) elim.set(i * 10 + d, true);
@@ -297,6 +297,7 @@
           notes[d - 1].textContent = on ? d : ""; notes[d - 1].className = elim.has(i * 10 + d) ? "x" : "";
         }
       }
+      root.querySelector("[data-undo]").disabled = snapshots.length === 0;
       candBtn.setAttribute("aria-pressed", showC);
     }
     function prepare() {
@@ -322,6 +323,7 @@
       return apply(s, silent);
     }
     function apply(s, silent) {
+      snapshots.push({ state: cloneState(st), origin: origin.slice(), last, showC });
       applyStep(st, s); path.push(s);
       for (const [i, d] of s.place || []) { inputs[i].value = d; origin[i] = s.tech === "reveal" ? "reveal" : "step"; }
       last = s; if ((s.elim || []).length) showC = true; render();
@@ -330,8 +332,18 @@
       if (!silent) say(`<strong>Schritt ${path.length}: ${s.name}.</strong> ${s.text}${st.g.includes(0) ? "" : " <strong>Damit ist das Sudoku gelöst.</strong>"}`);
       return s;
     }
+    function undoStep() {
+      const before = snapshots.pop();
+      if (!before) return;
+      st = before.state; origin = before.origin; last = before.last; showC = before.showC;
+      st.g.forEach((digit, i) => { inputs[i].value = digit || ""; });
+      path.pop(); stepsEl.lastElementChild?.remove();
+      render();
+      say(path.length ? `Zurück bei Schritt ${path.length}. Die Kandidaten sind wiederhergestellt.` : "Wieder bei den Vorgaben. Versuche den ersten Schritt selbst.");
+    }
     function all() {
       if (!prepare()) return;
+      if (!st.g.includes(0)) { say("Das Gitter ist bereits ausgefüllt."); return; }
       let n = 0; while (st.g.includes(0) && next(true)) n++;
       const lv = path.reduce((m, s) => Math.max(m, s.level), 0);
       if (!st.g.includes(0)) say(`<strong>Gelöst in ${path.length} Schritten.</strong> Schwierigste Technik: ${path.reduce((h, s) => (s.level > h.level ? s : h), path[0]).name} – ${LEVELS[lv]}. Der ganze Lösungsweg steht unten.`);
@@ -353,7 +365,7 @@
     gridEl.addEventListener("input", e => {
       const x = e.target, i = +x.dataset.i;
       const v = (x.value.match(/[1-9]/g) || []).pop() || ""; x.value = v;
-      if (st) { inputs.forEach((y, k) => { if (origin[k] === "step" || origin[k] === "reveal") { y.value = ""; origin[k] = ""; } }); reset(true); say("Vorgaben geändert – der Lösungsweg beginnt neu."); }
+      if (st) { inputs.forEach((y, k) => { if (k !== i && (origin[k] === "step" || origin[k] === "reveal")) { y.value = ""; origin[k] = ""; } }); reset(true); say("Vorgaben geändert – der Lösungsweg beginnt neu."); }
       origin[i] = v ? "given" : ""; render();
       if (v && i < 80) inputs[i + 1].focus();
     });
@@ -366,12 +378,13 @@
     root.addEventListener("click", e => {
       const b = e.target.closest("button"); if (!b) return;
       if (b.hasAttribute("data-next")) next();
+      else if (b.hasAttribute("data-undo")) undoStep();
       else if (b.hasAttribute("data-all")) all();
       else if (b.hasAttribute("data-check")) check();
       else if (b.hasAttribute("data-cands")) { showC = !showC; render(); }
       else if (b.hasAttribute("data-clear")) { load(Array(81).fill(0)); history.replaceState(null, "", location.pathname); inputs[0].focus(); }
       else if (b.hasAttribute("data-reveal")) { if (st && solution) { const s = revealStep(st, solution); if (s) apply(s); } }
-      else if (b.hasAttribute("data-solution")) { if (!prepare()) return; for (let i = 0; i < 81; i++) if (!st.g[i]) { inputs[i].value = solution[i]; origin[i] = "reveal"; } st = createState(solution); last = null; render(); say("Die vollständige Lösung ist eingetragen (orange: aufgedeckt, ohne Lösungsweg)."); }
+      else if (b.hasAttribute("data-solution")) { if (!prepare()) return; for (let i = 0; i < 81; i++) if (!st.g[i]) { inputs[i].value = solution[i]; origin[i] = "reveal"; } st = createState(solution); snapshots = []; last = null; render(); say("Die vollständige Lösung ist eingetragen (orange: aufgedeckt, ohne Lösungsweg)."); }
       else if (b.hasAttribute("data-print")) { if (!path.length) say("Noch kein Lösungsweg vorhanden – zuerst „Nächster Schritt“ oder „Ganzer Lösungsweg“ wählen."); else window.print(); }
       else if (b.hasAttribute("data-load")) fromText(text.value);
       else if (b.hasAttribute("data-link")) {
